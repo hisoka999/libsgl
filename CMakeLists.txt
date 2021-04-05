@@ -99,8 +99,8 @@ endif()
 
 
 if( UNIX)
-option(PACKAGE_TESTS "Build the tests" ON)
-if(PACKAGE_TESTS)
+option(ENGINE_TESTS "Build the tests" ON)
+if(ENGINE_TESTS)
 
     include(googletest)
     include(GoogleTest)

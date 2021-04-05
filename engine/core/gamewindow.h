@@ -16,10 +16,11 @@ namespace core
     public:
         static GameWindow &Instance()
         {
-            static GameWindow instance("Star Conquest", 1280, 720);
+            static GameWindow instance;
 
             return instance;
         }
+        int open(std::string pTitle, int pWidth, int pHeight, const std::string &prefDir);
 
         const SDL_Window *getSDLWindow() const;
 
@@ -31,11 +32,9 @@ namespace core
     protected:
     private:
         /** Default constructor */
-        GameWindow(std::string pTitle, int pWidth, int pHeight);
+        GameWindow();
         /** Default destructor */
         virtual ~GameWindow();
-
-        int open();
 
         SDL_Window *win;
 

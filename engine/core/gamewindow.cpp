@@ -8,31 +8,33 @@
 namespace core
 {
 
-    GameWindow::GameWindow(const std::string pTitle, int pWidth, int pHeight)
-        : win(nullptr), width(pWidth), height(pHeight), title(pTitle)
+    GameWindow::GameWindow()
+        : win(nullptr)
     {
         //ctor
         settings = std::make_shared<utils::IniBase>();
-        open();
     }
 
-    int GameWindow::open()
+    int GameWindow::open(const std::string pTitle, int pWidth, int pHeight, const std::string &prefDir)
     {
+        width = pWidth;
+        height = pHeight;
+        title = pTitle;
 
-        if (!utils::os::is_dir(utils::os::get_pref_dir("", "starconquest")))
+        if (!utils::os::is_dir(utils::os::get_pref_dir("", prefDir)))
         {
-            utils::os::create_dir(utils::os::get_pref_dir("", "starconquest"));
-            std::cout << "config dir: " << utils::os::get_pref_dir("", "starconquest") << std::endl;
+            utils::os::create_dir(utils::os::get_pref_dir("", prefDir));
+            std::cout << "config dir: " << utils::os::get_pref_dir("", prefDir) << std::endl;
         }
 
-        std::string path = utils::os::combine(utils::os::get_pref_dir("", "starconquest"), "settings.conf");
+        std::string path = utils::os::combine(utils::os::get_pref_dir("", prefDir), "settings.conf");
         if (!utils::os::is_file(path))
         {
             std::ofstream filestream;
             filestream.open(path, std::ios::out);
             filestream << "[Base]" << std::endl;
-            filestream << "Width=800" << std::endl;
-            filestream << "Height=600" << std::endl;
+            filestream << "Width=" << std::to_string(pWidth) << std::endl;
+            filestream << "Height=" << std::to_string(pHeight) << std::endl;
             filestream << "Fullscreen=FALSE" << std::endl;
 
             std::cout << path << " created!" << std::endl;
