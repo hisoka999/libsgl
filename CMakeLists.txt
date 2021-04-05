@@ -79,9 +79,14 @@ file(GLOB_RECURSE SRC
 
 
 set (MAGIC_ENUM_ROOT "deps")
-set (MAGIC_ENUM_SRC "${PROJECT_BINARY_DIR}/${MAGIC_ENUM_ROOT}/magic_enum/include" )
-
+set (MAGIC_ENUM_SRC "${PROJECT_BINARY_DIR}/${MAGIC_ENUM_ROOT}/magic_enum/magic_enum-src/include" )
 include(magic_enum)
+fetch_magic_enum(
+    ${PROJECT_SOURCE_DIR}/cmake
+    ${PROJECT_BINARY_DIR}/${MAGIC_ENUM_ROOT}/magic_enum
+    )
+
+
 message(${MAGIC_ENUM_SRC})
 
 # add the binary tree to the search path for include files
@@ -108,7 +113,7 @@ if(ENGINE_TESTS)
         ${PROJECT_SOURCE_DIR}/cmake
         ${PROJECT_BINARY_DIR}/googletest
         )
-    enable_testing()
+    enable_testing() 
     add_subdirectory(tests)
     #add_executable(SimpleTest )
 
