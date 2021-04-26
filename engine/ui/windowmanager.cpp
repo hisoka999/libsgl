@@ -50,8 +50,8 @@ namespace UI
     {
         for (auto container : containers)
         {
-            Window *win = (Window *)container;
-            if (!win)
+            Window *win = dynamic_cast<Window *>(container);
+            if (win == nullptr)
                 continue;
             if (win->getVisible())
                 return true;

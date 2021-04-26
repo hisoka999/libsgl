@@ -20,8 +20,8 @@ public:
         return instance;
     }
 
-    void loadLanguage(const Language lang);
-    void detectLanguage();
+    void loadLanguage(const Language lang, const std::string &appName);
+    void detectLanguage(const std::string &appName);
 
     std::string translate(const std::string &msgid) const;
 

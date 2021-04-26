@@ -41,13 +41,13 @@ std::string Localisation::getLanguage() const
     return language;
 }
 
-void Localisation::loadLanguage(const Language lang)
+void Localisation::loadLanguage(const Language lang, const std::string &appName)
 {
     std::string langName = std::string(magic_enum::enum_name(lang));
-    std::string fileName = "locale/" + langName + "/LC_MESSAGES/starconquest.po";
+    std::string fileName = "locale/" + langName + "/LC_MESSAGES/" + appName + ".po";
     loadLocalisation(fileName);
 }
-void Localisation::detectLanguage()
+void Localisation::detectLanguage(const std::string &appName)
 {
     std::string lang = "en";
 #ifdef __linux
@@ -80,7 +80,7 @@ void Localisation::detectLanguage()
     std::transform(language.begin(), language.end(), language.begin(), ::tolower);
     this->lang = magic_enum::enum_cast<Language>(language).value();
 
-    loadLanguage(this->lang);
+    loadLanguage(this->lang, appName);
 }
 
 std::string Localisation::translate(const std::string &msgid) const

@@ -57,7 +57,7 @@ namespace core
 
 #endif
 
-        win = SDL_CreateWindow(title.c_str(), 100, 100, width, height,
+        win = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height,
                                SDL_WINDOW_SHOWN);
         if (win == nullptr)
         {
