@@ -41,9 +41,10 @@ namespace UI
 
     void WindowManager::handleInput(core::Input *inp)
     {
-        for_each(containers.begin(), containers.end(), [&](Container *c) {
+        for (auto c : containers)
+        {
             c->handleEvents(inp);
-        });
+        };
     }
 
     bool WindowManager::isWindowOpen()

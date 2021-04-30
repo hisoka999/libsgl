@@ -29,18 +29,16 @@ namespace UI
     }
     void Container::render(core::Renderer *pRender)
     {
-        ObjectList::iterator it;
-        for (it = objects.begin(); it != objects.end(); ++it)
+        for (const auto &obj : objects)
         {
-            (*it)->render(pRender);
+            obj->render(pRender);
         }
     }
     void Container::handleEvents(core::Input *pInput)
     {
-        ObjectList::iterator it;
-        for (it = objects.begin(); it != objects.end(); ++it)
+        for (const auto &obj : objects)
         {
-            (*it)->handleEvents(pInput);
+            obj->handleEvents(pInput);
         }
     }
 
