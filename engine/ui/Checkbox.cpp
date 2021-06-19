@@ -32,28 +32,30 @@ namespace UI
 
     void Checkbox::handleEvents(core::Input *pInput)
     {
-        SDL_Event e = pInput->getEvent();
-        int tx;
-        int ty;
-        int textwidth = 0;
-        if (getParent() != nullptr)
+        int tx = getX();
+
+        int ty = getY();
+
+        if (this->getParent())
         {
-            tx = getParent()->getX() + getX();
-            ty = getParent()->getY() + getY();
-        }
-        else
-        {
-            tx = getX();
-            ty = getY();
+            graphics::Rect dsp = getParent()->eventRect();
+            tx += dsp.x;
+            ty += dsp.y;
         }
 
-        if (e.button.x >= tx && e.button.x <= tx + textwidth + 25 && e.button.y >= ty && e.button.y <= ty + 23)
+        graphics::Rect rect;
+        rect.x = tx;
+        rect.y = ty;
+        rect.width = 25;
+        rect.height = 25;
+        int textWidth, textHeight = 0;
+        getFont()->size(text, &textWidth, &textHeight);
+        rect.width += textWidth;
+
+        if (rect.intersects(pInput->getMousePostion()) && pInput->isMouseButtonPressed(SDL_BUTTON_LEFT))
         {
-            if (e.type == SDL_MOUSEBUTTONDOWN && e.button.button == SDL_BUTTON_LEFT)
-            {
-                std::cout << "toggle checked" << std::endl;
-                toggleChecked();
-            }
+            std::cout << "toggle checked" << std::endl;
+            toggleChecked();
         }
     }
 
@@ -78,7 +80,7 @@ namespace UI
         rect.height = 25;
 
         pRender->drawRect(rect);
-        getFont()->render(pRender, text, color, tx + 30, ty);
+        getFont()->render(pRender, text, color, tx + 30, ty + 5);
     }
 
 } // namespace UI
