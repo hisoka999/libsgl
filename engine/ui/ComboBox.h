@@ -79,7 +79,9 @@ namespace UI
             iconFont->render(pRender, "\uf0da", textColor, rightButtonRect.x + (rect.height / 2) - 5, rightButtonRect.y + (rect.height / 2) - 10);
             iconFont->render(pRender, "\uf0d9", textColor, leftButtonRect.x + (rect.height / 2) - 5, leftButtonRect.y + (rect.height / 2) - 10);
 
-            std::string text = elementFunction(elements[selection]);
+            std::string text = "empty";
+            if (elements.size() > 0)
+                text = elementFunction(elements[selection]);
 
             int textW, textH = 0;
             getFont()->size(text, &textW, &textH);
@@ -107,7 +109,7 @@ namespace UI
 
             if (this->getParent())
             {
-                graphics::Rect dsp = getParent()->displayRect();
+                graphics::Rect dsp = getParent()->eventRect();
                 tx += dsp.x;
                 ty += dsp.y;
             }
