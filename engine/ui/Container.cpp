@@ -31,14 +31,16 @@ namespace UI
     {
         for (const auto &obj : objects)
         {
-            obj->render(pRender);
+            if (obj != nullptr)
+                obj->render(pRender);
         }
     }
     void Container::handleEvents(core::Input *pInput)
     {
         for (const auto &obj : objects)
         {
-            obj->handleEvents(pInput);
+            if (obj != nullptr)
+                obj->handleEvents(pInput);
         }
     }
 

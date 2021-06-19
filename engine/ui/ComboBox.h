@@ -69,7 +69,7 @@ namespace UI
             else
                 pRender->setDrawColor(93, 103, 108, 255);
             pRender->fillRect(leftButtonRect);
-            if (selection < elements.size() - 1)
+            if (selection < elements.size() - 1 && elements.size() > 0)
                 pRender->setDrawColor(0, 200, 200, 255);
             else
                 pRender->setDrawColor(93, 103, 108, 255);
@@ -130,7 +130,7 @@ namespace UI
             }
             else if (rightButtonRect.intersects(pInput->getMousePostion()) && pInput->isMouseButtonPressed(SDL_BUTTON_LEFT))
             {
-                if (selection < elements.size() - 1)
+                if (selection < elements.size() - 1 && elements.size() > 0)
                 {
                     setSelection(selection + 1);
                 }
@@ -141,7 +141,7 @@ namespace UI
         {
             this->selection = selection;
             this->fireFuncionCall("selectionChanged", selection);
-            if (selection >= 0)
+            if (selection >= 0 && elements.size() > 0)
                 fireFuncionCall("valueChanged", elements[selection]);
         }
 
