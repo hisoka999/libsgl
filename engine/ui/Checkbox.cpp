@@ -19,6 +19,17 @@ namespace UI
         uiIconText = nullptr;
     }
 
+    void Checkbox::setChecked(bool check)
+    {
+        checked = check;
+        fireFuncionCall("checkboxChanged", checked);
+    }
+
+    void Checkbox::toggleChecked()
+    {
+        setChecked(!checked);
+    }
+
     void Checkbox::handleEvents(core::Input *pInput)
     {
         SDL_Event e = pInput->getEvent();
