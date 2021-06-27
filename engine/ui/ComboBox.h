@@ -18,7 +18,7 @@ namespace UI
         /** Default constructor */
         ComboBox(Object *parent = nullptr) : UI::Object(parent), selection(0)
         {
-            width = 100;
+            setWidth(100);
             iconFont = graphics::TextureManager::Instance().loadFont("fonts/fa-solid-900.ttf", 20);
 
             mouseDown = false;
@@ -69,7 +69,7 @@ namespace UI
             else
                 pRender->setDrawColor(93, 103, 108, 255);
             pRender->fillRect(leftButtonRect);
-            if (selection < elements.size() - 1)
+            if (selection < elements.size() - 1 && elements.size() > 0)
                 pRender->setDrawColor(0, 200, 200, 255);
             else
                 pRender->setDrawColor(93, 103, 108, 255);
@@ -88,8 +88,7 @@ namespace UI
 
             getFont()->render(pRender, text, textColor, rect.x + rect.height + 5, rect.y + (rect.height / 2) - (textH / 2));
         }
-        void setWidth(int width) { this->width = width; }
-        int getWidth() { return width; }
+
         void addElement(T elem) { elements.push_back(elem); }
         void setElementFunction(std::function<std::string(T)> func)
         {
@@ -132,7 +131,7 @@ namespace UI
             }
             else if (rightButtonRect.intersects(pInput->getMousePostion()) && pInput->isMouseButtonPressed(SDL_BUTTON_LEFT))
             {
-                if (selection < elements.size() - 1)
+                if (selection < elements.size() - 1 && elements.size() > 0)
                 {
                     setSelection(selection + 1);
                 }
@@ -143,7 +142,7 @@ namespace UI
         {
             this->selection = selection;
             this->fireFuncionCall("selectionChanged", selection);
-            if (selection >= 0)
+            if (selection >= 0 && elements.size() > 0)
                 fireFuncionCall("valueChanged", elements[selection]);
         }
 
@@ -161,7 +160,6 @@ namespace UI
 
     protected:
     private:
-        int width;
         std::vector<T> elements;
         bool mouseDown;
         unsigned int selection;
