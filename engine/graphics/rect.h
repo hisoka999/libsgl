@@ -56,7 +56,7 @@ namespace graphics
             return false;
         }
 
-        SDL_Rect sdlRect()
+        const SDL_Rect sdlRect() const
         {
             SDL_Rect r;
             r.h = height;
