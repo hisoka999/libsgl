@@ -17,8 +17,16 @@ namespace UI
     {
         int w, h;
         font->size(getHintText(), &w, &h);
+
+        int lineCount = 1;
+        for (char chr : getHintText())
+        {
+            if (chr == '\n')
+                lineCount++;
+        }
+
         setWidth(w);
-        setHeight(h);
+        setHeight(h * lineCount);
 
         renderBackground(renderer);
 

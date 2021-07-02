@@ -29,6 +29,10 @@ namespace core
     {
     }
 
+    void Scene::fixedUpdate(u_int32_t delta)
+    {
+    }
+
     Scene::~Scene()
     {
         winMgr = nullptr;
