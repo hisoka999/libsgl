@@ -15,6 +15,7 @@
 #include "engine/graphics/rect.h"
 #include "engine/graphics/text.h"
 #include "engine/graphics/texture.h"
+#include "engine/ui/Hint.h"
 #include <memory>
 
 namespace UI
@@ -109,6 +110,8 @@ namespace UI
         virtual graphics::Rect displayRect();
         virtual graphics::Rect eventRect();
         int getRenderOrder();
+        void setHint(const std::shared_ptr<UI::Hint> &hint);
+        const std::shared_ptr<UI::Hint> &getHint();
 
     protected:
         template <typename... Args>
@@ -123,6 +126,9 @@ namespace UI
         int renderOrder;
 
     private:
+        std::shared_ptr<UI::Hint> hint;
+        bool showHint;
+
         template <typename F, typename... Args>
         void call(F const &f, Args const &...args)
         {

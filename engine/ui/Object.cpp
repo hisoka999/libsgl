@@ -29,11 +29,34 @@ namespace UI
         return renderOrder;
     }
 
+    void Object::setHint(const std::shared_ptr<UI::Hint> &hint)
+    {
+        this->hint = hint;
+    }
+
+    const std::shared_ptr<UI::Hint> &Object::getHint()
+    {
+        return hint;
+    }
+
     void Object::render(core::Renderer *pRender)
     {
+        if (showHint)
+        {
+            hint->render(pRender);
+        }
     }
     void Object::handleEvents(core::Input *pInput)
     {
+        if (hint != nullptr)
+        {
+            showHint = false;
+            if (eventRect().intersects(pInput->getMousePostion()))
+            {
+                showHint = true;
+                hint->setPosition(pInput->getMousePostion());
+            }
+        }
     }
     graphics::Text *Object::getFont()
     {

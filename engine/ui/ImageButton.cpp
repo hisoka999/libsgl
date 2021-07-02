@@ -147,6 +147,8 @@ namespace UI
         if (text.length() > 0)
             getParent()->getFont()->render(pRender, text, white, messageX, messageY);
         pRender->setDrawColor(defaultColor.r, defaultColor.g, defaultColor.b, defaultColor.a);
+
+        Object::render(pRender);
     }
 
 } // namespace UI

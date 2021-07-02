@@ -176,6 +176,7 @@ namespace UI
             texture->render(pRenderer, tx + getWidth() + 25 - 9, ty, 9, 9, 174, 0);
             texture->render(pRenderer, tx + getWidth() + 25 - 9, ty + getHeight() - 9, 9, 9, 174, 20);
         }
+        Object::render(pRenderer);
     }
 
     SDL_Color Button::getDisabledColor() const

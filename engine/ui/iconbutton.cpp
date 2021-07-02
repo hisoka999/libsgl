@@ -41,6 +41,8 @@ namespace UI
         iconFont->render(pRender, iconText, displayColor, tx + 10, ty + 10);
         if (label.size() > 0)
             getFont()->render(pRender, label, displayColor, tx + 40, ty + 12);
+
+        Object::render(pRender);
     }
 
     void IconButton::setIconText(const std::string &value)
