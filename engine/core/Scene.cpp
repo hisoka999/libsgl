@@ -25,6 +25,10 @@ namespace core
         }
     }
 
+    void Scene::load()
+    {
+    }
+
     Scene::~Scene()
     {
         winMgr = nullptr;

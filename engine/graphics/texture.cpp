@@ -68,7 +68,7 @@ namespace graphics
         SDL_Rect dst = pDest.sdlRect();
         SDL_Rect src = pSrc.sdlRect();
         SDL_RenderCopy(ren->getRenderer(), tex, &src, &dst);
-    }
+        }
 
     void Texture::render(core::Renderer *ren, int x, int y, int pWidth, int pHeight,
                          int pSrcX, int pSrcY)

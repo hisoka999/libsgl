@@ -29,12 +29,23 @@ namespace UI
                     if (i % columns == column - 1)
                     {
                         auto item = container->get(i);
-                        width = std::max(width, item->getWidth());
+
+                        width = std::max(width, int(item->displayRect().width));
                         item->setX(xOffset);
                         item->setY(yOffset);
                         yOffset = item->getY() + height + padding.getY();
                     }
                 }
+
+                for (size_t i = 0; i < container->size(); ++i)
+                {
+                    if (i % columns == column - 1)
+                    {
+                        auto item = container->get(i);
+                        item->setWidth(width);
+                    }
+                }
+
                 xOffset += width + padding.getX();
             }
         }

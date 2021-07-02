@@ -49,17 +49,19 @@ namespace core
 
     void SceneManager::setCurrentScene(std::string name)
     {
-        if (currentScene.size() != 0)
-        {
-            auto &scene = scenes[currentScene];
-            scene->unload();
-        }
         if (scenes.count(name) == 0)
         {
             throw std::runtime_error(
                 "scene with name \"" + name + "\" does not exists.");
         }
+        if (currentScene.size() != 0)
+        {
+            auto &scene = scenes[currentScene];
+            scene->unload();
+        }
+
         currentScene = name;
+        scenes[currentScene]->load();
     }
 
     const std::shared_ptr<Scene> &SceneManager::getScene(std::string name)
