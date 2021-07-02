@@ -25,4 +25,9 @@ namespace UI
         font->render(renderer, hintText, utils::color::WHITE, getPosition().getX(), getPosition().getY());
     }
 
+    void StringHint::setHintText(const std::string &hintText)
+    {
+        this->hintText = hintText;
+    }
+
 } // namespace UI

@@ -13,6 +13,7 @@ namespace UI
         ~StringHint();
 
         virtual void render(core::Renderer *renderer);
+        void setHintText(const std::string &hintText);
 
     private:
         std::string hintText;
