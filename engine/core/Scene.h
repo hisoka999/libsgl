@@ -21,6 +21,7 @@ namespace core
         virtual void handleEvents(core::Input *pInput) = 0;
         virtual void update(){};
         virtual void unload();
+        virtual void load();
 
     protected:
         core::Renderer *renderer;
