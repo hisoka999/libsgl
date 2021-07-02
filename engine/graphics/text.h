@@ -22,6 +22,8 @@ namespace graphics
         void render(core::Renderer *ren, const std::string &message, SDL_Color color,
                     int x, int y);
         int size(const std::string &message, int *w, int *h);
+        void renderWrapped(core::Renderer *ren, const std::string &message,
+                           SDL_Color color, int x, int y, size_t lineLength);
 
     protected:
     private:

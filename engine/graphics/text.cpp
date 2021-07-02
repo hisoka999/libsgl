@@ -70,6 +70,74 @@ namespace graphics
         return ((hash << 5) + hash) + utils::color::color2hex(color);
     }
 
+    void Text::renderWrapped(core::Renderer *ren, const std::string &message,
+                             SDL_Color color, int x, int y, size_t lineLength)
+    {
+        if (message.size() == 0)
+            return;
+        //We need to first render to a surface as that's what TTF_RenderText
+        //returns, then load that surface into a texture
+        int w, h;
+        if (size(message, &w, &h) == -1)
+        {
+            throw new SDLException("TTF_SizeText");
+        }
+        if (w == 0)
+        {
+            return;
+        }
+        auto hash = genTextHash(message, color);
+        SDL_Surface *surf = nullptr;
+        SDL_Texture *texture = nullptr;
+        if (textCache.count(hash) > 0)
+        {
+            texture = textCache[hash];
+        }
+        else
+        {
+            surf = TTF_RenderUTF8_Blended_Wrapped(font, message.c_str(),
+                                                  color, lineLength);
+
+            if (surf == nullptr)
+            {
+                TTF_GetError();
+                logger.logSDLError("TTF_RenderText_Blended");
+                TTF_CloseFont(font);
+                font = nullptr;
+                throw new SDLException("TTF_RenderText_Blended");
+            }
+            texture = SDL_CreateTextureFromSurface(ren->getRenderer(), surf);
+            if (texture == nullptr)
+            {
+                logger.logSDLError("SDL_CreateTextureFromSurface");
+                throw new SDLException("SDL_CreateTextureFromSurface");
+            }
+            textCache[hash] = texture;
+        }
+
+        int iW, iH;
+        SDL_QueryTexture(texture, nullptr, nullptr, &iW, &iH);
+
+        SDL_Rect dst;
+        dst.x = x;
+        dst.y = y;
+        dst.w = iW;
+        dst.h = iH;
+
+        SDL_Rect src;
+        src.x = 0;
+        src.y = 0;
+        src.w = iW;
+        src.h = iH;
+
+        SDL_RenderCopy(ren->getRenderer(), texture, &src, &dst);
+        if (surf != nullptr)
+        {
+            SDL_FreeSurface(surf);
+        }
+        texture = nullptr;
+    }
+
     void Text::render(core::Renderer *ren, const std::string &message,
                       SDL_Color color, int x, int y)
     {

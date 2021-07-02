@@ -22,7 +22,7 @@ namespace UI
 
         renderBackground(renderer);
 
-        font->render(renderer, getHintText(), utils::color::WHITE, getPosition().getX(), getPosition().getY());
+        font->renderWrapped(renderer, getHintText(), utils::color::BLUE, getPosition().getX(), getPosition().getY(), 150);
     }
 
 } // namespace UI
