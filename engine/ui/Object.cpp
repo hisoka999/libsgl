@@ -12,12 +12,16 @@ namespace UI
         width = height = 0;
         font = nullptr;
         renderOrder = 0;
+        showHint = false;
+        hint = nullptr;
     }
     Object::Object(Object *parent, int pWidth, int pHeight)
         : parent(parent), width(pWidth), height(pHeight), x(0), y(0), renderOrder(0)
     {
 
         font = nullptr;
+        showHint = false;
+        hint = nullptr;
     }
 
     Object::~Object()

@@ -39,13 +39,24 @@ namespace UI
         this->height = height;
     }
 
+    void Hint::setHintText(const std::string &hintText)
+    {
+        this->hintText = hintText;
+    }
+
     void Hint::renderBackground(core::Renderer *renderer)
     {
         graphics::Rect rect = {position.getX(), position.getY(), float(width), float(height)};
-        renderer->setDrawColor(255, 255, 255, 255);
+
+        renderer->setDrawColor(0x5b, 0xad, 0xf7, 255);
         renderer->fillRect(rect);
         renderer->setDrawColor(200, 200, 200, 255);
         renderer->drawRect(rect);
+    }
+
+    const std::string &Hint::getHintText()
+    {
+        return hintText;
     }
 
 } // namespace UI

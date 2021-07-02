@@ -16,18 +16,13 @@ namespace UI
     void StringHint::render(core::Renderer *renderer)
     {
         int w, h;
-        font->size(hintText, &w, &h);
+        font->size(getHintText(), &w, &h);
         setWidth(w);
         setHeight(h);
 
         renderBackground(renderer);
 
-        font->render(renderer, hintText, utils::color::WHITE, getPosition().getX(), getPosition().getY());
-    }
-
-    void StringHint::setHintText(const std::string &hintText)
-    {
-        this->hintText = hintText;
+        font->render(renderer, getHintText(), utils::color::WHITE, getPosition().getX(), getPosition().getY());
     }
 
 } // namespace UI

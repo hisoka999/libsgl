@@ -19,11 +19,14 @@ namespace UI
         void setWidth(size_t width);
         size_t getHeight();
         void setHeight(size_t height);
+        void setHintText(const std::string &hintText);
 
     protected:
         void renderBackground(core::Renderer *renderer);
+        const std::string &getHintText();
 
     private:
+        std::string hintText;
         utils::Vector2 position;
         size_t width;
         size_t height;
