@@ -5,7 +5,7 @@ namespace UI
 {
     namespace layout
     {
-        GridLayout::GridLayout(UI::Container *container, unsigned int columns) : Layout(container), columns(2), padding(5, 5)
+        GridLayout::GridLayout(UI::Container *container, unsigned int columns) : Layout(container), columns(columns), padding(5, 5)
         {
         }
 

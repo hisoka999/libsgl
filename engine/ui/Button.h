@@ -53,7 +53,6 @@ namespace UI
         SDL_Color color;
 
     private:
-        int width;
         int static_width;
         bool hover;
         bool enabled;

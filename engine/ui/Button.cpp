@@ -9,7 +9,7 @@ namespace UI
         : Object(parent), static_width(0), hover(false), enabled(true), borderless(false)
     {
         color = {255, 255, 255, 0};
-        width = 0;
+        setWidth(static_width);
 
         disabledColor = {204, 204, 204, 255};
 
@@ -25,10 +25,9 @@ namespace UI
     void Button::setStaticWidth(const int pWidth)
     {
         static_width = pWidth;
-        if (static_width > width)
+        if (static_width > getWidth())
         {
-            width = static_width;
-            setWidth(width);
+            setWidth(static_width);
         }
     }
 
@@ -53,13 +52,13 @@ namespace UI
         {
             if (w > static_width)
             {
-                width = w;
+                setWidth(w);
             }
             else
             {
-                width = static_width;
+                setWidth(static_width);
             }
-            setWidth(width);
+
             setHeight(35);
         }
     }
@@ -79,7 +78,7 @@ namespace UI
             r.x = getX();
             r.y = getY();
         }
-        r.width = width + 25;
+        r.width = getWidth() + 25;
         r.height = getHeight();
         return r;
     }
@@ -100,7 +99,7 @@ namespace UI
             r.x = getX();
             r.y = getY();
         }
-        r.width = width + 25;
+        r.width = getWidth() + 25;
         r.height = getHeight();
         return r;
     }
