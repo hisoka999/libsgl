@@ -7,14 +7,19 @@ namespace utils
         std::string convertJsonArrayToString(std::vector<std::variant<int, float, std::string, std::shared_ptr<Object>>> array)
         {
             std::string val = "[\n";
-            for (auto data : array)
+            for (size_t i = 0; i < array.size(); ++i)
             {
+                auto data = array[i];
                 val += convertJsonDataToString(data);
-                val += "\n,\n";
+                if (i + 1 < array.size())
+                {
+                    val += ",";
+                }
+                val += "\n";
             }
 
             val += "]\n";
-            return "";
+            return val;
         }
         std::string convertJsonDataToString(std::variant<int, float, std::string, std::shared_ptr<Object>> data)
         {
@@ -78,13 +83,25 @@ namespace utils
         std::string Object::toJsonString()
         {
             std::string val = "{\n";
+            int i = 0;
             for (auto attr : attributes)
             {
-                val += "\"" + attr.first + "\":" + convertJsonDataToString(attr.second) + ",\n";
+                val += "\"" + attr.first + "\":" + convertJsonDataToString(attr.second);
+                i++;
+                if (i < attributes.size())
+                {
+                    val += ",\n";
+                }
             }
+            i = 0;
             for (auto attr : arrayAttributes)
             {
-                val += "\"" + attr.first + "\":" + convertJsonArrayToString(attr.second) + ",\n";
+                val += "\"" + attr.first + "\":" + convertJsonArrayToString(attr.second);
+                i++;
+                if (i < arrayAttributes.size())
+                {
+                    val += ",\n";
+                }
             }
             val += "}";
             return val;
