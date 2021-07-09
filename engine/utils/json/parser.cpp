@@ -138,13 +138,12 @@ namespace utils
 
                 std::string attrName = jsonData.substr(lastAttr, splitPos - lastAttr);
 
-                attrName.erase(std::find_if(attrName.rbegin(), attrName.rend(), [](unsigned char ch) {
-                                   return ch != '\"' && !std::isspace(ch);
-                               }).base(),
+                attrName.erase(std::find_if(attrName.rbegin(), attrName.rend(), [](unsigned char ch)
+                                            { return ch != '\"' && !std::isspace(ch); })
+                                   .base(),
                                attrName.end());
-                attrName.erase(attrName.begin(), std::find_if(attrName.begin(), attrName.end(), [](unsigned char ch) {
-                                   return ch != '\"' && !std::isspace(ch);
-                               }));
+                attrName.erase(attrName.begin(), std::find_if(attrName.begin(), attrName.end(), [](unsigned char ch)
+                                                              { return ch != '\"' && !std::isspace(ch); }));
                 hasAttr = !attrName.empty();
                 if (hasAttr)
                 {
@@ -199,5 +198,6 @@ namespace utils
 
             return object;
         }
+
     }
 }
