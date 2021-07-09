@@ -66,6 +66,15 @@ namespace graphics
             return r;
         }
 
+        const SDL_FRect sdlFRect() const
+        {
+            SDL_FRect r;
+            r.h = height;
+            r.w = width;
+            r.x = x;
+            r.y = y;
+            return r;
+        }
         bool operator==(const Rect &other) const
         {
             return other.x == x && other.y == y && other.width == width && other.height == height;

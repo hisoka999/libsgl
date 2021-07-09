@@ -490,6 +490,11 @@ namespace core
         zoomFactor = factor;
     }
 
+    void Renderer::setDrawBlendMode(SDL_BlendMode blendMode)
+    {
+        SDL_SetRenderDrawBlendMode(ren, blendMode);
+    }
+
     void Renderer::drawLine(utils::Vector2 &start, utils::Vector2 &end)
     {
         SDL_RenderDrawLine(ren, start.getX(), start.getY(), end.getX(), end.getY());

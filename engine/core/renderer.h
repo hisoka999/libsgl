@@ -33,6 +33,7 @@ namespace core
         void calcDelta();
         float getZoomFactor();
         void setZoomFactor(float factor);
+        void setDrawBlendMode(SDL_BlendMode blendMode);
 
         //drawing routines
         /**

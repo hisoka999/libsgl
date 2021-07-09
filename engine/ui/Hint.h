@@ -30,6 +30,8 @@ namespace UI
         utils::Vector2 position;
         size_t width;
         size_t height;
+        SDL_Color backgroundColor;
+        SDL_Color borderColor;
     };
 } // namespace UI
 

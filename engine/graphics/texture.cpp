@@ -49,7 +49,7 @@ namespace graphics
     void Texture::renderResized(core::Renderer *ren, int x, int y, int pWidth,
                                 int pHeight)
     {
-        SDL_Rect dst;
+        SDL_FRect dst;
         dst.x = x;
         dst.y = y;
         dst.w = pWidth;
@@ -60,20 +60,20 @@ namespace graphics
         src.y = 0;
         src.w = width;
         src.h = height;
-        SDL_RenderCopy(ren->getRenderer(), tex, &src, &dst);
+        SDL_RenderCopyF(ren->getRenderer(), tex, &src, &dst);
     }
 
     void Texture::render(core::Renderer *ren, const Rect &pSrc, const Rect &pDest)
     {
-        SDL_Rect dst = pDest.sdlRect();
+        SDL_FRect dst = pDest.sdlFRect();
         SDL_Rect src = pSrc.sdlRect();
-        SDL_RenderCopy(ren->getRenderer(), tex, &src, &dst);
-        }
+        SDL_RenderCopyF(ren->getRenderer(), tex, &src, &dst);
+    }
 
     void Texture::render(core::Renderer *ren, int x, int y, int pWidth, int pHeight,
                          int pSrcX, int pSrcY)
     {
-        SDL_Rect dst;
+        SDL_FRect dst;
         dst.x = x;
         dst.y = y;
         dst.w = pWidth;
@@ -85,15 +85,15 @@ namespace graphics
         src.w = pWidth;
         src.h = pHeight;
 
-        SDL_RenderCopy(ren->getRenderer(), tex, &src, &dst);
+        SDL_RenderCopyF(ren->getRenderer(), tex, &src, &dst);
     }
 
     void Texture::renderRotated(core::Renderer *ren, const double angle,
                                 const int x, const int y, const int pWidth, const int pHeight)
     {
-        SDL_Point *center = nullptr;
+        SDL_FPoint *center = nullptr;
 
-        SDL_Rect dst;
+        SDL_FRect dst;
         dst.x = x;
         dst.y = y;
         dst.w = pWidth;
@@ -105,8 +105,8 @@ namespace graphics
         src.w = width;
         src.h = height;
 
-        int result = SDL_RenderCopyEx(ren->getRenderer(), tex, &src, &dst, angle, center,
-                                      SDL_FLIP_NONE);
+        int result = SDL_RenderCopyExF(ren->getRenderer(), tex, &src, &dst, angle, center,
+                                       SDL_FLIP_NONE);
         if (result != 0)
             throw SDLException("renderRotated::SDL_RenderCopyEx");
     }
