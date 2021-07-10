@@ -1,4 +1,5 @@
 #include "object.h"
+#include <engine/utils/string.h>
 namespace utils
 {
     namespace JSON
@@ -90,7 +91,7 @@ namespace utils
                 i++;
                 if (i < attributes.size())
                 {
-                    val += ",\n";
+                    val += ",";
                 }
             }
             i = 0;
@@ -100,9 +101,10 @@ namespace utils
                 i++;
                 if (i < arrayAttributes.size())
                 {
-                    val += ",\n";
+                    val += ",";
                 }
             }
+            val = utils::rtrim(val, ",");
             val += "}";
             return val;
         }
