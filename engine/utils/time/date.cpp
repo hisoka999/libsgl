@@ -51,7 +51,7 @@ namespace utils
 
         std::string Date::format()
         {
-            return utils::string_format("%2i.%2i.%i", day, month + 1, year);
+            return utils::string_format("%.2i.%.2i.%i", day, month + 1, year);
         }
 
         uint16_t Date::getYear()
