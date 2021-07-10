@@ -59,10 +59,10 @@ namespace graphics
         const SDL_Rect sdlRect() const
         {
             SDL_Rect r;
-            r.h = height;
-            r.w = width;
-            r.x = x;
-            r.y = y;
+            r.h = int(height);
+            r.w = int(width);
+            r.x = int(x);
+            r.y = int(y);
             return r;
         }
 

@@ -22,7 +22,7 @@ namespace core
         virtual void update(){};
         virtual void unload();
         virtual void load();
-        virtual void fixedUpdate(u_int32_t delta);
+        virtual void fixedUpdate(uint32_t delta);
 
     protected:
         core::Renderer *renderer;
