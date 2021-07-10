@@ -46,7 +46,7 @@ elseif (WIN32)
     set(SDL2TTF_DIR ${PROJECT_SOURCE_DIR}/deps/vcpp/SDL2)
     set(SDL2TTF_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/deps/vcpp/SDL2/include)
 
-    set(SDL2_MIXER_LIBRARY sdl2ttf)
+    set(SDL2_MIXER_LIBRARY SDL2_mixer)
     set(SDL2_MIXER_DIR ${PROJECT_SOURCE_DIR}/deps/vcpp/SDL2)
     set(SDL2_MIXER_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/deps/vcpp/SDL2/include)
 
