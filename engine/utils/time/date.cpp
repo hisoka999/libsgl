@@ -30,6 +30,10 @@ namespace utils
         {
         }
 
+        Date::~Date()
+        {
+        }
+
         void Date::addDay(uint16_t value)
         {
             day += value;
