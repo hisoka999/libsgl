@@ -49,5 +49,20 @@ namespace utils
         {
             return utils::string_format("%2i.%2i.%i", day, month + 1, year);
         }
+
+        uint16_t Date::getYear()
+        {
+            return year;
+        }
+
+        uint16_t Date::getMonth()
+        {
+            return month;
+        }
+
+        uint16_t Date::getDay()
+        {
+            return day;
+        }
     }
 }

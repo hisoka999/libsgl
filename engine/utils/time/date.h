@@ -24,6 +24,10 @@ namespace utils
             void addDay(uint16_t value);
 
             std::string format();
+
+            uint16_t getYear();
+            uint16_t getMonth();
+            uint16_t getDay();
         };
 
     } // namespace time
