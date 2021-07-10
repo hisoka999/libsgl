@@ -7,6 +7,18 @@
 
 #ifndef GRAPHICS_TEXTUREMANAGER_H_
 #define GRAPHICS_TEXTUREMANAGER_H_
+#pragma once
+
+// Define EXPORTED for any platform
+#ifdef _WIN32
+#ifdef WIN_EXPORT
+#define EXPORTED __declspec(dllexport)
+#else
+#define EXPORTED __declspec(dllimport)
+#endif
+#else
+#define EXPORTED
+#endif
 
 #include <engine/graphics/text.h>
 #include <engine/graphics/texture.h>
