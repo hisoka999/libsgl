@@ -37,7 +37,7 @@ namespace utils
         void Date::addDay(uint16_t value)
         {
             day += value;
-            while (lastDayOfMonth(year, month) > day)
+            while (lastDayOfMonth(year, month) < day)
             {
                 day -= lastDayOfMonth(year, month);
                 month++;
