@@ -92,12 +92,15 @@ message(${MAGIC_ENUM_SRC})
 # add the binary tree to the search path for include files
 # so that we will find TutorialConfig.h
 include_directories("${PROJECT_BINARY_DIR}" ${SDL2_INCLUDE_DIR} ${GETTEXT_INCLUDE_DIR} ${Intl_INCLUDE_DIR} ${MAGIC_ENUM_SRC})
+if (WIN32)
+    set (CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+    set (WINDOWS_EXPORT_ALL_SYMBOLS ON)
+    add_compile_options("$<$<C_COMPILER_ID:MSVC>:/utf-8>")
+    add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
+endif()
 
 
 add_library(${PROJECT_NAME} SHARED ${SRC})
-if (WIN32)
-set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS /SUBSYSTEM:WINDOWS)
-endif()
 
 
 
