@@ -89,10 +89,10 @@ namespace UI
     graphics::Rect Object::eventRect()
     {
         graphics::Rect r;
-        r.x = x;
-        r.y = y;
-        r.width = width;
-        r.height = height;
+        r.x = float(x);
+        r.y = float(y);
+        r.width = float(width);
+        r.height = float(height);
         if (getParent() != nullptr)
         {
             r.x += getParent()->eventRect().x;
@@ -104,10 +104,10 @@ namespace UI
     graphics::Rect Object::displayRect()
     {
         graphics::Rect r;
-        r.x = x;
-        r.y = y;
-        r.width = width;
-        r.height = height;
+        r.x = float(x);
+        r.y = float(y);
+        r.width = float(width);
+        r.height = float(height);
         if (getParent() != nullptr)
         {
             r.x += getParent()->displayRect().x;

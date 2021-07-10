@@ -73,7 +73,7 @@ namespace core
         return scenes[currentScene];
     }
 
-    void SceneManager::fixedUpdate(u_int32_t delta)
+    void SceneManager::fixedUpdate(uint32_t delta)
     {
         if (currentScene.empty())
             return;
