@@ -89,20 +89,15 @@ namespace utils
             {
                 val += "\"" + attr.first + "\":" + convertJsonDataToString(attr.second);
                 i++;
-                if (i < attributes.size())
-                {
-                    val += ",";
-                }
+
+                val += ",";
             }
             i = 0;
             for (auto attr : arrayAttributes)
             {
                 val += "\"" + attr.first + "\":" + convertJsonArrayToString(attr.second);
                 i++;
-                if (i < arrayAttributes.size())
-                {
-                    val += ",";
-                }
+                val += ",";
             }
             val = utils::rtrim(val, ",");
             val += "}";
