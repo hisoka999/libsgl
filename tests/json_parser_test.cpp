@@ -1,7 +1,13 @@
 #include "gtest/gtest.h"
 #include <engine/utils/json/parser.h>
 #include <memory>
-
+#include <fstream>
+#ifdef __linux
+#include <pwd.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
+#endif
 TEST(ParserTest, ParseArray)
 {
 
@@ -78,4 +84,32 @@ TEST(ParserTest, ParseObjectWithArray)
     EXPECT_EQ(std::get<std::string>(vec.at(0)), "path1");
     EXPECT_EQ(std::get<std::string>(vec.at(1)), "path2");
     EXPECT_EQ(std::get<std::string>(vec.at(2)), "file.ext");
+}
+
+TEST(ParserTest, LoadComplexSaveGame)
+{
+    auto prog_dir = std::string(get_current_dir_name());
+    std::string saveGameFile = "/home/stefan/projects/libsgl/tests/test_files/savegame.save";
+    std::ifstream file;
+    std::istringstream is;
+    std::string s;
+    std::string group;
+    //  std::cout << filename << std::endl;
+
+    file.open(saveGameFile.c_str());
+    EXPECT_TRUE(file.is_open());
+
+    std::string buffer((std::istreambuf_iterator<char>(file)),
+                       std::istreambuf_iterator<char>());
+
+    utils::JSON::Parser parser;
+    auto jsonObject = parser.parseObject(buffer);
+
+    file.close();
+    //for debugging
+    for (auto name : jsonObject->getAttributes())
+    {
+        std::cout << "found attr: " << name << std::endl;
+    }
+    EXPECT_EQ(jsonObject->getAttributes().size(), 5);
 }

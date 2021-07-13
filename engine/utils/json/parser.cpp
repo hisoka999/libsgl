@@ -66,7 +66,7 @@ namespace utils
 
             size_t startPos = jsonData.find_first_of("[");
             size_t endPos = jsonData.find_last_of("]");
-            if (startPos > jsonData.size())
+            if (startPos > jsonData.size() || endPos > jsonData.size())
                 return vector;
 
             std::string data = jsonData.substr(startPos + 1, endPos - startPos - 1);
@@ -89,6 +89,8 @@ namespace utils
                     splitPos = findPositionInString(data, '{', '}', objectStart) + 1;
                     attrValue = data.substr(objectStart, splitPos - objectStart);
                     attrValue = rtrim(ltrim(ltrim(ltrim(attrValue, "\n"), " "), "{"), "}");
+                    // std::cout << "tmp: " << attrValue << std::endl
+                    //           << "----------" << std::endl;
                     vector.push_back(parseObject(attrValue));
                     splitPos = data.find_first_of(",", splitPos - 2);
                 }
@@ -125,18 +127,20 @@ namespace utils
         {
             std::shared_ptr<Object> object = std::make_shared<Object>();
             size_t lastAttr = 0;
+            std::string tmp = jsonData;
+            std::string _jsonData = trim(tmp, "{}");
 
             bool hasAttr = true;
 
             while (hasAttr)
             {
-                size_t splitPos = jsonData.find_first_of(":", lastAttr);
-                size_t endPos = jsonData.find_first_of(",", lastAttr);
-                if (splitPos > jsonData.size())
+                size_t splitPos = _jsonData.find_first_of(":", lastAttr);
+                size_t endPos = _jsonData.find_first_of(",", lastAttr);
+                if (splitPos > _jsonData.size())
                     break;
                 //std::cout << splitPos << ":" << endPos << std::endl;
 
-                std::string attrName = jsonData.substr(lastAttr, splitPos - lastAttr);
+                std::string attrName = _jsonData.substr(lastAttr, splitPos - lastAttr);
 
                 attrName.erase(std::find_if(attrName.rbegin(), attrName.rend(), [](unsigned char ch)
                                             { return ch != '\"' && !std::isspace(ch); })
@@ -147,31 +151,45 @@ namespace utils
                 hasAttr = !attrName.empty();
                 if (hasAttr)
                 {
-                    if (endPos > jsonData.size())
-                        endPos = jsonData.size();
-                    std::string attrValue = jsonData.substr(splitPos + 1, endPos - splitPos - 1);
+                    if (endPos > _jsonData.size())
+                        endPos = _jsonData.size();
+                    std::string attrValue = _jsonData.substr(splitPos + 1, endPos - splitPos - 1);
                     attrValue = trim(attrValue);
                     attrName = trim(attrName);
                     //std::cout << attrName << ":" << attrValue << std::endl;
                     //test if the value is a string
-                    if (attrValue.find_first_of("{") < attrValue.size())
+                    size_t arrayPos = attrValue.find_first_of("[");
+                    size_t objectPos = attrValue.find_first_of("{");
+                    if (objectPos < attrValue.size() && objectPos < arrayPos)
                     {
-                        size_t objectStart = jsonData.find_first_of("{", splitPos);
-                        size_t objectEnd = findPositionInString(jsonData, '{', '}', objectStart + 1);
-                        attrValue = jsonData.substr(objectStart + 1, objectEnd - objectStart - 1);
+                        size_t objectStart = _jsonData.find_first_of("{", splitPos);
+                        size_t objectEnd = findPositionInString(_jsonData, '{', '}', objectStart + 1);
+                        attrValue = _jsonData.substr(objectStart + 1, objectEnd - objectStart - 1);
                         attrValue = rtrim(ltrim(trim(attrValue), "{"), "}");
-                        //std::cout << "sub:" << attrName << ":" << attrValue << std::endl;
-                        object->setAttribute(attrName, parseObject(attrValue));
+                        //std::cout << "obj value:" << attrName << ":" << attrValue << std::endl;
+                        if (attrValue.size() == 0)
+                        {
+                            object->setAttribute(attrName, std::make_shared<Object>());
+                        }
+                        else
+                        {
+                            object->setAttribute(attrName, parseObject(attrValue));
+                        }
+
+                        endPos = objectEnd + 1;
                     }
-                    else if (attrValue.find_first_of("[") < attrValue.size())
+                    else if (arrayPos < attrValue.size())
                     {
-                        size_t arrayStart = jsonData.find_first_of("[", splitPos);
-                        size_t arrayEnd = findPositionInString(jsonData, '[', ']', arrayStart + 1);
+                        size_t arrayStart = _jsonData.find_first_of("[", splitPos);
+                        size_t arrayEnd = findPositionInString(_jsonData, '[', ']', arrayStart + 1);
+                        if (arrayEnd == 0)
+                            arrayEnd = arrayStart + 1;
                         splitPos = attrValue.find_first_of("]");
-                        attrValue = jsonData.substr(arrayStart, arrayEnd - arrayStart);
+                        attrValue = _jsonData.substr(arrayStart, arrayEnd - arrayStart);
                         //attrValue = rtrim(ltrim(trim(attrValue), "["), "]");
                         //std::cerr << "array value: " << attrValue << std::endl;
                         object->setArrayAttribute(attrName, parseArray(attrValue));
+                        endPos = arrayEnd + 1;
                     }
                     else if (attrValue.find_first_of("\"") < attrValue.size())
                     {

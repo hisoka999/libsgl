@@ -12,14 +12,14 @@ set_target_properties(gmock PROPERTIES FOLDER extern)
 set_target_properties(gmock_main PROPERTIES FOLDER extern)
 
 set(TEST_SRC "")
-file(GLOB TEST_SRC ${PROJECT_SOURCE_DIR}/engine/utils/json/*.cpp)
+file(GLOB TEST_SRC ${PROJECT_SOURCE_DIR}/engine/utils/json/*.cpp )
 
 macro(package_add_test TESTNAME)
     #INCLUDE_DIRECTORIES()
 
 
     message("TEST_SRC = ${TEST_SRC}" )
-    include_directories(${PROJECT_SOURCE_DIR})
+    include_directories(${PROJECT_SOURCE_DIR} )
     # create an exectuable in which the tests will be stored
     add_executable(${TESTNAME}  ${TEST_SRC} ${ARGN})
     # link the Google test infrastructure, mocking library, and a default main fuction to
