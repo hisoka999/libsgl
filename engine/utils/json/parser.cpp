@@ -66,7 +66,7 @@ namespace utils
 
             size_t startPos = jsonData.find_first_of("[");
             size_t endPos = jsonData.find_last_of("]");
-            if (startPos > jsonData.size() || endPos > jsonData.size())
+            if (startPos > jsonData.size())
                 return vector;
 
             std::string data = jsonData.substr(startPos + 1, endPos - startPos - 1);
