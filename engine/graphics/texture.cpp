@@ -146,4 +146,9 @@ namespace graphics
         tex = SDL_CreateTextureFromSurface(ren->getRenderer(), surface);
     }
 
+    void Texture::setAlphaMod(uint8_t alpha)
+    {
+        SDL_SetTextureAlphaMod(tex, alpha);
+    }
+
 } // namespace graphics

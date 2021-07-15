@@ -27,6 +27,7 @@ namespace graphics
         void setColorKey(uint8_t r, uint8_t g, uint8_t b);
         void setBlendMode(SDL_BlendMode blendMode);
         void setAlphaColor(core::Renderer *ren, uint8_t r, uint8_t g, uint8_t b);
+        void setAlphaMod(uint8_t alpha);
         int getWidth();
         int getHeight();
         SDL_Texture *getSDLTexture()
