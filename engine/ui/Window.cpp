@@ -16,6 +16,7 @@ namespace UI
     Window::Window(int x, int y, int width, int height)
         : width(width), height(height)
     {
+        setObjectName("window");
         setTheme(graphics::TextureManager::Instance().getDefaultTheme());
         setX(x);
         setY(y);

@@ -8,6 +8,7 @@ namespace UI
     Button::Button(Object *parent)
         : Object(parent), static_width(0), hover(false), enabled(true), borderless(false)
     {
+        setObjectName("button");
         color = {255, 255, 255, 0};
         setWidth(static_width);
 
