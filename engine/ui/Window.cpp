@@ -1,7 +1,7 @@
 #include "engine/ui/Window.h"
 #include "engine/ui/Theme.h"
 #include <functional>
-
+#include <engine/graphics/TextureManager.h>
 namespace UI
 {
 
@@ -16,6 +16,7 @@ namespace UI
     Window::Window(int x, int y, int width, int height)
         : width(width), height(height)
     {
+        setTheme(graphics::TextureManager::Instance().getDefaultTheme());
         setX(x);
         setY(y);
         visible = false;

@@ -9,7 +9,7 @@
 
 namespace graphics
 {
-    const std::shared_ptr<UI::Theme> &TextureManager::loadTheme(std::string filename)
+    const std::shared_ptr<UI::Theme> &TextureManager::loadTheme(std::string filename, bool markAsDefault)
     {
         if (themeMaps.count(filename) > 0)
             return themeMaps[filename];
@@ -17,6 +17,9 @@ namespace graphics
         auto theme = std::make_shared<UI::Theme>(filename);
 
         themeMaps[filename] = theme;
+
+        if (markAsDefault)
+            defaultTheme = theme;
 
         return theme;
     }
@@ -54,6 +57,11 @@ namespace graphics
                 textureMaps.erase(it);
             }
         }
+    }
+
+    std::shared_ptr<UI::Theme> &TextureManager::getDefaultTheme()
+    {
+        return defaultTheme;
     }
 
 }

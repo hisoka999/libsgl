@@ -92,9 +92,10 @@ namespace graphics
             this->renderer = renderer;
         }
 
-        const std::shared_ptr<UI::Theme> &loadTheme(std::string filename);
+        const std::shared_ptr<UI::Theme> &loadTheme(std::string filename, bool markAsDefault = false);
 
         void updateRessources();
+        std::shared_ptr<UI::Theme> &getDefaultTheme();
 
     private:
         TextureManager() = default;
@@ -106,6 +107,7 @@ namespace graphics
         std::map<std::string, std::shared_ptr<graphics::Text>> fonts;
         std::map<std::string, std::shared_ptr<graphics::TextureMap>> textureMaps;
         std::map<std::string, std::shared_ptr<UI::Theme>> themeMaps;
+        std::shared_ptr<UI::Theme> defaultTheme = nullptr;
 
         core::Renderer *renderer = nullptr;
     };
