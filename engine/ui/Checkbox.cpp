@@ -69,10 +69,10 @@ namespace UI
             tx += this->getParent()->getX();
             ty += this->getParent()->getY();
         }
-        int x2 = 0;
+
         if (checked)
             uiIconText->render(pRender, "\uf00c", color, tx, ty);
-        //pTexture->render(pRender, tx, ty, 25, 23, x2, 260);
+
         graphics::Rect rect;
         rect.x = tx;
         rect.y = ty;

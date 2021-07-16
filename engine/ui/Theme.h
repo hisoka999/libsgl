@@ -31,15 +31,15 @@ namespace UI
     private:
         std::shared_ptr<utils::JSON::Object> themeElements;
 
-        std::shared_ptr<utils::JSON::Object> findObjectStyle(UI::Object *object);
+        std::shared_ptr<utils::JSON::Object> findObjectStyle(UI::Object *object) const;
 
     public:
         Theme(std::string themeName);
         ~Theme();
 
-        const std::string &getStyleText(UI::Object *object, const StyleType styleType);
-        const SDL_Color getStyleColor(UI::Object *object, const StyleType StyleType);
-        const int getStyleInt(UI::Object *object, const StyleType StyleType);
+        std::string getStyleText(UI::Object *object, const StyleType styleType) const;
+        SDL_Color getStyleColor(UI::Object *object, const StyleType StyleType) const;
+        int getStyleInt(UI::Object *object, const StyleType StyleType) const;
     };
 
 } // namespace UI

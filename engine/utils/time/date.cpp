@@ -4,7 +4,7 @@ namespace utils
 {
     namespace time
     {
-        const uint16_t lastDayOfMonth(const uint16_t year, const uint16_t month)
+        uint16_t lastDayOfMonth(const uint16_t year, const uint16_t month)
         {
             if (month == 1)
             {
@@ -21,9 +21,9 @@ namespace utils
                 return 31;
             }
         }
-        const bool isLeapYear(const uint16_t year)
+        bool isLeapYear(const uint16_t year)
         {
-            return false; //TODO implement it the right way
+            return year % 400 == 0 || (year % 4 == 0 && year % 100 != 0);
         }
         Date::Date(uint16_t year, uint16_t month, uint16_t day)
             : year(year), month(month), day(day)

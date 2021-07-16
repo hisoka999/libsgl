@@ -27,7 +27,7 @@ namespace graphics
 
     protected:
     private:
-        const size_t genTextHash(const std::string &message, SDL_Color color);
+        size_t genTextHash(const std::string &message, SDL_Color color);
         TTF_Font *font;
         utils::Logger logger;
         std::map<size_t, SDL_Texture *> textCache;

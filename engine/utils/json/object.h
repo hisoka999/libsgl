@@ -17,9 +17,6 @@ namespace utils
         typedef std::variant<int, float, std::string, std::shared_ptr<Object>> JsonValue;
         typedef std::vector<JsonValue> JsonArray;
 
-        static std::string convertJsonArrayToString(std::vector<std::variant<int, float, std::string, std::shared_ptr<Object>>> array);
-        static std::string convertJsonDataToString(std::variant<int, float, std::string, std::shared_ptr<Object>> data);
-
         class Object
         {
         public:

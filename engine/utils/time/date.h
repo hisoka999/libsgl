@@ -8,8 +8,8 @@ namespace utils
 {
     namespace time
     {
-        const uint16_t lastDayOfMonth(const uint16_t year, const uint16_t month);
-        const bool isLeapYear(const uint16_t year);
+        uint16_t lastDayOfMonth(const uint16_t year, const uint16_t month);
+        bool isLeapYear(const uint16_t year);
 
         class Date
         {

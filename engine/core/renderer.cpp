@@ -413,7 +413,7 @@ namespace core
     {
         if (viewPort.width == 0.0f)
         {
-            SDL_Rect *rect;
+            SDL_Rect *rect = nullptr;
             SDL_RenderGetViewport(ren, rect);
             viewPort.width = rect->w;
             viewPort.height = rect->h;

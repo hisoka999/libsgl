@@ -5,23 +5,6 @@ namespace utils
     namespace JSON
     {
 
-        std::string convertJsonArrayToString(std::vector<std::variant<int, float, std::string, std::shared_ptr<Object>>> array)
-        {
-            std::string val = "[\n";
-            for (size_t i = 0; i < array.size(); ++i)
-            {
-                auto data = array[i];
-                val += convertJsonDataToString(data);
-                if (i + 1 < array.size())
-                {
-                    val += ",";
-                }
-                val += "\n";
-            }
-
-            val += "]\n";
-            return val;
-        }
         std::string convertJsonDataToString(std::variant<int, float, std::string, std::shared_ptr<Object>> data)
         {
             if (std::holds_alternative<int>(data))
@@ -42,6 +25,24 @@ namespace utils
                 return obj->toJsonString();
             }
             return "";
+        }
+
+        std::string convertJsonArrayToString(std::vector<std::variant<int, float, std::string, std::shared_ptr<Object>>> array)
+        {
+            std::string val = "[\n";
+            for (size_t i = 0; i < array.size(); ++i)
+            {
+                auto data = array[i];
+                val += convertJsonDataToString(data);
+                if (i + 1 < array.size())
+                {
+                    val += ",";
+                }
+                val += "\n";
+            }
+
+            val += "]\n";
+            return val;
         }
 
         Object::Object()

@@ -55,7 +55,7 @@ namespace graphics
             return -1;
     }
 
-    const size_t Text::genTextHash(const std::string &message, SDL_Color color)
+    size_t Text::genTextHash(const std::string &message, SDL_Color color)
     {
 
         unsigned long hash = 5381;

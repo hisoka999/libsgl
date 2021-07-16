@@ -15,7 +15,7 @@ namespace core
         settings = std::make_shared<utils::IniBase>();
     }
 
-    int GameWindow::open(const std::string pTitle, int pWidth, int pHeight, const std::string &prefDir)
+    int GameWindow::open(const std::string pTitle, const int pWidth, const int pHeight, const std::string &prefDir)
     {
         width = pWidth;
         height = pHeight;
@@ -107,6 +107,16 @@ namespace core
     void GameWindow::delay(unsigned int millsec)
     {
         SDL_Delay(millsec);
+    }
+
+    int GameWindow::getWidth() const
+    {
+        return width;
+    }
+
+    int GameWindow::getHeight() const
+    {
+        return height;
     }
 
     std::shared_ptr<utils::IniBase> GameWindow::getSettings() const

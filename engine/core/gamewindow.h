@@ -20,13 +20,13 @@ namespace core
 
             return instance;
         }
-        int open(std::string pTitle, int pWidth, int pHeight, const std::string &prefDir);
+        int open(std::string pTitle, const int pWidth, const int pHeight, const std::string &prefDir);
 
         const SDL_Window *getSDLWindow() const;
 
         void delay(unsigned int millsec);
-        const int getWidth() const { return width; }
-        const int getHeight() const { return height; }
+        int getWidth() const;
+        int getHeight() const;
         std::shared_ptr<utils::IniBase> getSettings() const;
 
     protected:

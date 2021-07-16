@@ -7,7 +7,7 @@
 #include <fstream>
 namespace UI
 {
-    std::shared_ptr<utils::JSON::Object> Theme::findObjectStyle(UI::Object *object)
+    std::shared_ptr<utils::JSON::Object> Theme::findObjectStyle(UI::Object *object) const
     {
         auto styleClass = object->getStyleClass();
         auto elementName = object->getObjectName();
@@ -45,14 +45,14 @@ namespace UI
     {
     }
 
-    const std::string &Theme::getStyleText(UI::Object *object, const StyleType styleType)
+    std::string Theme::getStyleText(UI::Object *object, const StyleType styleType) const
     {
         std::string name = std::string(magic_enum::enum_name(styleType));
 
         return findObjectStyle(object)->getStringValue(name);
     }
 
-    const SDL_Color Theme::getStyleColor(UI::Object *object, const StyleType styleType)
+    SDL_Color Theme::getStyleColor(UI::Object *object, const StyleType styleType) const
     {
         std::string name = std::string(magic_enum::enum_name(styleType));
 
@@ -71,7 +71,7 @@ namespace UI
         return color;
     }
 
-    const int Theme::getStyleInt(UI::Object *object, const StyleType styleType)
+    int Theme::getStyleInt(UI::Object *object, const StyleType styleType) const
     {
         std::string name = std::string(magic_enum::enum_name(styleType));
 
