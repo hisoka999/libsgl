@@ -49,6 +49,7 @@ namespace core
         void fillRect(graphics::Rect &rect);
 
         void setDrawColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a);
+        void setDrawColor(const SDL_Color &color);
 
         void drawLine(utils::Vector2 &start, utils::Vector2 &end);
 

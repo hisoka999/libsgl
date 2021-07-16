@@ -9,12 +9,24 @@
 
 namespace graphics
 {
+    const std::shared_ptr<UI::Theme> &TextureManager::loadTheme(std::string filename)
+    {
+        if (themeMaps.count(filename) > 0)
+            return themeMaps[filename];
+
+        auto theme = std::make_shared<UI::Theme>(filename);
+
+        themeMaps[filename] = theme;
+
+        return theme;
+    }
 
     TextureManager::~TextureManager()
     {
         textures.clear();
         //fonts.clear();
         textureMaps.clear();
+        themeMaps.clear();
     }
     void TextureManager::updateRessources()
     {

@@ -56,6 +56,11 @@ namespace utils
         {
             return std::get<int>(attributes.at(attr));
         }
+
+        float Object::getFloatValue(const std::string &attr) const
+        {
+            return std::get<float>(attributes.at(attr));
+        }
         std::shared_ptr<Object> Object::getObjectValue(const std::string &attr) const
         {
             return std::get<std::shared_ptr<Object>>(attributes.at(attr));
@@ -79,6 +84,11 @@ namespace utils
                 result.push_back(attr.first);
             }
             return result;
+        }
+
+        bool Object::hasAttribute(const std::string &attr)
+        {
+            return attributes.count(attr) > 0;
         }
 
         std::string Object::toJsonString()

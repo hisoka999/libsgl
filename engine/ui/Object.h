@@ -20,6 +20,7 @@
 
 namespace UI
 {
+    class Theme;
 
     class BaseObject
     {
@@ -112,8 +113,15 @@ namespace UI
         int getRenderOrder();
         void setHint(const std::shared_ptr<UI::Hint> &hint);
         const std::shared_ptr<UI::Hint> &getHint();
+        std::string &getStyleClass();
+        void setStyleClass(const std::string &value);
+        std::string &getObjectName();
+
+        std::shared_ptr<Theme> getTheme();
+        void setTheme(std::shared_ptr<Theme> &theme);
 
     protected:
+        void setObjectName(const std::string &objectName);
         template <typename... Args>
         void fireFuncionCall(std::string const &event, Args const &...args)
         {
@@ -142,6 +150,9 @@ namespace UI
 
         std::multimap<std::string, core::dispatcher_type> _callbacks;
         graphics::Text *font;
+        std::string styleClass;
+        std::string objectName;
+        std::shared_ptr<Theme> theme = nullptr;
     };
 
 } // namespace UI

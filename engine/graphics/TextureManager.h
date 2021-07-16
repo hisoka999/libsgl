@@ -23,6 +23,7 @@
 #include <engine/graphics/text.h>
 #include <engine/graphics/texture.h>
 #include <engine/graphics/texturemap.h>
+#include <engine/ui/Theme.h>
 #include <map>
 #include <memory>
 #include <mutex>
@@ -91,6 +92,8 @@ namespace graphics
             this->renderer = renderer;
         }
 
+        const std::shared_ptr<UI::Theme> &loadTheme(std::string filename);
+
         void updateRessources();
 
     private:
@@ -102,6 +105,7 @@ namespace graphics
         std::map<std::string, std::shared_ptr<graphics::Texture>> textures;
         std::map<std::string, std::shared_ptr<graphics::Text>> fonts;
         std::map<std::string, std::shared_ptr<graphics::TextureMap>> textureMaps;
+        std::map<std::string, std::shared_ptr<UI::Theme>> themeMaps;
 
         core::Renderer *renderer = nullptr;
     };

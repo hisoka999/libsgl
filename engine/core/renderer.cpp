@@ -460,10 +460,15 @@ namespace core
             throw SDLException("setDrawColor");
         }
     }
+
+    void Renderer::setDrawColor(const SDL_Color &color)
+    {
+        setDrawColor(color.r, color.b, color.g, color.a);
+    }
     void Renderer::drawRect(graphics::Rect &rect)
     {
-        SDL_Rect r = rect.sdlRect();
-        int result = SDL_RenderDrawRect(ren, &r);
+        SDL_FRect r = rect.sdlFRect();
+        int result = SDL_RenderDrawRectF(ren, &r);
         if (result != 0)
         {
             logger.logSDLError("Renderer::drawRect");
@@ -473,8 +478,8 @@ namespace core
 
     void Renderer::fillRect(graphics::Rect &rect)
     {
-        SDL_Rect r = rect.sdlRect();
-        int result = SDL_RenderFillRect(ren, &r);
+        SDL_FRect r = rect.sdlFRect();
+        int result = SDL_RenderFillRectF(ren, &r);
         if (result != 0)
         {
             logger.logSDLError("Renderer::fillRect");
@@ -497,7 +502,7 @@ namespace core
 
     void Renderer::drawLine(utils::Vector2 &start, utils::Vector2 &end)
     {
-        SDL_RenderDrawLine(ren, start.getX(), start.getY(), end.getX(), end.getY());
+        SDL_RenderDrawLineF(ren, start.getX(), start.getY(), end.getX(), end.getY());
     }
 
 }

@@ -35,10 +35,12 @@ namespace utils
 
             std::string getStringValue(const std::string &attr) const;
             int getIntValue(const std::string &attr) const;
+            float getFloatValue(const std::string &attr) const;
             std::shared_ptr<Object> getObjectValue(const std::string &attr) const;
             JsonArray getArray(const std::string &attr) const;
 
             std::vector<std::string> getAttributes();
+            bool hasAttribute(const std::string &attr);
 
             std::string toJsonString();
 

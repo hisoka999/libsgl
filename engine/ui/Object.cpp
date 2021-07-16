@@ -43,6 +43,43 @@ namespace UI
         return hint;
     }
 
+    std::string &Object::getStyleClass()
+    {
+        return styleClass;
+    }
+
+    void Object::setStyleClass(const std::string &value)
+    {
+        styleClass = value;
+    }
+
+    std::string &Object::getObjectName()
+    {
+        return objectName;
+    }
+
+    std::shared_ptr<Theme> Object::getTheme()
+    {
+        if (theme != nullptr)
+            return theme;
+
+        if (getParent() != nullptr)
+        {
+            return getParent()->getTheme();
+        }
+        return nullptr;
+    }
+
+    void Object::setTheme(std::shared_ptr<Theme> &theme)
+    {
+        this->theme = theme;
+    }
+
+    void Object::setObjectName(const std::string &objectName)
+    {
+        this->objectName = objectName;
+    }
+
     void Object::render(core::Renderer *pRender)
     {
         if (showHint)
