@@ -59,15 +59,10 @@ namespace UI
         std::string colorString = findObjectStyle(object)->getStringValue(name);
         SDL_Color color;
         auto value = colorString.substr(1); //get rid of the shebang
-        std::stringstream ss;
-        ss << std::hex << value.substr(1, 2);
-        ss >> color.r;
-        ss << std::hex << value.substr(3, 2);
-        ss >> color.g;
-        ss << std::hex << value.substr(5, 2);
-        ss >> color.b;
-        ss << std::hex << value.substr(7, 2);
-        ss >> color.a;
+        color.r = std::stoul(value.substr(0, 2), nullptr, 16);
+        color.g = std::stoul(value.substr(2, 2), nullptr, 16);
+        color.b = std::stoul(value.substr(4, 2), nullptr, 16);
+        color.a = std::stoul(value.substr(6, 2), nullptr, 16);
         return color;
     }
 

@@ -463,7 +463,7 @@ namespace core
 
     void Renderer::setDrawColor(const SDL_Color &color)
     {
-        setDrawColor(color.r, color.b, color.g, color.a);
+        setDrawColor(color.r, color.g, color.b, color.a);
     }
     void Renderer::drawRect(graphics::Rect &rect)
     {

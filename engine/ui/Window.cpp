@@ -73,7 +73,7 @@ namespace UI
             backgroundRect.y = getY() + topRect.height;
             backgroundRect.width = width;
             backgroundRect.height = height - topRect.height;
-            pRender->setDrawColor(getTheme()->getStyleColor(this, UI::StyleType::ForgroundColor));
+            pRender->setDrawColor(getTheme()->getStyleColor(this, UI::StyleType::BackgroundColor));
 
             pRender->fillRect(backgroundRect);
             pRender->drawRect(backgroundRect);
