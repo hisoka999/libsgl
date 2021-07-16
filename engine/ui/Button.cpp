@@ -9,14 +9,24 @@ namespace UI
         : Object(parent), static_width(0), hover(false), enabled(true), borderless(false)
     {
         setObjectName("button");
-        color = {255, 255, 255, 0};
+
         setWidth(static_width);
+        if (getTheme() == nullptr)
+        {
+            setTheme(graphics::TextureManager::Instance().getDefaultTheme());
+        }
 
-        disabledColor = {204, 204, 204, 255};
+        color = getTheme()->getStyleColor(this, UI::StyleType::Color);
 
-        hoverColor = {93, 103, 108, 255};
+        disabledColor = getTheme()->getStyleColor(this, UI::StyleType::DisabledColor);
 
-        texture = graphics::TextureManager::Instance().loadTexture("images/Button01.png");
+        hoverColor = getTheme()->getStyleColor(this, UI::StyleType::HoverColor);
+
+        auto textureName = getTheme()->getStyleText(this, UI::StyleType::BackgroundImage);
+        texture = nullptr;
+
+        if (!textureName.empty())
+            texture = graphics::TextureManager::Instance().loadTexture(textureName);
     }
 
     Button::~Button()
@@ -157,6 +167,7 @@ namespace UI
         }
         if (!borderless)
         {
+
             //draw background rect
             graphics::Rect backgroundRect;
             backgroundRect.x = tx;
@@ -164,17 +175,24 @@ namespace UI
             backgroundRect.width = getWidth() + 25;
             backgroundRect.height = getHeight();
 
-            pRenderer->setDrawColor(12, 21, 24, 255);
+            pRenderer->setDrawColor(getTheme()->getStyleColor(this, UI::StyleType::BackgroundColor));
             pRenderer->fillRect(backgroundRect);
 
             //left top corner
+            if (texture != nullptr)
+            {
+                texture->render(pRenderer, tx, ty, 9, 9, 0, 0);
+                //left bottom corner
+                texture->render(pRenderer, tx, ty + getHeight() - 9, 9, 9, 0, 20);
 
-            texture->render(pRenderer, tx, ty, 9, 9, 0, 0);
-            //left bottom corner
-            texture->render(pRenderer, tx, ty + getHeight() - 9, 9, 9, 0, 20);
-
-            texture->render(pRenderer, tx + getWidth() + 25 - 9, ty, 9, 9, 174, 0);
-            texture->render(pRenderer, tx + getWidth() + 25 - 9, ty + getHeight() - 9, 9, 9, 174, 20);
+                texture->render(pRenderer, tx + getWidth() + 25 - 9, ty, 9, 9, 174, 0);
+                texture->render(pRenderer, tx + getWidth() + 25 - 9, ty + getHeight() - 9, 9, 9, 174, 20);
+            }
+            else
+            {
+                pRenderer->setDrawColor(getTheme()->getStyleColor(this, UI::StyleType::BorderColor));
+                pRenderer->drawRect(backgroundRect);
+            }
         }
         Object::render(pRenderer);
     }
