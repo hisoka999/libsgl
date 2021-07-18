@@ -18,10 +18,10 @@ namespace utils
             Parser();
 
             void parseString(const std::string &jsonData);
-            std::vector<std::variant<int, float, std::string, std::shared_ptr<Object>>> parseArray(const std::string &jsonData);
+            JsonArray parseArray(const std::string &jsonData);
             std::shared_ptr<Object> parseObject(const std::string &jsonData);
 
-                private:
+        private:
             void parseAttribute(const std::string &jsonData);
             size_t findPositionInString(const std::string data, char starChar, char endChar, const size_t startPosition);
         };

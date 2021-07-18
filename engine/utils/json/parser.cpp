@@ -60,9 +60,9 @@ namespace utils
             return 0;
         }
 
-        std::vector<std::variant<int, float, std::string, std::shared_ptr<Object>>> Parser::parseArray(const std::string &jsonData)
+        JsonArray Parser::parseArray(const std::string &jsonData)
         {
-            std::vector<std::variant<int, float, std::string, std::shared_ptr<Object>>> vector;
+            JsonArray vector;
 
             size_t startPos = jsonData.find_first_of("[");
             size_t endPos = jsonData.find_last_of("]");
@@ -101,11 +101,16 @@ namespace utils
                 }
                 else if (attrValue == "true")
                 {
-                    vector.push_back(1);
+                    vector.push_back(true);
                 }
                 else if (attrValue == "false")
                 {
-                    vector.push_back(0);
+                    vector.push_back(false);
+                }
+                else if (attrValue.find_first_of(".") < attrValue.size())
+                {
+                    float value = std::atof(attrValue.c_str());
+                    vector.push_back(value);
                 }
                 else
                 {

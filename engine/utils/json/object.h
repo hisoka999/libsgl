@@ -14,7 +14,7 @@ namespace utils
 
         class Object;
 
-        typedef std::variant<int, float, std::string, std::shared_ptr<Object>> JsonValue;
+        typedef std::variant<bool, int, float, std::string, std::shared_ptr<Object>> JsonValue;
         typedef std::vector<JsonValue> JsonArray;
 
         class Object
@@ -33,6 +33,7 @@ namespace utils
             std::string getStringValue(const std::string &attr) const;
             int getIntValue(const std::string &attr) const;
             float getFloatValue(const std::string &attr) const;
+            bool getBoolValue(const std::string &attr) const;
             std::shared_ptr<Object> getObjectValue(const std::string &attr) const;
             JsonArray getArray(const std::string &attr) const;
 

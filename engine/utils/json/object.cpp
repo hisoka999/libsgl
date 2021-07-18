@@ -5,7 +5,7 @@ namespace utils
     namespace JSON
     {
 
-        std::string convertJsonDataToString(std::variant<int, float, std::string, std::shared_ptr<Object>> data)
+        std::string convertJsonDataToString(JsonValue data)
         {
             if (std::holds_alternative<int>(data))
             {
@@ -14,6 +14,11 @@ namespace utils
             else if (std::holds_alternative<float>(data))
             {
                 return std::to_string(std::get<float>(data));
+            }
+            else if (std::holds_alternative<bool>(data))
+            {
+                bool value = std::get<bool>(data);
+                return (value) ? "true" : "false";
             }
             else if (std::holds_alternative<std::string>(data))
             {
@@ -27,7 +32,7 @@ namespace utils
             return "";
         }
 
-        std::string convertJsonArrayToString(std::vector<std::variant<int, float, std::string, std::shared_ptr<Object>>> array)
+        std::string convertJsonArrayToString(JsonArray array)
         {
             std::string val = "[\n";
             for (size_t i = 0; i < array.size(); ++i)
@@ -61,6 +66,11 @@ namespace utils
         float Object::getFloatValue(const std::string &attr) const
         {
             return std::get<float>(attributes.at(attr));
+        }
+
+        bool Object::getBoolValue(const std::string &attr) const
+        {
+            return std::get<bool>(attributes.at(attr));
         }
         std::shared_ptr<Object> Object::getObjectValue(const std::string &attr) const
         {
