@@ -86,11 +86,13 @@ namespace utils
                 if (attrValue.find_first_of("{") < attrValue.size())
                 {
                     size_t objectStart = data.find_first_of("{", lastSplitPos) + 1;
-                    splitPos = findPositionInString(data, '{', '}', objectStart) + 1;
+                    splitPos = findPositionInString(data, '{', '}', objectStart + 1);
                     attrValue = data.substr(objectStart, splitPos - objectStart);
-                    attrValue = rtrim(ltrim(ltrim(ltrim(attrValue, "\n"), " "), "{"), "}");
+                    //attrValue = rtrim(ltrim(ltrim(ltrim(attrValue, "\n"), " "), "{"), "}");
                     // std::cout << "tmp: " << attrValue << std::endl
-                    //           << "----------" << std::endl;
+                    //           << "----------" << std::endl
+                    //           << "data: " << data << std::endl;
+
                     vector.push_back(parseObject(attrValue));
                     splitPos = data.find_first_of(",", splitPos - 2);
                 }
@@ -162,6 +164,7 @@ namespace utils
                     std::string attrValue = _jsonData.substr(splitPos + 1, endPos - splitPos - 1);
                     attrValue = trim(attrValue);
                     attrName = trim(attrName);
+
                     //std::cout << attrName << ":" << attrValue << std::endl;
                     //test if the value is a string
                     size_t arrayPos = attrValue.find_first_of("[");
@@ -190,8 +193,8 @@ namespace utils
                         size_t arrayEnd = findPositionInString(_jsonData, '[', ']', arrayStart + 1);
                         if (arrayEnd == 0)
                             arrayEnd = arrayStart + 1;
-                        splitPos = attrValue.find_first_of("]");
-                        attrValue = _jsonData.substr(arrayStart, arrayEnd - arrayStart);
+                        //splitPos = attrValue.find_first_of("]");
+                        attrValue = _jsonData.substr(arrayStart, arrayEnd - arrayStart + 1);
                         //attrValue = rtrim(ltrim(trim(attrValue), "["), "]");
                         //std::cerr << "array value: " << attrValue << std::endl;
                         object->setArrayAttribute(attrName, parseArray(attrValue));
@@ -205,11 +208,16 @@ namespace utils
 
                     else if (attrValue == "true")
                     {
-                        object->setAttribute(attrName, 1);
+                        object->setAttribute(attrName, true);
                     }
                     else if (attrValue == "false")
                     {
-                        object->setAttribute(attrName, 0);
+                        object->setAttribute(attrName, false);
+                    }
+                    else if (attrValue.find_first_of(".") < attrValue.size())
+                    {
+                        float value = std::atof(attrValue.c_str());
+                        object->setAttribute(attrName, value);
                     }
                     else
                     {
