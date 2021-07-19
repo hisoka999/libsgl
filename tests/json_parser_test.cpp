@@ -25,14 +25,14 @@ TEST(ParserTest, ParseObject)
 {
     std::shared_ptr<utils::JSON::Parser> parser = std::make_shared<utils::JSON::Parser>();
 
-    auto obj = parser->parseObject("\"id\":1 ,\"name\":\"Test\", \"attr\" : {\"test\":22},\"alive\":false  ");
+    auto obj = parser->parseObject("{\"id\":1 ,\"name\":\"Test\", \"attr\" : {\"test\":22},\"alive\":false  }");
 
     auto attr = obj->getObjectValue("attr");
 
     EXPECT_EQ(obj->getIntValue("id"), 1);
     EXPECT_EQ(obj->getStringValue("name"), "Test");
     EXPECT_EQ(attr->getIntValue("test"), 22);
-    EXPECT_EQ(obj->getIntValue("alive"), 0);
+    EXPECT_EQ(obj->getBoolValue("alive"), false);
 }
 
 TEST(ParserTest, ParseArrayWithObject)
@@ -40,7 +40,7 @@ TEST(ParserTest, ParseArrayWithObject)
 
     std::shared_ptr<utils::JSON::Parser> parser = std::make_shared<utils::JSON::Parser>();
 
-    auto vec = parser->parseArray("[1,{\"id\":1 ,\"name\":\"Test\", \"attr\" : {\"test\":22},\n},3,4,\"DATA\"]");
+    auto vec = parser->parseArray("[1,{\"id\":1 ,\"name\":\"Test\", \"attr\" : {\"test\":22}\n},3,4,\"DATA\"]");
     EXPECT_EQ(vec.size(), 5);
     EXPECT_EQ(std::get<int>(vec.at(0)), 1);
 
@@ -61,7 +61,7 @@ TEST(ParserTest, ParseArrayMultipleObjects)
 {
     std::shared_ptr<utils::JSON::Parser> parser = std::make_shared<utils::JSON::Parser>();
 
-    auto vec = parser->parseArray("[{\"id\":1 ,\"name\":\"Test\", \"attr\" : {\"test\":22,\"t\":3,},\"x\":22 \n},{\"id\":2 ,\"name\":\"Demo\", \"attr\" : {\"test\":22,},\n}]");
+    auto vec = parser->parseArray("[{\"id\":1 ,\"name\":\"Test\", \"attr\" : {\"test\":22,\"t\":3,},\"x\":22 \n},{\"id\":2 ,\"name\":\"Demo\", \"attr\" : {\"test\":22}\n}]");
     EXPECT_EQ(vec.size(), 2);
     auto obj = std::get<std::shared_ptr<utils::JSON::Object>>(vec.at(0));
     EXPECT_EQ(obj->getIntValue("id"), 1);
