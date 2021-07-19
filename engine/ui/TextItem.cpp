@@ -17,6 +17,7 @@ namespace UI
         // TODO Auto-generated constructor stub
         SDL_StopTextInput();
         color = {255, 255, 255, 255};
+        cursorPosition = 0;
     }
 
     TextItem::~TextItem()
@@ -31,6 +32,7 @@ namespace UI
     void TextItem::setText(const std::string &text)
     {
         this->text = text;
+        cursorPosition = text.size();
         fireFuncionCall("textChanged", text);
     }
 
@@ -44,12 +46,18 @@ namespace UI
         pRender->setDrawColor(93, 103, 108, 255);
         pRender->drawRect(rect);
 
+        int textW, textH = 0;
         if (text.size() != 0)
         {
-            int textW, textH = 0;
+
             getFont()->size(text, &textW, &textH);
             getFont()->render(pRender, text, color, rect.x + 5, rect.y + (rect.height / 2.0f) - (textH / 2.0f));
         }
+        std::string textToCursor = text.substr(0, cursorPosition);
+        getFont()->size(textToCursor, &textW, &textH);
+        utils::Vector2 lineStart(textW + rect.x + 2, rect.y);
+        utils::Vector2 lineEnd(textW + rect.x + 2, rect.y + textH);
+        pRender->drawLine(lineStart, lineEnd);
     }
     void TextItem::handleEvents(core::Input *pInput)
     {
@@ -74,16 +82,34 @@ namespace UI
         else if (pInput->isTextInput() && isSelected)
         {
             std::string txt = pInput->getTextInput();
-            text += txt;
+            text = text.substr(0, cursorPosition) + txt + text.substr(cursorPosition);
+            cursorPosition++;
             fireFuncionCall("textChanged", text);
         }
         else if (pInput->isKeyDown(SDLK_BACKSPACE) && isSelected)
         {
             if (text.size() > 0)
             {
-                text.resize(text.size() - 1);
+                text = text.substr(0, cursorPosition - 1) + text.substr(cursorPosition);
+                cursorPosition--;
                 fireFuncionCall("textChanged", text);
             }
+        }
+        else if (pInput->isKeyDown(SDLK_LEFT))
+        {
+            if (cursorPosition == 0)
+            {
+                return;
+            }
+            cursorPosition--;
+        }
+        else if (pInput->isKeyDown(SDLK_RIGHT))
+        {
+            if (cursorPosition == text.size())
+            {
+                return;
+            }
+            cursorPosition++;
         }
     }
     void TextItem::setFont(const std::string &fontname, unsigned int font_size)

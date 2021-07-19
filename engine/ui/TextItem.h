@@ -30,6 +30,7 @@ namespace UI
         std::string text;
         SDL_Color color;
         bool isSelected;
+        size_t cursorPosition;
     };
 
 } /* namespace UI */

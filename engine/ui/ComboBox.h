@@ -157,6 +157,12 @@ namespace UI
                 setSelection(index);
             }
         }
+        T getSelectionText()
+        {
+            if (elements.size() > 0)
+                return elements[index];
+            return nullptr;
+        }
 
     protected:
     private:
