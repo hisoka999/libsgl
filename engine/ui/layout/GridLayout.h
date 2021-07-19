@@ -12,7 +12,7 @@ namespace UI
             GridLayout(UI::Container *container, unsigned int columns = 2);
             virtual void updateLayout(const graphics::Rect &bounds);
 
-            void setPadding(utils::Vector2 value);
+            void setPadding(const utils::Vector2 &value);
 
         private:
             unsigned int columns;

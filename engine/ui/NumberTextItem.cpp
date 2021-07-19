@@ -1,42 +1,35 @@
-/*
- * TextItem.cpp
- *
- *  Created on: 05.02.2017
- *      Author: stefan
- */
-
-#include <engine/ui/TextItem.h>
+#include "NumberTextItem.h"
 
 namespace UI
 {
-
-    TextItem::TextItem(Object *parent, int pWidth, int pHeight)
+    NumberTextItem::NumberTextItem(Object *parent, int pWidth, int pHeight)
         : UI::Object(parent, pWidth, pHeight), isSelected(false)
     {
-        setObjectName("TextItem");
+        setObjectName("NumberTextItem");
         // TODO Auto-generated constructor stub
         SDL_StopTextInput();
         color = {255, 255, 255, 255};
         cursorPosition = 0;
     }
 
-    TextItem::~TextItem()
+    NumberTextItem::~NumberTextItem()
     {
         // TODO Auto-generated destructor stub
     }
 
-    std::string TextItem::getText()
+    float NumberTextItem::getValue()
     {
-        return text;
+        return value;
     }
-    void TextItem::setText(const std::string &text)
+    void NumberTextItem::setValue(const float pValue)
     {
-        this->text = text;
+        this->value = pValue;
+        text = std::to_string(value);
         cursorPosition = text.size();
-        fireFuncionCall("textChanged", text);
+        fireFuncionCall("valueChanged", value);
     }
 
-    void TextItem::render(core::Renderer *pRender)
+    void NumberTextItem::render(core::Renderer *pRender)
     {
         graphics::Rect rect = displayRect();
 
@@ -59,7 +52,7 @@ namespace UI
         utils::Vector2 lineEnd(textW + rect.x + 2, rect.y + textH);
         pRender->drawLine(lineStart, lineEnd);
     }
-    void TextItem::handleEvents(core::Input *pInput)
+    void NumberTextItem::handleEvents(core::Input *pInput)
     {
         if (pInput->isMouseButtonPressed(SDL_BUTTON_LEFT))
         {
@@ -83,16 +76,19 @@ namespace UI
         {
             std::string txt = pInput->getTextInput();
             text = text.substr(0, cursorPosition) + txt + text.substr(cursorPosition);
+            value = std::atof(text.c_str());
+
             cursorPosition++;
-            fireFuncionCall("textChanged", text);
+            fireFuncionCall("valueChanged", value);
         }
         else if (pInput->isKeyDown(SDLK_BACKSPACE) && isSelected)
         {
             if (text.size() > 0)
             {
                 text = text.substr(0, cursorPosition - 1) + text.substr(cursorPosition);
+                value = std::atof(text.c_str());
                 cursorPosition--;
-                fireFuncionCall("textChanged", text);
+                fireFuncionCall("valueChanged", value);
             }
         }
         else if (pInput->isKeyDown(SDLK_LEFT))
@@ -112,16 +108,16 @@ namespace UI
             cursorPosition++;
         }
     }
-    void TextItem::setFont(const std::string &fontname, unsigned int font_size)
+    void NumberTextItem::setFont(const std::string &fontname, unsigned int font_size)
     {
         graphics::Text *text = new graphics::Text();
         text->openFont(fontname, font_size);
         Object::setFont(text);
     }
-    void TextItem::setColor(int r, int g, int b)
+    void NumberTextItem::setColor(int r, int g, int b)
     {
         color.r = r;
         color.g = g;
         color.b = b;
     }
-} /* namespace UI */
+}

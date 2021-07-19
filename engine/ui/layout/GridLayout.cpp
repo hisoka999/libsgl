@@ -50,7 +50,7 @@ namespace UI
             }
         }
 
-        void GridLayout::setPadding(utils::Vector2 value)
+        void GridLayout::setPadding(const utils::Vector2 &value)
         {
             padding = value;
         }

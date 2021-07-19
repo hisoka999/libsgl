@@ -76,7 +76,7 @@ namespace core
         return utils::Vector2(event.wheel.x, event.wheel.y);
     }
 
-    utils::Vector2 Input::getMousePostion()
+    constexpr utils::Vector2 &Input::getMousePostion()
     {
 
         return mousePosition;
