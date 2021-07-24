@@ -27,6 +27,8 @@ public:
 
     std::string getLanguage() const;
 
+    std::locale getLocale();
+
     Language getLang() const;
 
 private:

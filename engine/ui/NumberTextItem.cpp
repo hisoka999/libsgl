@@ -1,4 +1,6 @@
 #include "NumberTextItem.h"
+#include "engine/utils/string.h"
+#include "engine/utils/localisation.h"
 
 namespace UI
 {
@@ -24,7 +26,7 @@ namespace UI
     void NumberTextItem::setValue(const float pValue)
     {
         this->value = pValue;
-        text = std::to_string(value);
+        text = utils::string_format("%2.f", value);
         cursorPosition = text.size();
         fireFuncionCall("valueChanged", value);
     }
@@ -56,7 +58,7 @@ namespace UI
     {
         if (pInput->isMouseButtonPressed(SDL_BUTTON_LEFT))
         {
-            if (displayRect().intersects(pInput->getMousePostion()))
+            if (eventRect().intersects(pInput->getMousePostion()))
             {
                 SDL_Rect rect = displayRect().sdlRect();
                 SDL_SetTextInputRect(&rect);
@@ -75,11 +77,22 @@ namespace UI
         else if (pInput->isTextInput() && isSelected)
         {
             std::string txt = pInput->getTextInput();
-            text = text.substr(0, cursorPosition) + txt + text.substr(cursorPosition);
-            value = std::atof(text.c_str());
+            std::string tmpText = text.substr(0, cursorPosition) + txt;
+            if (text.size() > cursorPosition)
+                tmpText += text.substr(cursorPosition);
+            std::istringstream us_in(tmpText);
+            us_in.imbue(Localisation::Instance().getLocale());
 
-            cursorPosition++;
-            fireFuncionCall("valueChanged", value);
+            us_in >> value;
+
+            bool hasFailed = us_in.fail();
+
+            if (us_in.eof() && !hasFailed)
+            {
+                text = utils::string_format("%2.f", value);
+                cursorPosition++;
+                fireFuncionCall("valueChanged", value);
+            }
         }
         else if (pInput->isKeyDown(SDLK_BACKSPACE) && isSelected)
         {
@@ -87,6 +100,7 @@ namespace UI
             {
                 text = text.substr(0, cursorPosition - 1) + text.substr(cursorPosition);
                 value = std::atof(text.c_str());
+
                 cursorPosition--;
                 fireFuncionCall("valueChanged", value);
             }

@@ -72,11 +72,6 @@ namespace utils
         return !areSame(x, other.x) || !areSame(y, other.y);
     }
 
-    const Vector2 Vector2::operator=(const Vector2 &other)
-    {
-        return Vector2(other.x, other.y);
-    }
-
     const Vector2 Vector2::normalize()
     {
         float value = std::sqrt(std::pow(x, 2.f) + std::pow(y, 2.f));

@@ -41,6 +41,34 @@ std::string Localisation::getLanguage() const
     return language;
 }
 
+std::locale Localisation::getLocale()
+{
+#ifdef __linux
+    switch (lang)
+    {
+    case Language::de:
+        return std::locale("de_DE.utf8");
+    case Language::en:
+        return std::locale("en_US.utf8");
+    default:
+        break;
+        return std::locale("en_US.utf8");
+    }
+#elif _WIN32
+    //TODO fix later
+    switch (lang)
+    {
+    case Language::de:
+        return std::locale("de_DE.utf8");
+    case Language::en:
+        return std::locale("en_US.utf8");
+    default:
+        break;
+        return std::locale("en_US.utf8");
+    }
+#endif
+}
+
 void Localisation::loadLanguage(const Language lang, const std::string &appName)
 {
     std::string langName = std::string(magic_enum::enum_name(lang));
@@ -69,6 +97,7 @@ void Localisation::detectLanguage(const std::string &appName)
         GetLocaleInfo(Lang1, LOCALE_SNAME, &*s.begin(), cch);
     }
     language = s;
+    std::cout << "language: " << language << std::endl;
 #endif
 
     if (language.empty())
