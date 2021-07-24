@@ -29,6 +29,8 @@ namespace UI
     }
     void Container::render(core::Renderer *pRender)
     {
+        if (needRefresh)
+            refresh();
         for (const auto &obj : objects)
         {
             if (obj != nullptr)
@@ -52,6 +54,21 @@ namespace UI
     std::shared_ptr<Object> Container::get(size_t pos)
     {
         return objects.at(pos);
+    }
+
+    void Container::needsRefresh()
+    {
+        needRefresh = true;
+    }
+
+    void Container::refresh()
+    {
+        endRefresh();
+    }
+
+    void Container::endRefresh()
+    {
+        needRefresh = false;
     }
     void Container::clear()
     {

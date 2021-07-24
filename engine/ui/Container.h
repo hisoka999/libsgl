@@ -24,11 +24,15 @@ namespace UI
         virtual void handleEvents(core::Input *pInput);
         size_t size();
         std::shared_ptr<Object> get(size_t pos);
+        void needsRefresh();
 
     protected:
         ObjectList objects;
+        virtual void refresh();
+        void endRefresh();
 
     private:
+        bool needRefresh = false;
     };
 
 } // namespace UI
