@@ -23,10 +23,10 @@ namespace core
         bool isMouseMoving();
         bool isMouseDoubleClick();
         bool isQuit();
-        constexpr utils::Vector2 &getMousePostion();
+        utils::Vector2 &getMousePostion();
         bool poll();
         //void clearEvents();
-        SDL_Event getEvent()
+        SDL_Event &getEvent()
         {
             return event;
         }
