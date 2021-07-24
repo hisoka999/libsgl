@@ -26,7 +26,7 @@ namespace UI
     void NumberTextItem::setValue(const float pValue)
     {
         this->value = pValue;
-        text = utils::string_format("%2.f", value);
+        text = utils::string_format("%.2f", value);
         cursorPosition = text.size();
         fireFuncionCall("valueChanged", value);
     }
@@ -89,7 +89,7 @@ namespace UI
 
             if (us_in.eof() && !hasFailed)
             {
-                text = utils::string_format("%2.f", value);
+                text = utils::string_format("%.2f", value);
                 cursorPosition++;
                 fireFuncionCall("valueChanged", value);
             }
