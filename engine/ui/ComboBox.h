@@ -160,7 +160,7 @@ namespace UI
         T getSelectionText()
         {
             if (elements.size() > 0)
-                return elements[index];
+                return elements[selection];
             return nullptr;
         }
 
