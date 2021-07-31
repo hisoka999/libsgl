@@ -155,8 +155,8 @@ namespace UI
     graphics::Rect ScrollArea::eventRect()
     {
         graphics::Rect r;
-        r.x = renderRect.x + getX();
-        r.y = renderRect.y + getY();
+        r.x = renderRect.x + getX() - scrollPosX;
+        r.y = renderRect.y + getY() - scrollPosY;
         r.width = renderRect.width;
         r.height = renderRect.height;
         if (getParent() != nullptr)
