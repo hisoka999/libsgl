@@ -37,7 +37,6 @@ namespace core
     {
         winMgr = nullptr;
         music = nullptr;
-        // TODO Auto-generated destructor stub
     }
 
 } /* namespace character */

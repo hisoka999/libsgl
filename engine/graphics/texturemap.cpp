@@ -1,5 +1,7 @@
 #include "texturemap.h"
 #include <engine/graphics/TextureManager.h>
+#include <fstream>
+#include <engine/utils/json/parser.h>
 
 namespace graphics
 {
@@ -17,24 +19,34 @@ namespace graphics
     }
     void TextureMap::loadFromFile(const std::string &fileName)
     {
-        textureName = fileName;
-        iniFile.Setfilename(fileName);
-        iniFile.read();
-        std::string textureName = iniFile.getValue("TEXTURE_MAP", "texture");
+        std::ifstream file;
+        std::istringstream is;
+        std::string s;
+        std::string group;
+        //  std::cout << filename << std::endl;
 
-        texture = graphics::TextureManager::Instance().loadTexture(textureName);
-
-        size_t subTextureNum = static_cast<size_t>(iniFile.getValueI("TEXTURES", "tex\\size"));
-
-        for (size_t i = 1; i <= subTextureNum; ++i)
+        file.open(fileName.c_str(), std::ios::in);
+        if (!file.is_open())
         {
-            std::string baseName = "tex\\" + std::to_string(i) + "\\";
+            throw IOException(fileName, "file does not exists");
+        }
+        std::string buffer((std::istreambuf_iterator<char>(file)),
+                           std::istreambuf_iterator<char>());
+        utils::JSON::Parser parser;
+        auto jsonObject = parser.parseObject(buffer);
+        textureName = jsonObject->getStringValue("textureName");
+        auto jsonArray = jsonObject->getArray("subTextures");
+
+        file.close();
+        for (auto subTex : jsonArray)
+        {
+            auto subTexObject = std::get<std::shared_ptr<utils::JSON::Object>>(subTex);
             graphics::Rect textureData;
-            std::string subTextureName = iniFile.getValue("TEXTURES", baseName + "name");
-            textureData.x = iniFile.getValueI("TEXTURES", baseName + "x");
-            textureData.y = iniFile.getValueI("TEXTURES", baseName + "y");
-            textureData.width = iniFile.getValueI("TEXTURES", baseName + "width");
-            textureData.height = iniFile.getValueI("TEXTURES", baseName + "height");
+            textureData.x = subTexObject->getFloatValue("x");
+            textureData.y = subTexObject->getFloatValue("y");
+            textureData.width = subTexObject->getFloatValue("width");
+            textureData.height = subTexObject->getFloatValue("height");
+            auto subTextureName = subTexObject->getStringValue("name");
             subTextures[subTextureName] = textureData;
         }
     }
