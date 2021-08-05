@@ -23,7 +23,6 @@ namespace graphics
         std::istringstream is;
         std::string s;
         std::string group;
-        //  std::cout << filename << std::endl;
 
         file.open(fileName.c_str(), std::ios::in);
         if (!file.is_open())
@@ -35,6 +34,8 @@ namespace graphics
         utils::JSON::Parser parser;
         auto jsonObject = parser.parseObject(buffer);
         textureName = jsonObject->getStringValue("textureName");
+        texture = graphics::TextureManager::Instance().loadTexture(textureName);
+
         auto jsonArray = jsonObject->getArray("subTextures");
 
         file.close();
