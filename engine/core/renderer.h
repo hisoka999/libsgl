@@ -43,6 +43,7 @@ namespace core
      * @throws
      */
         void drawCircle(int x, int y, int rad, SDL_Color color);
+        void drawPoint(float x, float y);
 
         void drawRect(graphics::Rect &rect);
 

@@ -451,6 +451,11 @@ namespace core
             throw SDLException("drawCircle");
         }
     }
+
+    void Renderer::drawPoint(float x, float y)
+    {
+        SDL_RenderDrawPointF(ren, x, y);
+    }
     void Renderer::setDrawColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a)
     {
         int result = SDL_SetRenderDrawColor(ren, r, g, b, a);
