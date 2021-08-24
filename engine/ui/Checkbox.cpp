@@ -16,6 +16,7 @@ namespace UI
         {
             setTheme(graphics::TextureManager::Instance().getDefaultTheme());
         }
+        setHeight(25);
 
         color = getTheme()->getStyleColor(this, UI::StyleType::Color);
         borderColor = getTheme()->getStyleColor(this, UI::StyleType::BorderColor);
@@ -56,7 +57,7 @@ namespace UI
         rect.x = tx;
         rect.y = ty;
         rect.width = 25;
-        rect.height = 25;
+        rect.height = getHeight();
         int textWidth, textHeight = 0;
         getFont()->size(text, &textWidth, &textHeight);
         rect.width += textWidth;
@@ -74,14 +75,17 @@ namespace UI
         graphics::Rect rect = displayRect();
 
         rect.width = 25;
-        rect.height = 25;
+        rect.height = getHeight();
         pRender->setDrawColor(backgroundColor);
         pRender->fillRect(rect);
         pRender->setDrawColor(borderColor);
         pRender->drawRect(rect);
 
+        int textWidth, textHeight = 0;
+        getFont()->size(text, &textWidth, &textHeight);
+
         if (checked)
-            uiIconText->render(pRender, "\uf00c", color, rect.x, rect.y);
+            uiIconText->render(pRender, "\uf00c", color, rect.x, rect.y + (getHeight() - textHeight) / 2);
         getFont()->render(pRender, text, color, rect.x + 30, rect.y + 5);
     }
 
