@@ -14,7 +14,18 @@ namespace UI
     TabBar::TabBar(Object *parent)
         : UI::Object(parent), currentTab(-1), hoveredTab(-1)
     {
-        btnTexture = graphics::TextureManager::Instance().loadTexture("images/Button01.png");
+        setObjectName("tabbar");
+
+        if (getTheme() == nullptr)
+        {
+            setTheme(graphics::TextureManager::Instance().getDefaultTheme());
+        }
+        btnTexture = graphics::TextureManager::Instance().loadTexture(getTheme()->getStyleText(this, UI::StyleType::BackgroundImage));
+        color = getTheme()->getStyleColor(this, UI::StyleType::Color);
+
+        disabledColor = getTheme()->getStyleColor(this, UI::StyleType::DisabledColor);
+
+        hoverColor = getTheme()->getStyleColor(this, UI::StyleType::HoverColor);
     }
 
     TabBar::~TabBar()
@@ -30,7 +41,7 @@ namespace UI
             displayRect = getParent()->displayRect();
         }
         int index = 0;
-        SDL_Color color = {198, 197, 197, 255};
+        SDL_Color currentColor = {198, 197, 197, 255};
         int tabX = static_cast<int>(displayRect.x) + 16;
         int taby = static_cast<int>(displayRect.y) + 16;
         graphics::Rect tabRect;
@@ -52,39 +63,45 @@ namespace UI
             backgroundRect.height = tabHeight;
 
             pRender->setDrawColor(12, 21, 24, 255);
+            pRender->setDrawColor(getTheme()->getStyleColor(this, UI::StyleType::BackgroundColor));
             pRender->fillRect(backgroundRect);
 
             if (index == hoveredTab)
             {
-                color = {133, 133, 133, 255};
+                currentColor = hoverColor;
             }
             else if (index == currentTab)
             {
-                color = {255, 255, 255, 255};
+                currentColor = color;
             }
             else
             {
-                color = {198, 197, 197, 255};
+                currentColor = disabledColor;
             }
 
-            //left top corner
+            if (btnTexture != nullptr)
+            {
+                //left top corner
 
-            btnTexture->render(pRender, tabX, taby, 9, 9, 0, 0);
-            //left bottom corner
-            btnTexture->render(pRender, tabX, taby + tabHeight - 9, 9, 9, 0, 20);
+                btnTexture->render(pRender, tabX, taby, 9, 9, 0, 0);
+                //left bottom corner
+                btnTexture->render(pRender, tabX, taby + tabHeight - 9, 9, 9, 0, 20);
 
-            btnTexture->render(pRender, tabX + tabWidth + 25 - 9, taby, 9, 9, 174, 0);
-            btnTexture->render(pRender, tabX + tabWidth + 25 - 9, taby + tabHeight - 9, 9, 9, 174, 20);
+                btnTexture->render(pRender, tabX + tabWidth + 25 - 9, taby, 9, 9, 174, 0);
+                btnTexture->render(pRender, tabX + tabWidth + 25 - 9, taby + tabHeight - 9, 9, 9, 174, 20);
+            }
+            else
+            {
+                pRender->setDrawColor(getTheme()->getStyleColor(this, UI::StyleType::BorderColor));
+                pRender->drawRect(backgroundRect);
+            }
 
             //tabX += 10; // offset
             //render title
-            getFont()->render(pRender, title, color, tabX + 10, taby + 5);
+            getFont()->render(pRender, title, currentColor, tabX + 10, taby + 5);
             taby += tabHeight + 10;
             index++;
-        } /*
-    tabBarRect.width = getWidth() - 5;
-    pRender->setDrawColor(255, 255, 255, 255);
-    pRender->drawRect(tabBarRect);*/
+        }
 
         pRender->setDrawColor(93, 103, 108, 255);
         utils::Vector2 start(displayRect.x + 183, displayRect.y + 16);

@@ -41,6 +41,9 @@ namespace UI
         int currentTab;
         int hoveredTab;
         std::shared_ptr<graphics::Texture> btnTexture;
+        SDL_Color hoverColor;
+        SDL_Color disabledColor;
+        SDL_Color color;
     };
 
 } /* namespace UI */
