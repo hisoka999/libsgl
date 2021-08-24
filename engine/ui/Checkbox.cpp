@@ -73,15 +73,15 @@ namespace UI
 
         graphics::Rect rect = displayRect();
 
-        if (checked)
-            uiIconText->render(pRender, "\uf00c", color, rect.x, rect.y);
-
         rect.width = 25;
         rect.height = 25;
         pRender->setDrawColor(backgroundColor);
         pRender->fillRect(rect);
         pRender->setDrawColor(borderColor);
         pRender->drawRect(rect);
+
+        if (checked)
+            uiIconText->render(pRender, "\uf00c", color, rect.x, rect.y);
         getFont()->render(pRender, text, color, rect.x + 30, rect.y + 5);
     }
 
