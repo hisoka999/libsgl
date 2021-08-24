@@ -8,15 +8,14 @@
 #include <memory>
 #include <string>
 
-enum class FullScreenMode
-{
-    Fullscreen = 0,
-    FullscreenDesktop = 1,
-    Windowed = 2
-};
 namespace core
 {
-
+    enum class FullScreenMode
+    {
+        Fullscreen = 0,
+        FullscreenDesktop = 1,
+        Windowed = 2
+    };
     class GameWindow
     {
     public:
