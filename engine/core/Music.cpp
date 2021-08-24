@@ -8,28 +8,29 @@
 #include <engine/core/Music.h>
 #include <stdexcept>
 
-namespace core {
-
-Music::Music()
-    : _data(nullptr)
+namespace core
 {
-}
 
-Music::~Music()
-{
-    Mix_FreeMusic(_data);
-    _data = nullptr;
-}
+    Music::Music()
+        : _data(nullptr)
+    {
+    }
+
+    Music::~Music()
+    {
+        Mix_FreeMusic(_data);
+        _data = nullptr;
+    }
 
 } /* namespace core */
 
 void core::Music::loadMusic(std::string filename)
 {
     _data = Mix_LoadMUS(filename.c_str());
-    if (_data == nullptr) {
+    if (_data == nullptr)
+    {
         throw std::runtime_error(
-            std::string("failed to load music: ")
-            + std::string(Mix_GetError()));
+            std::string("failed to load music: ") + std::string(Mix_GetError()));
     }
 }
 
@@ -51,6 +52,11 @@ void core::Music::resume()
 void core::Music::stop()
 {
     Mix_HaltMusic();
+}
+
+void core::Music::setVolume(const int volume)
+{
+    Mix_VolumeMusic(volume);
 }
 
 bool core::Music::isMusicPlaying()

@@ -11,23 +11,26 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_mixer.h>
 
-namespace core {
+namespace core
+{
 
-class Music {
-public:
-	Music();
-	virtual ~Music();
-	void loadMusic(std::string filename);
-	void play(int repeat);
-	void pause();
-	void resume();
-	void stop();
+	class Music
+	{
+	public:
+		Music();
+		virtual ~Music();
+		void loadMusic(std::string filename);
+		void play(int repeat);
+		void pause();
+		void resume();
+		void stop();
+		void setVolume(const int volume);
 
-	bool isMusicPlaying();
+		bool isMusicPlaying();
 
-private:
-	Mix_Music* _data;
-};
+	private:
+		Mix_Music *_data;
+	};
 
 } /* namespace core */
 
