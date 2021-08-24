@@ -20,7 +20,10 @@ namespace UI
         {
             setTheme(graphics::TextureManager::Instance().getDefaultTheme());
         }
-        btnTexture = graphics::TextureManager::Instance().loadTexture(getTheme()->getStyleText(this, UI::StyleType::BackgroundImage));
+        auto textureName = getTheme()->getStyleText(this, UI::StyleType::BackgroundImage);
+        btnTexture = nullptr;
+        if (!textureName.empty())
+            btnTexture = graphics::TextureManager::Instance().loadTexture(textureName);
         color = getTheme()->getStyleColor(this, UI::StyleType::Color);
 
         disabledColor = getTheme()->getStyleColor(this, UI::StyleType::DisabledColor);
