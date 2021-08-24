@@ -7,11 +7,20 @@ namespace UI
     Checkbox::Checkbox(Object *parent)
         : UI::Object(parent)
     {
-        uiIconText = graphics::TextureManager::Instance().loadFont("fonts/fa-solid-900.ttf", 20);
+        setObjectName("checkbox");
+
         //    textCore = new graphics::Text();
         //    textCore->openFont("arial.ttf", 12);
         checked = false;
-        color = {255, 255, 255, 255};
+        if (getTheme() == nullptr)
+        {
+            setTheme(graphics::TextureManager::Instance().getDefaultTheme());
+        }
+
+        color = getTheme()->getStyleColor(this, UI::StyleType::Color);
+        borderColor = getTheme()->getStyleColor(this, UI::StyleType::BorderColor);
+        backgroundColor = getTheme()->getStyleColor(this, UI::StyleType::BackgroundColor);
+        uiIconText = graphics::TextureManager::Instance().loadFont(getTheme()->getStyleText(this, UI::StyleType::IconFontName), getTheme()->getStyleInt(this, UI::StyleType::IconFontSize));
     }
 
     Checkbox::~Checkbox()
@@ -62,25 +71,18 @@ namespace UI
     void Checkbox::render(core::Renderer *pRender)
     {
 
-        int tx = getX();
-        int ty = getY();
-        if (this->getParent())
-        {
-            tx += this->getParent()->getX();
-            ty += this->getParent()->getY();
-        }
+        graphics::Rect rect = displayRect();
 
         if (checked)
-            uiIconText->render(pRender, "\uf00c", color, tx, ty);
+            uiIconText->render(pRender, "\uf00c", color, rect.x, rect.y);
 
-        graphics::Rect rect;
-        rect.x = tx;
-        rect.y = ty;
         rect.width = 25;
         rect.height = 25;
-
+        pRender->setDrawColor(backgroundColor);
+        pRender->fillRect(rect);
+        pRender->setDrawColor(borderColor);
         pRender->drawRect(rect);
-        getFont()->render(pRender, text, color, tx + 30, ty + 5);
+        getFont()->render(pRender, text, color, rect.x + 30, rect.y + 5);
     }
 
 } // namespace UI

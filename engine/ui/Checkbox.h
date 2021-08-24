@@ -29,6 +29,8 @@ namespace UI
         std::string text;
         std::shared_ptr<graphics::Text> uiIconText;
         SDL_Color color;
+        SDL_Color borderColor;
+        SDL_Color backgroundColor;
     };
 
 } // namespace UI

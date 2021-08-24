@@ -25,6 +25,10 @@ namespace UI
             renderOrder = 99;
 
             elementFunction = nullptr;
+            if (getTheme() == nullptr)
+            {
+                setTheme(graphics::TextureManager::Instance().getDefaultTheme());
+            }
         }
         /** Default destructor */
         virtual ~ComboBox()
@@ -161,7 +165,7 @@ namespace UI
         {
             if (elements.size() > 0)
                 return elements[selection];
-            return nullptr;
+            return elements.at(0);
         }
 
     protected:
