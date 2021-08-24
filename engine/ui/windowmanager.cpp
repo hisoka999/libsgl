@@ -41,10 +41,18 @@ namespace UI
 
     void WindowManager::handleInput(core::Input *inp)
     {
+
         for (auto c : containers)
         {
-            c->handleEvents(inp);
+            Window *win = dynamic_cast<Window *>(c);
+            if (win == nullptr)
+                c->handleEvents(inp);
         };
+        auto win = lastActiveWindow();
+        if (win != nullptr)
+        {
+            win->handleEvents(inp);
+        }
     }
 
     bool WindowManager::isWindowOpen()
@@ -58,6 +66,20 @@ namespace UI
                 return true;
         }
         return false;
+    }
+
+    Window *WindowManager::lastActiveWindow()
+    {
+        Window *result = nullptr;
+        for (auto container : containers)
+        {
+            Window *win = dynamic_cast<Window *>(container);
+            if (win == nullptr)
+                continue;
+            if (win->getVisible())
+                result = win;
+        }
+        return result;
     }
 
 } // namespace UI
