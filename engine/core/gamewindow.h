@@ -8,6 +8,12 @@
 #include <memory>
 #include <string>
 
+enum class FullScreenMode
+{
+    Fullscreen = 0,
+    FullscreenDesktop = 1,
+    Windowed = 2
+};
 namespace core
 {
 
@@ -28,6 +34,7 @@ namespace core
         int getWidth() const;
         int getHeight() const;
         std::shared_ptr<utils::IniBase> getSettings() const;
+        void setFullScreen(FullScreenMode mode);
 
     protected:
     private:

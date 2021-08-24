@@ -35,7 +35,7 @@ namespace core
             filestream << "[Base]" << std::endl;
             filestream << "Width=" << std::to_string(pWidth) << std::endl;
             filestream << "Height=" << std::to_string(pHeight) << std::endl;
-            filestream << "Fullscreen=FALSE" << std::endl;
+            filestream << "Fullscreen=0" << std::endl;
 
             std::cout << path << " created!" << std::endl;
             filestream.close();
@@ -79,12 +79,8 @@ namespace core
             throw SDLException(
                 "SDL_mixer could not initialize! SDL_mixer Error:" + std::string(Mix_GetError()));
         }
-
-        if (settings->getValueB("Base", "Fullscreen"))
-        {
-            SDL_SetWindowFullscreen(win, SDL_WINDOW_FULLSCREEN);
-        }
-
+        FullScreenMode fullscreen = (FullScreenMode)settings->getValueI("Base", "Fullscreen");
+        setFullScreen(fullscreen);
         return 0;
     }
 
@@ -122,6 +118,22 @@ namespace core
     std::shared_ptr<utils::IniBase> GameWindow::getSettings() const
     {
         return settings;
+    }
+
+    void GameWindow::setFullScreen(FullScreenMode mode)
+    {
+        switch (mode)
+        {
+        case FullScreenMode::Fullscreen:
+            SDL_SetWindowFullscreen(win, SDL_WINDOW_FULLSCREEN);
+            break;
+        case FullScreenMode::FullscreenDesktop:
+            SDL_SetWindowFullscreen(win, SDL_WINDOW_FULLSCREEN_DESKTOP);
+            break;
+        default:
+            SDL_SetWindowFullscreen(win, 0);
+            break;
+        }
     }
 
 } // namespace core
