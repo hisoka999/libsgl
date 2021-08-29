@@ -80,9 +80,9 @@ namespace core
         if (nextScene != nullptr)
         {
             currentScene = nextSceneName;
-            nextSceneName = "";
             addScene(currentScene, nextScene);
-            nextScene == nullptr;
+            nextScene = nullptr;
+            nextSceneName = "";
         }
 
         scenes[currentScene]->fixedUpdate(delta);
