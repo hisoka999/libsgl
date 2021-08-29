@@ -63,9 +63,9 @@ namespace UI
     {
         if (pInput->isMouseButtonPressed(SDL_BUTTON_LEFT))
         {
-            if (displayRect().intersects(pInput->getMousePostion()))
+            if (eventRect().intersects(pInput->getMousePostion()))
             {
-                SDL_Rect rect = displayRect().sdlRect();
+                SDL_Rect rect = eventRect().sdlRect();
                 SDL_SetTextInputRect(&rect);
                 SDL_StartTextInput();
                 isSelected = true;
