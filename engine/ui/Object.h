@@ -103,6 +103,14 @@ namespace UI
                 }
             }
         }
+        void disconnect(std::string const &event)
+        {
+            auto rng = _callbacks.equal_range(event);
+            for (auto it = rng.first; it != rng.second; ++it)
+            {
+                _callbacks.erase(it);
+            }
+        }
 
         graphics::Text *getFont();
         void setFont(graphics::Text *pFont);

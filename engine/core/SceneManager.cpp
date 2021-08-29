@@ -11,7 +11,7 @@
 namespace core
 {
 
-    SceneManager::SceneManager()
+    SceneManager::SceneManager() : nextScene(nullptr)
     {
         // TODO Auto-generated constructor stub
     }
@@ -77,6 +77,21 @@ namespace core
     {
         if (currentScene.empty())
             return;
+        if (nextScene != nullptr)
+        {
+            currentScene = nextSceneName;
+            nextSceneName = "";
+            addScene(currentScene, nextScene);
+            nextScene == nullptr;
+        }
+
         scenes[currentScene]->fixedUpdate(delta);
     }
+
+    void SceneManager::changeScene(const std::string &name, const std::shared_ptr<Scene> &scene)
+    {
+        nextSceneName = name;
+        nextScene = scene;
+    }
+
 } /* namespace core */

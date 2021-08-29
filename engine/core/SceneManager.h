@@ -36,7 +36,8 @@ namespace core
         const std::shared_ptr<Scene> &getScene(std::string name);
         void update();
         const std::shared_ptr<Scene> &getCurrentScene();
-        virtual void fixedUpdate(uint32_t delta);
+        void fixedUpdate(uint32_t delta);
+        void changeScene(const std::string &name, const std::shared_ptr<Scene> &scene);
 
     private:
         SceneManager();
@@ -44,6 +45,8 @@ namespace core
 
         std::map<std::string, std::shared_ptr<Scene>> scenes;
         std::string currentScene;
+        std::string nextSceneName;
+        std::shared_ptr<Scene> nextScene;
     };
 
 } /* namespace core */
