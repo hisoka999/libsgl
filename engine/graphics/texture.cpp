@@ -14,13 +14,12 @@ namespace graphics
 
     Texture::Texture(core::Renderer *pRenderer, const int pWidth, const int pHeight)
     {
-        surface = SDL_CreateRGBSurfaceWithFormat(0, pWidth, pHeight, 32, SDL_PIXELFORMAT_RGBA32);
-        // tex = SDL_CreateTexture(pRenderer->getRenderer(), SDL_PIXELFORMAT_RGBA8888,
-        //                         SDL_TEXTUREACCESS_TARGET, pWidth, pHeight);
-        tex = SDL_CreateTextureFromSurface(pRenderer->getRenderer(), surface);
+        tex = SDL_CreateTexture(pRenderer->getRenderer(), SDL_PIXELFORMAT_RGBA8888,
+                                SDL_TEXTUREACCESS_TARGET, pWidth, pHeight);
 
         width = pWidth;
         height = pHeight;
+        surface = nullptr;
 
         if (tex == nullptr)
         {

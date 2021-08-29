@@ -83,19 +83,16 @@ namespace UI
 
             renderArea = new graphics::Texture(pRender, scrollWidth, scrollHeight);
 
-            // SDL_SetTextureBlendMode(renderArea->getSDLTexture(),
-            //                         SDL_BLENDMODE_BLEND);
-
-            SDL_Color alphaColor = {255, 0, 255, 255};
-            graphics::Rect renderRect = {0, 0, scrollWidth, scrollHeight};
-            pRender->setDrawColor(alphaColor);
-
             pRender->setRenderTarget(renderArea->getSDLTexture());
-            pRender->fillRect(renderRect);
+
+            renderArea->setBlendMode(SDL_BLENDMODE_BLEND);
+            //miniMap->setColorKey(255, 0, 255);
+            pRender->setDrawColor(0, 0, 0, 0);
+            pRender->clear();
+
             std::for_each(objects.begin(), objects.end(), [&](const std::shared_ptr<Object> o)
                           { o->render(pRender); });
             pRender->setRenderTarget(nullptr);
-            renderArea->setColorKey(255, 0, 255);
         }
         graphics::Rect srcRect;
         graphics::Rect destRect;
