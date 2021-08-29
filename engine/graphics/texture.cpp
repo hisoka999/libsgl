@@ -21,7 +21,7 @@ namespace graphics
 
         width = pWidth;
         height = pHeight;
-        surface = nullptr;
+
         if (tex == nullptr)
         {
             throw SDLException("SDL_CreateTexture");
