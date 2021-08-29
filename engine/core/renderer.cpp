@@ -510,5 +510,13 @@ namespace core
         SDL_RenderDrawLineF(ren, start.getX(), start.getY(), end.getX(), end.getY());
     }
 
+    void Renderer::updateViewportSizeByWindow(const GameWindow *pWin)
+    {
+        auto viewPort = getViewPort();
+        viewPort.width = pWin->getWidth();
+        viewPort.height = pWin->getHeight();
+        setViewPort(viewPort);
+    }
+
 }
 // namespace core

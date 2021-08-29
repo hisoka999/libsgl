@@ -21,7 +21,7 @@ namespace graphics
         if (markAsDefault)
             defaultTheme = theme;
 
-        return theme;
+        return themeMaps[filename];
     }
 
     TextureManager::~TextureManager()

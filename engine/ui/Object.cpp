@@ -16,7 +16,7 @@ namespace UI
         hint = nullptr;
     }
     Object::Object(Object *parent, int pWidth, int pHeight)
-        : parent(parent), width(pWidth), height(pHeight), x(0), y(0), renderOrder(0)
+        : renderOrder(0), parent(parent), x(0), y(0), width(pWidth), height(pHeight)
     {
 
         font = nullptr;

@@ -34,6 +34,7 @@ namespace core
         int getHeight() const;
         std::shared_ptr<utils::IniBase> getSettings() const;
         void setFullScreen(FullScreenMode mode);
+        void setWindowSize(int width, int height);
 
     protected:
     private:

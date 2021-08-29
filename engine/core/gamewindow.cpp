@@ -136,4 +136,11 @@ namespace core
         }
     }
 
+    void GameWindow::setWindowSize(int width, int height)
+    {
+        SDL_SetWindowSize(win, width, height);
+        this->width = width;
+        this->height = height;
+    }
+
 } // namespace core

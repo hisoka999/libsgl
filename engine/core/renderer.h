@@ -53,6 +53,7 @@ namespace core
         void setDrawColor(const SDL_Color &color);
 
         void drawLine(utils::Vector2 &start, utils::Vector2 &end);
+        void updateViewportSizeByWindow(const GameWindow *pWin);
 
     protected:
     private:
