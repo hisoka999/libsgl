@@ -30,6 +30,8 @@ namespace UI
         graphics::Texture *renderArea;
         bool buttonPressed;
         std::shared_ptr<graphics::Text> uiText;
+        SDL_Color backgroundColor;
+        SDL_Color foregroundColor;
     };
 
 } // namespace UI

@@ -13,11 +13,18 @@ namespace UI
                                                                                        0),
           scrollPosY(0), buttonPressed(false)
     {
+        setObjectName("scrollarea");
         renderRect.x = 0;
         renderRect.y = 0;
         renderRect.width = pWidth;
         renderRect.height = pHeight;
         renderArea = nullptr;
+        if (getTheme() == nullptr)
+        {
+            setTheme(graphics::TextureManager::Instance().getDefaultTheme());
+        }
+        backgroundColor = getTheme()->getStyleColor(this, UI::StyleType::BackgroundColor);
+        foregroundColor = getTheme()->getStyleColor(this, UI::StyleType::ForgroundColor);
 
         uiText = graphics::TextureManager::Instance().loadFont("fonts/fa-solid-900.ttf", 12);
     }
@@ -85,13 +92,13 @@ namespace UI
 
             pRender->setRenderTarget(renderArea->getSDLTexture());
 
-            renderArea->setBlendMode(SDL_BLENDMODE_BLEND);
-            //miniMap->setColorKey(255, 0, 255);
-            pRender->setDrawColor(0, 0, 0, 0);
+            pRender->setDrawColor(backgroundColor);
             pRender->clear();
 
-            std::for_each(objects.begin(), objects.end(), [&](const std::shared_ptr<Object> o)
-                          { o->render(pRender); });
+            for (auto &o : objects)
+            {
+                o->render(pRender);
+            }
             pRender->setRenderTarget(nullptr);
         }
         graphics::Rect srcRect;
@@ -125,6 +132,7 @@ namespace UI
         renderArea->render(pRender, srcRect, destRect);
 
         pRender->setDrawColor(93, 103, 108, 255);
+        pRender->setDrawColor(foregroundColor);
         graphics::Rect borderRect;
         borderRect.x = parentRect.x + getX();
         borderRect.y = parentRect.y + getY();
@@ -143,7 +151,7 @@ namespace UI
             scrollbarRect.height = renderRect.height - 2;
 
             pRender->drawRect(scrollbarRect);
-            SDL_Color uiColor = {93, 103, 108, 255};
+            SDL_Color uiColor = foregroundColor;
             uiText->render(pRender, "\uf0d7", uiColor, scrollbarRect.x + 2, scrollbarRect.y + scrollbarRect.height - 14);
 
             uiText->render(pRender, "\uf0d8", uiColor, scrollbarRect.x + 2, scrollbarRect.y + 2);
