@@ -13,9 +13,14 @@ namespace graphics
     {
         return textureName;
     }
-    void TextureMap::render(const std::string &subTexture, const graphics::Rect &destRect, core::Renderer *renderer)
+    void TextureMap::render(const std::string_view &subTexture, const graphics::Rect &destRect, core::Renderer *renderer)
     {
-        texture->render(renderer, subTextures[subTexture], destRect);
+        texture->render(renderer, subTextures[hasher(subTexture)], destRect);
+    }
+
+    void TextureMap::render(const size_t subTextureHash, const graphics::Rect &destRect, core::Renderer *renderer)
+    {
+        texture->render(renderer, subTextures[subTextureHash], destRect);
     }
     void TextureMap::loadFromFile(const std::string &fileName)
     {
@@ -48,10 +53,15 @@ namespace graphics
             textureData.width = subTexObject->getFloatValue("width");
             textureData.height = subTexObject->getFloatValue("height");
             auto subTextureName = subTexObject->getStringValue("name");
-            subTextures[subTextureName] = textureData;
+            subTextures[hasher(subTextureName)] = textureData;
         }
     }
-    const graphics::Rect TextureMap::getSourceRect(const std::string &subTexture)
+    const graphics::Rect &TextureMap::getSourceRect(const std::string_view &subTexture)
+    {
+        return subTextures[hasher(subTexture)];
+    }
+
+    const graphics::Rect &TextureMap::getSourceRect(const size_t subTexture)
     {
         return subTextures[subTexture];
     }

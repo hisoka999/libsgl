@@ -16,6 +16,7 @@ namespace graphics
         /** Default constructor */
         Texture();
         Texture(core::Renderer *pRenderer, const int pWidth, const int pHeight);
+        Texture(core::Renderer *pRenderer, const int pWidth, const int pHeight, SDL_TextureAccess targetAccess);
         /** Default destructor */
         virtual ~Texture();
         void loadTexture(core::Renderer *ren, std::string filename);
@@ -30,10 +31,14 @@ namespace graphics
         void setAlphaMod(uint8_t alpha);
         int getWidth();
         int getHeight();
-        SDL_Texture *getSDLTexture()
-        {
-            return tex;
-        }
+        SDL_Texture *getSDLTexture();
+        //Pixel manipulators
+        bool lockTexture();
+        bool unlockTexture();
+        void *getPixels();
+        void copyPixels(void *pixels);
+        int getPitch();
+        Uint32 getPixel32(unsigned int x, unsigned int y);
 
     protected:
     private:
@@ -41,6 +46,8 @@ namespace graphics
         SDL_Surface *surface;
         int width;
         int height;
+        void *pixels;
+        int pitch;
     };
 
 } // namespace graphics

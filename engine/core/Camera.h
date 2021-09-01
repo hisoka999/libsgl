@@ -13,25 +13,25 @@
 namespace core
 {
 
-class Camera
-{
-public:
-    Camera(graphics::Rect &viewPort);
-    virtual ~Camera();
+    class Camera
+    {
+    public:
+        Camera(graphics::Rect &viewPort);
+        virtual ~Camera();
 
-    void move(float pX, float pY);
-    void reset();
+        void move(float pX, float pY);
+        void reset();
 
-    float getX();
-    float getY();
-    float getWidth();
-    float getHeight();
+        float getX() const;
+        float getY() const;
+        float getWidth() const;
+        float getHeight() const;
 
-    graphics::Rect getViewPortRect();
+        const graphics::Rect &getViewPortRect() const;
 
-private:
-    graphics::Rect viewPort;
-};
+    private:
+        graphics::Rect viewPort;
+    };
 
 } /* namespace core */
 

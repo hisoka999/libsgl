@@ -27,6 +27,21 @@ namespace graphics
         }
     }
 
+    Texture::Texture(core::Renderer *pRenderer, const int pWidth, const int pHeight, SDL_TextureAccess targetAccess)
+    {
+        tex = SDL_CreateTexture(pRenderer->getRenderer(), SDL_PIXELFORMAT_RGBA8888,
+                                targetAccess, pWidth, pHeight);
+
+        width = pWidth;
+        height = pHeight;
+        surface = nullptr;
+
+        if (tex == nullptr)
+        {
+            throw SDLException("SDL_CreateTexture");
+        }
+    }
+
     void Texture::loadTexture(core::Renderer *ren, std::string filename)
     {
         //tex = IMG_LoadTexture(ren->getRenderer(), filename.c_str());
@@ -120,6 +135,84 @@ namespace graphics
     int Texture::getHeight()
     {
         return height;
+    }
+
+    SDL_Texture *Texture::getSDLTexture()
+    {
+        return tex;
+    }
+
+    bool Texture::lockTexture()
+    {
+        bool success = true;
+
+        //Texture is already locked
+        if (pixels != nullptr)
+        {
+            printf("Texture is already locked!\n");
+            success = false;
+        }
+        //Lock texture
+        else
+        {
+            if (SDL_LockTexture(tex, nullptr, &pixels, &pitch) != 0)
+            {
+                printf("Unable to lock texture! %s\n", SDL_GetError());
+                success = false;
+            }
+        }
+
+        return success;
+    }
+
+    bool Texture::unlockTexture()
+    {
+        bool success = true;
+
+        //Texture is not locked
+        if (pixels == nullptr)
+        {
+            printf("Texture is not locked!\n");
+            success = false;
+        }
+        //Unlock texture
+        else
+        {
+            SDL_UnlockTexture(tex);
+            pixels = nullptr;
+            pitch = 0;
+        }
+
+        return success;
+    }
+
+    void *Texture::getPixels()
+    {
+        return pixels;
+    }
+
+    void Texture::copyPixels(void *pixels)
+    {
+        //Texture is locked
+        if (pixels != NULL)
+        {
+            //Copy to locked pixels
+            memcpy(this->pixels, pixels, pitch * height);
+        }
+    }
+
+    int Texture::getPitch()
+    {
+        return pitch;
+    }
+
+    Uint32 Texture::getPixel32(unsigned int x, unsigned int y)
+    {
+        //Convert the pixels to 32 bit
+        Uint32 *_pixels = (Uint32 *)this->pixels;
+
+        //Get the pixel requested
+        return _pixels[(y * (pitch / 4)) + x];
     }
     Texture::~Texture()
     {

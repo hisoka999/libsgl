@@ -26,12 +26,12 @@ namespace core
         Uint32 getTickCount();
         float getTimeDelta();
         void setRenderTarget(SDL_Texture *pTexture);
-        graphics::Rect getViewPort();
-        void setViewPort(graphics::Rect &rect);
+        const graphics::Rect &getViewPort();
+        void setViewPort(const graphics::Rect &rect);
         void setMainCamera(Camera *pCamera);
-        Camera *getMainCamera();
+        const Camera *getMainCamera() const;
         void calcDelta();
-        float getZoomFactor();
+        float getZoomFactor() const;
         void setZoomFactor(float factor);
         void setDrawBlendMode(SDL_BlendMode blendMode);
 
@@ -45,9 +45,9 @@ namespace core
         void drawCircle(int x, int y, int rad, SDL_Color color);
         void drawPoint(float x, float y);
 
-        void drawRect(graphics::Rect &rect);
+        void drawRect(const graphics::Rect &rect);
 
-        void fillRect(graphics::Rect &rect);
+        void fillRect(const graphics::Rect &rect);
 
         void setDrawColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a);
         void setDrawColor(const SDL_Color &color);

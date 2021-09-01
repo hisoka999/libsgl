@@ -409,20 +409,20 @@ namespace core
         return delta;
     }
 
-    graphics::Rect Renderer::getViewPort()
+    const graphics::Rect &Renderer::getViewPort()
     {
         if (viewPort.width == 0.0f)
         {
-            SDL_Rect *rect = nullptr;
-            SDL_RenderGetViewport(ren, rect);
-            viewPort.width = rect->w;
-            viewPort.height = rect->h;
-            viewPort.x = rect->x;
-            viewPort.y = rect->y;
+            SDL_Rect rect;
+            SDL_RenderGetViewport(ren, &rect);
+            viewPort.width = rect.w;
+            viewPort.height = rect.h;
+            viewPort.x = rect.x;
+            viewPort.y = rect.y;
         }
         return viewPort;
     }
-    void Renderer::setViewPort(graphics::Rect &rect)
+    void Renderer::setViewPort(const graphics::Rect &rect)
     {
         viewPort = rect;
         SDL_Rect r = viewPort.sdlRect();
@@ -437,7 +437,7 @@ namespace core
     {
         camera = pCamera;
     }
-    Camera *Renderer::getMainCamera()
+    const Camera *Renderer::getMainCamera() const
     {
         return camera;
     }
@@ -470,7 +470,7 @@ namespace core
     {
         setDrawColor(color.r, color.g, color.b, color.a);
     }
-    void Renderer::drawRect(graphics::Rect &rect)
+    void Renderer::drawRect(const graphics::Rect &rect)
     {
         SDL_FRect r = rect.sdlFRect();
         int result = SDL_RenderDrawRectF(ren, &r);
@@ -481,7 +481,7 @@ namespace core
         }
     }
 
-    void Renderer::fillRect(graphics::Rect &rect)
+    void Renderer::fillRect(const graphics::Rect &rect)
     {
         SDL_FRect r = rect.sdlFRect();
         int result = SDL_RenderFillRectF(ren, &r);
@@ -491,7 +491,7 @@ namespace core
             throw SDLException("fillRect");
         }
     }
-    float Renderer::getZoomFactor()
+    float Renderer::getZoomFactor() const
     {
         return zoomFactor;
     }
