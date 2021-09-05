@@ -39,6 +39,7 @@ namespace graphics
         void copyPixels(void *pixels);
         int getPitch();
         Uint32 getPixel32(unsigned int x, unsigned int y);
+        void setPixel(int x, int y, SDL_Color color);
 
     protected:
     private:
@@ -48,6 +49,7 @@ namespace graphics
         int height;
         void *pixels;
         int pitch;
+        SDL_PixelFormat *pixelFormat;
     };
 
 } // namespace graphics

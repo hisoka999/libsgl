@@ -49,7 +49,7 @@ namespace graphics
             else
                 return false;
         }
-        bool intersects(const utils::Vector2 &v)
+        bool intersects(const utils::Vector2 &v) const
         {
             if (x <= v.getX() && y <= v.getY() && x + width >= v.getX() && y + height >= v.getY())
                 return true;

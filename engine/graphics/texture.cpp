@@ -10,6 +10,8 @@ namespace graphics
     {
         tex = nullptr;
         surface = nullptr;
+        pixels = nullptr;
+        pixelFormat = nullptr;
     }
 
     Texture::Texture(core::Renderer *pRenderer, const int pWidth, const int pHeight)
@@ -20,6 +22,8 @@ namespace graphics
         width = pWidth;
         height = pHeight;
         surface = nullptr;
+        pixels = nullptr;
+        pixelFormat = nullptr;
 
         if (tex == nullptr)
         {
@@ -35,11 +39,15 @@ namespace graphics
         width = pWidth;
         height = pHeight;
         surface = nullptr;
+        pixels = nullptr;
+        Uint32 format;
 
         if (tex == nullptr)
         {
             throw SDLException("SDL_CreateTexture");
         }
+        SDL_QueryTexture(tex, &format, nullptr, &width, &height);
+        pixelFormat = SDL_AllocFormat(format);
     }
 
     void Texture::loadTexture(core::Renderer *ren, std::string filename)
@@ -214,12 +222,22 @@ namespace graphics
         //Get the pixel requested
         return _pixels[(y * (pitch / 4)) + x];
     }
+
+    void Texture::setPixel(int x, int y, SDL_Color color)
+    {
+
+        Uint32 *_pixels = (Uint32 *)this->pixels;
+        Uint32 value = SDL_MapRGBA(pixelFormat, color.r, color.g, color.b, color.a);
+        _pixels[(y * (pitch / 4)) + x] = value;
+    }
     Texture::~Texture()
     {
         SDL_DestroyTexture(tex);
         if (surface != nullptr)
             SDL_FreeSurface(surface);
         surface = nullptr;
+        if (pixelFormat != nullptr)
+            SDL_FreeFormat(pixelFormat);
     }
 
     void Texture::setColorKey(uint8_t r, uint8_t g, uint8_t b)

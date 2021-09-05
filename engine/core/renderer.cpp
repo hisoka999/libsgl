@@ -437,7 +437,7 @@ namespace core
     {
         camera = pCamera;
     }
-    const Camera *Renderer::getMainCamera() const
+    Camera *Renderer::getMainCamera()
     {
         return camera;
     }

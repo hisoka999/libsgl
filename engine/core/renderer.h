@@ -29,7 +29,7 @@ namespace core
         const graphics::Rect &getViewPort();
         void setViewPort(const graphics::Rect &rect);
         void setMainCamera(Camera *pCamera);
-        const Camera *getMainCamera() const;
+        Camera *getMainCamera();
         void calcDelta();
         float getZoomFactor() const;
         void setZoomFactor(float factor);
