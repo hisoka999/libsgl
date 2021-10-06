@@ -6,14 +6,27 @@
  */
 
 #include "engine/ui/Label.h"
-
+#include "engine/graphics/TextureManager.h"
 namespace UI
 {
 
     Label::Label(const std::string &text, Object *parent)
-        : UI::Object(parent), text(text)
+        : UI::Object(parent)
     {
+        setObjectName("label");
+        if (getTheme() == nullptr)
+        {
+            setTheme(graphics::TextureManager::Instance().getDefaultTheme());
+        }
         color = {255, 255, 255, 255};
+        color = getTheme()->getStyleColor(this, UI::StyleType::Color);
+        std::string fontName = getTheme()->getStyleText(this, UI::StyleType::FontName);
+        int fontSize = getTheme()->getStyleInt(this, UI::StyleType::FontSize);
+        if (!fontName.empty())
+        {
+            setFont(fontName, fontSize);
+        }
+        setText(text);
     }
     Label::Label(Object *parent)
         : UI::Object(parent), text("")
