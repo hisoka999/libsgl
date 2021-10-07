@@ -19,22 +19,22 @@ namespace utils
             uint16_t day;
 
         public:
-            Date(uint16_t year, uint16_t month, uint16_t day);
+            Date(const uint16_t year, const uint16_t month, const uint16_t day);
             ~Date();
             void addDay(uint16_t value);
 
             std::string format();
 
-            uint16_t getYear();
-            uint16_t getMonth();
-            uint16_t getDay();
-            uint64_t toNumber();
+            const uint16_t getYear() const;
+            const uint16_t getMonth() const;
+            const uint16_t getDay() const;
+            const uint64_t toNumber() const;
 
-            bool operator==(Date &date);
-            bool operator>=(Date &date);
-            bool operator>(Date &date);
-            bool operator<=(Date &date);
-            bool operator<(Date &date);
+            bool operator==(const Date &date);
+            bool operator>=(const Date &date);
+            bool operator>(const Date &date);
+            bool operator<=(const Date &date);
+            bool operator<(const Date &date);
         };
 
     } // namespace time

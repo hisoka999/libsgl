@@ -25,7 +25,7 @@ namespace utils
         {
             return year % 400 == 0 || (year % 4 == 0 && year % 100 != 0);
         }
-        Date::Date(uint16_t year, uint16_t month, uint16_t day)
+        Date::Date(const uint16_t year, const uint16_t month, const uint16_t day)
             : year(year), month(month), day(day)
         {
         }
@@ -54,48 +54,48 @@ namespace utils
             return utils::string_format("%.2i.%.2i.%i", day, month + 1, year);
         }
 
-        uint16_t Date::getYear()
+        const uint16_t Date::getYear() const
         {
             return year;
         }
 
-        uint16_t Date::getMonth()
+        const uint16_t Date::getMonth() const
         {
             return month;
         }
 
-        uint16_t Date::getDay()
+        const uint16_t Date::getDay() const
         {
             return day;
         }
 
-        uint64_t Date::toNumber()
+        const uint64_t Date::toNumber() const
         {
             return (year * 365) + (month * 12) + day;
         }
 
-        bool Date::operator==(Date &date)
+        bool Date::operator==(const Date &date)
         {
             return year == date.getYear() && month == date.getMonth() && day == date.getDay();
         }
 
-        bool Date::operator>=(Date &date)
+        bool Date::operator>=(const Date &date)
         {
             return year >= date.getYear() && month >= date.getMonth() && day >= date.getDay();
         }
 
-        bool Date::operator>(Date &date)
+        bool Date::operator>(const Date &date)
         {
 
             return toNumber() > date.toNumber();
         }
 
-        bool Date::operator<=(Date &date)
+        bool Date::operator<=(const Date &date)
         {
             return year <= date.getYear() && month <= date.getMonth() && day <= date.getDay();
         }
 
-        bool Date::operator<(Date &date)
+        bool Date::operator<(const Date &date)
         {
             return toNumber() < date.toNumber();
         }
