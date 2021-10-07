@@ -28,6 +28,13 @@ namespace utils
             uint16_t getYear();
             uint16_t getMonth();
             uint16_t getDay();
+            uint64_t toNumber();
+
+            bool operator==(Date &date);
+            bool operator>=(Date &date);
+            bool operator>(Date &date);
+            bool operator<=(Date &date);
+            bool operator<(Date &date);
         };
 
     } // namespace time

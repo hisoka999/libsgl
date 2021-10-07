@@ -68,5 +68,36 @@ namespace utils
         {
             return day;
         }
+
+        uint64_t Date::toNumber()
+        {
+            return (year * 365) + (month * 12) + day;
+        }
+
+        bool Date::operator==(Date &date)
+        {
+            return year == date.getYear() && month == date.getMonth() && day == date.getDay();
+        }
+
+        bool Date::operator>=(Date &date)
+        {
+            return year >= date.getYear() && month >= date.getMonth() && day >= date.getDay();
+        }
+
+        bool Date::operator>(Date &date)
+        {
+
+            return toNumber() > date.toNumber();
+        }
+
+        bool Date::operator<=(Date &date)
+        {
+            return year <= date.getYear() && month <= date.getMonth() && day <= date.getDay();
+        }
+
+        bool Date::operator<(Date &date)
+        {
+            return toNumber() < date.toNumber();
+        }
     }
 }

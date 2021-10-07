@@ -27,6 +27,12 @@ namespace graphics
             width = pWidth;
             height = pHeight;
         }
+
+        utils::Vector2 toVecto2()
+        {
+            return utils::Vector2(x, y);
+        }
+
         bool intersectsNoLine(const Rect &target) const
         {
             if (
