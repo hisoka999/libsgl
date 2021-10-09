@@ -9,6 +9,13 @@
 
 namespace graphics
 {
+    TextureManager &TextureManager::Instance()
+    {
+
+        static TextureManager instance;
+        return instance;
+    }
+
     const std::shared_ptr<UI::Theme> &TextureManager::loadTheme(std::string filename, bool markAsDefault)
     {
         if (themeMaps.count(filename) > 0)
@@ -59,9 +66,8 @@ namespace graphics
         }
     }
 
-    std::shared_ptr<UI::Theme> &TextureManager::getDefaultTheme()
+    const std::shared_ptr<UI::Theme> &TextureManager::getDefaultTheme()
     {
         return defaultTheme;
     }
-
 }

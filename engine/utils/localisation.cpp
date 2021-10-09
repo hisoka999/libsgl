@@ -52,7 +52,6 @@ std::locale Localisation::getLocale()
     case Language::en:
         return std::locale("en_US.utf8");
     default:
-        break;
         return std::locale("en_US.utf8");
     }
 #elif _WIN32
@@ -60,12 +59,12 @@ std::locale Localisation::getLocale()
     switch (lang)
     {
     case Language::de:
-        return std::locale("de_DE.utf8");
+        return std::locale("de-DE.utf8");
     case Language::en:
-        return std::locale("en_US.utf8");
+        return std::locale("en-US.utf8");
     default:
-        break;
-        return std::locale("en_US.utf8");
+        return std::locale("en-US.utf8");
+    }
 #else
     throw std::runtime_error("unsupported operating system");
 #endif
@@ -84,22 +83,22 @@ void Localisation::detectLanguage(const std::string &appName)
     const char *envLang = std::getenv("LANG");
     language = std::string(envLang);
 #elif _WIN32
-        WORD Lang1 = GetLangFromLocale(GetThreadLocale());
+    WORD Lang1 = GetLangFromLocale(GetThreadLocale());
 
-        WORD Lang2 = GetLangFromLocale(LOCALE_USER_DEFAULT);
-        WORD Lang3 = GetLangFromLocale(LOCALE_SYSTEM_DEFAULT);
-        if (Lang1 == 0)
-        {
-            Lang1 = Lang2;
-        }
-        std::string s;
-        if (int cch = GetLocaleInfo(Lang1, LOCALE_SNAME, 0, 0))
-        {
-            s.resize(cch - 1);
-            GetLocaleInfo(Lang1, LOCALE_SNAME, &*s.begin(), cch);
-        }
-        language = s;
-        std::cout << "language: " << language << std::endl;
+    WORD Lang2 = GetLangFromLocale(LOCALE_USER_DEFAULT);
+    WORD Lang3 = GetLangFromLocale(LOCALE_SYSTEM_DEFAULT);
+    if (Lang1 == 0)
+    {
+        Lang1 = Lang2;
+    }
+    std::string s;
+    if (int cch = GetLocaleInfo(Lang1, LOCALE_SNAME, 0, 0))
+    {
+        s.resize(cch - 1);
+        GetLocaleInfo(Lang1, LOCALE_SNAME, &*s.begin(), cch);
+    }
+    language = s;
+    std::cout << "language: " << language << std::endl;
 #endif
 
     if (language.empty())

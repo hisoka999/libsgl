@@ -58,7 +58,7 @@ namespace UI
         return objectName;
     }
 
-    std::shared_ptr<Theme> Object::getTheme()
+    const std::shared_ptr<Theme> &Object::getTheme()
     {
         if (theme != nullptr)
             return theme;
@@ -70,7 +70,7 @@ namespace UI
         return nullptr;
     }
 
-    void Object::setTheme(std::shared_ptr<Theme> &theme)
+    void Object::setTheme(const std::shared_ptr<Theme> &theme)
     {
         this->theme = theme;
     }
