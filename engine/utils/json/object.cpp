@@ -74,7 +74,15 @@ namespace utils
         }
         std::shared_ptr<Object> Object::getObjectValue(const std::string &attr) const
         {
-            return std::get<std::shared_ptr<Object>>(attributes.at(attr));
+            try
+            {
+                return std::get<std::shared_ptr<Object>>(attributes.at(attr));
+            }
+            catch (std::bad_variant_access const &ex)
+            {
+                std::cout << ex.what() << ": w contained int, not float\n";
+                return nullptr;
+            }
         }
 
         JsonArray Object::getArray(const std::string &attr) const

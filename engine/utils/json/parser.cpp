@@ -173,6 +173,8 @@ namespace utils
                     {
                         size_t objectStart = _jsonData.find_first_of("{", splitPos);
                         size_t objectEnd = findPositionInString(_jsonData, '{', '}', objectStart + 1);
+                        if (objectEnd == 0)
+                            objectEnd = _jsonData.size() - 1;
                         attrValue = _jsonData.substr(objectStart + 1, objectEnd - objectStart - 1);
                         attrValue = rtrim(ltrim(trim(attrValue), "{"), "}");
                         //std::cout << "obj value:" << attrName << ":" << attrValue << std::endl;
@@ -218,6 +220,10 @@ namespace utils
                     {
                         float value = std::atof(attrValue.c_str());
                         object->setAttribute(attrName, value);
+                    }
+                    else if (attrValue == "null")
+                    {
+                        object->setAttribute(attrName, 0);
                     }
                     else
                     {
