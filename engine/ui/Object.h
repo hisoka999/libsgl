@@ -125,8 +125,8 @@ namespace UI
         void setStyleClass(const std::string &value);
         std::string &getObjectName();
 
-        std::shared_ptr<Theme> getTheme();
-        void setTheme(std::shared_ptr<Theme> &theme);
+        const std::shared_ptr<Theme> &getTheme();
+        void setTheme(const std::shared_ptr<Theme> &theme);
 
     protected:
         void setObjectName(const std::string &objectName);

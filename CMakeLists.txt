@@ -110,8 +110,11 @@ elseif(${CMAKE_CXX_COMPILER_ID} STREQUAL "MSVC")
     target_compile_definitions(${PROJECT_NAME} PRIVATE WIN_EXPORT)
 endif()
 
-add_library(${PROJECT_NAME} SHARED ${SRC})
-
+if (${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
+    add_library(${PROJECT_NAME} SHARED ${SRC})
+elseif(${CMAKE_CXX_COMPILER_ID} STREQUAL "MSVC")
+    add_library(${PROJECT_NAME} STATIC ${SRC})
+endif()
 
 
 

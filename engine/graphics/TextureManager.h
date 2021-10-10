@@ -34,11 +34,7 @@ namespace graphics
     class TextureManager
     {
     public:
-        static TextureManager &Instance()
-        {
-            static TextureManager instance;
-            return instance;
-        }
+        static TextureManager &Instance();
 
         const std::shared_ptr<graphics::Texture> loadTexture(const std::string &filename)
         {
@@ -95,7 +91,7 @@ namespace graphics
         const std::shared_ptr<UI::Theme> &loadTheme(std::string filename, bool markAsDefault = false);
 
         void updateRessources();
-        std::shared_ptr<UI::Theme> &getDefaultTheme();
+        const std::shared_ptr<UI::Theme> &getDefaultTheme();
 
     private:
         TextureManager() = default;
