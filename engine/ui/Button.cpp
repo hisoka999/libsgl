@@ -11,7 +11,7 @@ namespace UI
         setObjectName("button");
 
         setWidth(static_width);
-        if (getTheme() == nullptr)
+        if (parent == nullptr || getTheme() == nullptr)
         {
             setTheme(graphics::TextureManager::Instance().getDefaultTheme());
         }

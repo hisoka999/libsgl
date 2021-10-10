@@ -1,12 +1,12 @@
 #ifndef UI_COMBOBOX_H
 #define UI_COMBOBOX_H
 
+#include <engine/graphics/TextureManager.h>
 #include <engine/graphics/text.h>
 #include <engine/graphics/texture.h>
 #include <engine/ui/Object.h>
-#include <vector>
 #include <type_traits>
-#include <engine/graphics/TextureManager.h>
+#include <vector>
 
 namespace UI
 {
@@ -25,7 +25,7 @@ namespace UI
             renderOrder = 99;
 
             elementFunction = nullptr;
-            if (getTheme() == nullptr)
+            if (parent == nullptr || getTheme() == nullptr)
             {
                 setTheme(graphics::TextureManager::Instance().getDefaultTheme());
             }
