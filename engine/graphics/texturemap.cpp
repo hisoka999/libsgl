@@ -66,4 +66,9 @@ namespace graphics
         return subTextures[subTexture];
     }
 
+    const std::shared_ptr<graphics::Texture> &TextureMap::getTexture()
+    {
+        return texture;
+    }
+
 }

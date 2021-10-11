@@ -20,6 +20,7 @@ namespace graphics
         std::string getFileName();
         const graphics::Rect &getSourceRect(const std::string_view &subTexture);
         const graphics::Rect &getSourceRect(const size_t subTexture);
+        const std::shared_ptr<graphics::Texture> &getTexture();
 
     private:
         std::string textureName;

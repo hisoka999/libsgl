@@ -27,6 +27,8 @@ namespace utils
             else
             {
                 std::shared_ptr<Object> obj = std::get<std::shared_ptr<Object>>(data);
+                if (obj == nullptr)
+                    return "null";
                 return obj->toJsonString();
             }
             return "";
