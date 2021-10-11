@@ -138,6 +138,11 @@ namespace graphics
         texture = nullptr;
     }
 
+    void Text::setStyle(FontStyle style)
+    {
+        TTF_SetFontStyle(font, int(style));
+    }
+
     void Text::render(core::Renderer *ren, const std::string &message,
                       SDL_Color color, int x, int y)
     {

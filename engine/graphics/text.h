@@ -8,7 +8,14 @@
 
 namespace graphics
 {
-
+    enum class FontStyle : int
+    {
+        NORMAL = 0x00,
+        BOLD = 0x01,
+        ITALIC = 0x02,
+        UNDERLINE = 0x04,
+        STRIKETHROUGH = 0x08
+    };
     class Text
     {
     public:
@@ -24,6 +31,7 @@ namespace graphics
         int size(const std::string &message, int *w, int *h);
         void renderWrapped(core::Renderer *ren, const std::string &message,
                            SDL_Color color, int x, int y, size_t lineLength);
+        void setStyle(FontStyle style);
 
     protected:
     private:
