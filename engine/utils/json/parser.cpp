@@ -1,6 +1,8 @@
 #include "parser.h"
 #include <algorithm>
 #include <iostream>
+#include "Lexer.h"
+#include <chrono>
 
 namespace utils
 {
@@ -36,16 +38,16 @@ namespace utils
             }
         }
 
-        size_t Parser::findPositionInString(const std::string data, char starChar, char endChar, const size_t startPosition)
+        size_t Parser::findPositionInString(const std::string_view &data, char starChar, char endChar, const size_t startPosition)
         {
             int depth = 0;
             for (size_t pos = startPosition; pos < data.size(); ++pos)
             {
-                if (data.at(pos) == starChar)
+                if (data[pos] == starChar)
                 {
                     depth++;
                 }
-                else if (data.at(pos) == endChar)
+                else if (data[pos] == endChar)
                 {
                     if (depth > 0)
                     {
@@ -60,182 +62,196 @@ namespace utils
             return 0;
         }
 
-        JsonArray Parser::parseArray(const std::string &jsonData)
+        JsonArray Parser::parseArray(const std::string_view &jsonData)
         {
             JsonArray vector;
+            utils::JSON::Lexer lexer;
 
-            size_t startPos = jsonData.find_first_of("[");
-            size_t endPos = jsonData.find_last_of("]");
-            if (startPos > jsonData.size())
-                return vector;
+            auto tokens = lexer.lex(jsonData);
 
-            std::string data = jsonData.substr(startPos + 1, endPos - startPos - 1);
-            //std::cout << "data = " << data << std::endl;
+            // t = tokens[0]
 
-            size_t splitPos = data.find_first_of(",");
-            size_t lastSplitPos = 0;
-            while (lastSplitPos < data.size())
+            //if(isRoot && tokens[0] == "{")
+            size_t start = 0;
+            if (tokens[start] == "[")
             {
+                start++;
+                return parse_array(tokens, &start);
+            }
+        }
 
-                std::string attrValue = data.substr(lastSplitPos, splitPos - lastSplitPos);
+        JsonValue Parser::parse_value(const std::string_view &token)
+        {
+            auto data = token.data();
+            char startChar = token[0];
 
-                if (trim(attrValue) == "")
-                    break;
-
-                //std::cout << "array value (start): <<" << attrValue << ">>" << std::endl;
-                if (attrValue.find_first_of("{") < attrValue.size())
+            if (token == "true")
+            {
+                return JsonValue(true);
+            }
+            else if (token == "false")
+            {
+                return JsonValue(false);
+            }
+            else if (token == "null")
+            {
+                return JsonValue(0);
+            }
+            else if ((startChar >= '0' && startChar <= '9') || startChar == '-')
+            {
+                if (token.find_first_of(".") < token.size())
                 {
-                    size_t objectStart = data.find_first_of("{", lastSplitPos) + 1;
-                    splitPos = findPositionInString(data, '{', '}', objectStart + 1);
-                    attrValue = data.substr(objectStart, splitPos - objectStart);
-                    //attrValue = rtrim(ltrim(ltrim(ltrim(attrValue, "\n"), " "), "{"), "}");
-                    // std::cout << "tmp: " << attrValue << std::endl
-                    //           << "----------" << std::endl
-                    //           << "data: " << data << std::endl;
-
-                    vector.push_back(parseObject(attrValue));
-                    splitPos = data.find_first_of(",", splitPos - 2);
-                }
-                else if (attrValue.find_first_of("\"") < attrValue.size())
-                {
-                    //found string
-                    vector.push_back(trim(attrValue, "\""));
-                }
-                else if (attrValue == "true")
-                {
-                    vector.push_back(true);
-                }
-                else if (attrValue == "false")
-                {
-                    vector.push_back(false);
-                }
-                else if (attrValue.find_first_of(".") < attrValue.size())
-                {
-                    float value = std::atof(attrValue.c_str());
-                    vector.push_back(value);
+                    return float(std::atof(data));
                 }
                 else
                 {
-                    vector.push_back(std::atoi(attrValue.c_str()));
+                    return std::atoi(data);
                 }
-                //std::cout << "array value: " << attrValue << std::endl;
+            }
+            else
+            {
+                return std::string(token);
+            }
+        }
 
-                if (splitPos > data.size())
-                    break;
-                lastSplitPos = splitPos + 1;
-                splitPos = data.find_first_of(",", splitPos + 1);
-                //std::cout << "split pos: " << splitPos << std::endl;
-                //std::cout << "last split pos: " << lastSplitPos << std::endl;
-            };
-            return vector;
+        JsonArray Parser::parse_array(std::vector<std::string_view> &tokens, size_t *start)
+        {
+            JsonArray array;
+            auto token = tokens[*start];
+
+            if (token == "]")
+            {
+                *start = *start + 1;
+                return array;
+            }
+
+            while (true)
+            {
+                token = tokens[*start];
+                if (token == "{")
+                {
+                    *start = *start + 1;
+                    array.push_back(parse_object(tokens, start));
+                }
+                else
+                {
+                    JsonValue value = parse_value(token);
+                    array.push_back(value);
+                    *start = *start + 1;
+                }
+                token = tokens[*start];
+                if (token == ",")
+                    *start = *start + 1;
+                token = tokens[*start];
+                if (token == "]")
+                {
+                    *start = *start + 1;
+                    return array;
+                }
+            }
+            return array;
+        }
+
+        const std::shared_ptr<Object> Parser::parse_object(std::vector<std::string_view> &tokens, size_t *start)
+        {
+            auto token = tokens[*start];
+
+            std::shared_ptr<Object> jsonObject = std::make_shared<Object>();
+            if (token == "}")
+            {
+                *start = *start + 1;
+                return jsonObject;
+            }
+
+            while (true)
+            {
+
+                auto jsonKey = std::string(tokens[*start]);
+
+                *start = *start + 1; // erease key
+
+                if (tokens[*start] != ":")
+                {
+                    throw std::runtime_error(std::string("expected  colon but got other token: ") + std::string(tokens[*start]) + "for key: " + jsonKey);
+                }
+
+                *start = *start + 1; // erease colon
+
+                auto valueStart = tokens[*start];
+
+                if (jsonKey == "active")
+                {
+                    std::cout << "key: " << jsonKey << " value: " << valueStart << std::endl;
+                }
+
+                if (valueStart == "{")
+                {
+                    *start = *start + 1;
+                    jsonObject->setAttribute(jsonKey, parse_object(tokens, start));
+                }
+                else if (valueStart == "[")
+                {
+                    *start = *start + 1;
+                    auto arrayValue = parse_array(tokens, start);
+                    jsonObject->setArrayAttribute(jsonKey, arrayValue);
+                }
+                else
+                {
+                    JsonValue value = parse_value(valueStart);
+                    jsonObject->setAttribute(jsonKey, value);
+                    *start = *start + 1;
+                }
+
+                auto token = tokens[*start];
+
+                if (token == "}")
+                {
+                    *start = *start + 1;
+                    return jsonObject;
+                }
+                else if (token != ",")
+                {
+                    throw std::runtime_error(std::string("expected  comma but got other token: ") + std::string(tokens[*start]) + " for key: " + jsonKey + " for Value(" + std::string(valueStart) + ")");
+                }
+
+                *start = *start + 1;
+            }
+            return nullptr;
         }
 
         std::shared_ptr<Object> Parser::parseObject(const std::string &jsonData)
         {
-            std::shared_ptr<Object> object = std::make_shared<Object>();
-            size_t lastAttr = 0;
-            std::string tmp = jsonData;
-            std::string _jsonData = trim(tmp, "{}");
 
-            bool hasAttr = true;
+            auto start = std::chrono::high_resolution_clock::now();
 
-            while (hasAttr)
+            utils::JSON::Lexer lexer;
+
+            auto tokens = lexer.lex(jsonData);
+
+            auto elapsed = std::chrono::high_resolution_clock::now() - start;
+
+            long long milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(elapsed).count();
+            std::cout << "parseObject(after lex): " << milliseconds << "ms" << std::endl;
+
+            start = std::chrono::high_resolution_clock::now();
+
+            //if(isRoot && tokens[0] == "{")
+            size_t startPos = 0;
+
+            if (tokens[startPos] == "{")
             {
-                size_t splitPos = _jsonData.find_first_of(":", lastAttr);
-                size_t endPos = _jsonData.find_first_of(",", lastAttr);
-                if (splitPos > _jsonData.size())
-                    break;
-                //std::cout << splitPos << ":" << endPos << std::endl;
+                startPos++;
+                auto result = parse_object(tokens, &startPos);
+                elapsed = std::chrono::high_resolution_clock::now() - start;
 
-                std::string attrName = _jsonData.substr(lastAttr, splitPos - lastAttr);
-
-                attrName = trim(trim(trim(attrName, "\t\n\r\f\v"), "\""), ",");
-                auto filter = [](unsigned char ch)
-                { return ch != '\"' && !std::isspace(ch); };
-                attrName.erase(std::find_if(attrName.rbegin(), attrName.rend(), filter)
-                                   .base(),
-                               attrName.end());
-                attrName.erase(attrName.begin(), std::find_if(attrName.begin(), attrName.end(), filter));
-                hasAttr = !attrName.empty();
-                if (hasAttr)
-                {
-                    if (endPos > _jsonData.size())
-                        endPos = _jsonData.size();
-                    std::string attrValue = _jsonData.substr(splitPos + 1, endPos - splitPos - 1);
-                    attrValue = trim(attrValue);
-                    attrName = trim(attrName);
-
-                    //std::cout << attrName << ":" << attrValue << std::endl;
-                    //test if the value is a string
-                    size_t arrayPos = attrValue.find_first_of("[");
-                    size_t objectPos = attrValue.find_first_of("{");
-                    if (objectPos < attrValue.size() && objectPos < arrayPos)
-                    {
-                        size_t objectStart = _jsonData.find_first_of("{", splitPos);
-                        size_t objectEnd = findPositionInString(_jsonData, '{', '}', objectStart + 1);
-                        if (objectEnd == 0)
-                            objectEnd = _jsonData.size() - 1;
-                        attrValue = _jsonData.substr(objectStart + 1, objectEnd - objectStart - 1);
-                        attrValue = rtrim(ltrim(trim(attrValue), "{"), "}");
-                        //std::cout << "obj value:" << attrName << ":" << attrValue << std::endl;
-                        if (attrValue.size() == 0)
-                        {
-                            object->setAttribute(attrName, std::make_shared<Object>());
-                        }
-                        else
-                        {
-                            object->setAttribute(attrName, parseObject(attrValue));
-                        }
-
-                        endPos = objectEnd + 1;
-                    }
-                    else if (arrayPos < attrValue.size())
-                    {
-                        size_t arrayStart = _jsonData.find_first_of("[", splitPos);
-                        size_t arrayEnd = findPositionInString(_jsonData, '[', ']', arrayStart + 1);
-                        if (arrayEnd == 0)
-                            arrayEnd = arrayStart + 1;
-                        //splitPos = attrValue.find_first_of("]");
-                        attrValue = _jsonData.substr(arrayStart, arrayEnd - arrayStart + 1);
-                        //attrValue = rtrim(ltrim(trim(attrValue), "["), "]");
-                        //std::cerr << "array value: " << attrValue << std::endl;
-                        object->setArrayAttribute(attrName, parseArray(attrValue));
-                        endPos = arrayEnd + 1;
-                    }
-                    else if (attrValue.find_first_of("\"") < attrValue.size())
-                    {
-                        //found string
-                        object->setAttribute(attrName, trim(attrValue, "\""));
-                    }
-
-                    else if (attrValue == "true")
-                    {
-                        object->setAttribute(attrName, true);
-                    }
-                    else if (attrValue == "false")
-                    {
-                        object->setAttribute(attrName, false);
-                    }
-                    else if (attrValue.find_first_of(".") < attrValue.size())
-                    {
-                        float value = std::atof(attrValue.c_str());
-                        object->setAttribute(attrName, value);
-                    }
-                    else if (attrValue == "null")
-                    {
-                        object->setAttribute(attrName, 0);
-                    }
-                    else
-                    {
-                        object->setAttribute(attrName, std::atoi(attrValue.c_str()));
-                    }
-
-                    lastAttr = endPos + 1;
-                }
+                milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(elapsed).count();
+                std::cout << "parseObject(after parse_object): " << milliseconds << "ms" << std::endl;
+                return result;
             }
 
-            return object;
+            return nullptr;
         }
 
     }
+
 }
