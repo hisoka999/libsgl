@@ -35,7 +35,7 @@ namespace utils
                 {
                     auto token = jsonData.substr(start, end - start);
                     tokens.push_back(token);
-                    pos = end;
+                    pos = end - 1;
                     continue;
                 }
                 lex_number(jsonData, &start, &end);

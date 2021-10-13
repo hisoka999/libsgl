@@ -105,7 +105,12 @@ namespace utils
                 }
                 else
                 {
-                    return std::atoi(data);
+                    auto value = std::atoi(data);
+                    if (token.size() > 64)
+                    {
+                        return std::string(token);
+                    }
+                    return value;
                 }
             }
             else
