@@ -36,6 +36,7 @@ namespace utils
             bool getBoolValue(const std::string &attr) const;
             std::shared_ptr<Object> getObjectValue(const std::string &attr) const;
             JsonArray getArray(const std::string &attr) const;
+            bool hasArray(const std::string &attr);
 
             std::vector<std::string> getAttributes();
             bool hasAttribute(const std::string &attr);

@@ -91,6 +91,11 @@ namespace utils
         {
             return arrayAttributes.at(attr);
         }
+
+        bool Object::hasArray(const std::string &attr)
+        {
+            return arrayAttributes.count(attr) > 0;
+        }
         void Object::setArrayAttribute(const std::string &attr, JsonArray array)
         {
             arrayAttributes[attr] = array;
