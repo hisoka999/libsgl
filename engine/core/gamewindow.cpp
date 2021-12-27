@@ -11,7 +11,7 @@ namespace core
     GameWindow::GameWindow()
         : win(nullptr)
     {
-        //ctor
+        // ctor
         settings = std::make_shared<utils::IniBase>();
     }
 
@@ -51,8 +51,8 @@ namespace core
         }
 
 #ifdef __WIN32
-        //SDL_SetHint(SDL_HINT_VIDEO_WIN_D3DCOMPILER,"d3dcompiler_46.dll");
-        //sSDL_SetHint(SDL_HINT_RENDER_DIRECT3D11_DEBUG,"1");
+        // SDL_SetHint(SDL_HINT_VIDEO_WIN_D3DCOMPILER,"d3dcompiler_46.dll");
+        // sSDL_SetHint(SDL_HINT_RENDER_DIRECT3D11_DEBUG,"1");
         SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
 
 #endif
@@ -73,7 +73,7 @@ namespace core
             throw SDLException("GameWindow::TTF_Init");
         }
 
-        //Initialize SDL_mixer
+        // Initialize SDL_mixer
         if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
         {
             throw SDLException(

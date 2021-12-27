@@ -32,7 +32,7 @@ namespace graphics
         int getWidth();
         int getHeight();
         SDL_Texture *getSDLTexture();
-        //Pixel manipulators
+        // Pixel manipulators
         bool lockTexture();
         bool unlockTexture();
         void *getPixels();
@@ -50,6 +50,10 @@ namespace graphics
         void *pixels;
         int pitch;
         SDL_PixelFormat *pixelFormat;
+
+        // temp structure def
+        SDL_FRect dst;
+        SDL_Rect src;
     };
 
 } // namespace graphics

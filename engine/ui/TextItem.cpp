@@ -111,6 +111,10 @@ namespace UI
             }
             cursorPosition++;
         }
+        else if (pInput->isKeyDown(SDLK_RETURN))
+        {
+            fireFuncionCall("inputSubmit", text);
+        }
     }
     void TextItem::setFont(const std::string &fontname, unsigned int font_size)
     {

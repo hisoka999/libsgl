@@ -18,8 +18,8 @@ namespace graphics
         void render(const std::string_view &subTexture, const graphics::Rect &destRect, core::Renderer *renderer);
         void render(const size_t subTextureHash, const graphics::Rect &destRect, core::Renderer *renderer);
         std::string getFileName();
-        const graphics::Rect &getSourceRect(const std::string_view &subTexture);
-        const graphics::Rect &getSourceRect(const size_t subTexture);
+        void getSourceRect(const std::string_view &subTexture, graphics::Rect *src);
+        void getSourceRect(const size_t subTexture, graphics::Rect *src);
         const std::shared_ptr<graphics::Texture> &getTexture();
 
     private:

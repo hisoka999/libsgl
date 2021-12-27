@@ -56,14 +56,22 @@ namespace graphics
             subTextures[hasher(subTextureName)] = textureData;
         }
     }
-    const graphics::Rect &TextureMap::getSourceRect(const std::string_view &subTexture)
+    void TextureMap::getSourceRect(const std::string_view &subTexture, graphics::Rect *src)
     {
-        return subTextures[hasher(subTexture)];
+        auto &r = subTextures[hasher(subTexture)];
+        src->x = r.x;
+        src->y = r.y;
+        src->width = r.width;
+        src->height = r.height;
     }
 
-    const graphics::Rect &TextureMap::getSourceRect(const size_t subTexture)
+    void TextureMap::getSourceRect(const size_t subTexture, graphics::Rect *src)
     {
-        return subTextures[subTexture];
+        auto &r = subTextures[subTexture];
+        src->x = r.x;
+        src->y = r.y;
+        src->width = r.width;
+        src->height = r.height;
     }
 
     const std::shared_ptr<graphics::Texture> &TextureMap::getTexture()

@@ -5,6 +5,22 @@
 namespace graphics
 {
 
+    void sdlRectP(const graphics::Rect &src, SDL_Rect *r)
+    {
+        r->h = int(src.height);
+        r->w = int(src.width);
+        r->x = int(src.x);
+        r->y = int(src.y);
+    }
+
+    void sdlFRectP(const graphics::Rect &src, SDL_FRect *r)
+    {
+        r->h = src.height;
+        r->w = src.width;
+        r->x = src.x;
+        r->y = src.y;
+    }
+
     Texture::Texture()
         : width(0), height(0)
     {
@@ -52,7 +68,7 @@ namespace graphics
 
     void Texture::loadTexture(core::Renderer *ren, std::string filename)
     {
-        //tex = IMG_LoadTexture(ren->getRenderer(), filename.c_str());
+        // tex = IMG_LoadTexture(ren->getRenderer(), filename.c_str());
         surface = IMG_Load(filename.c_str());
 
         if (surface == nullptr)
@@ -63,7 +79,7 @@ namespace graphics
             throw SDLException("IMG_LoadTexture");
         }
         tex = SDL_CreateTextureFromSurface(ren->getRenderer(), surface);
-        //Query the texture to get its width and height to use
+        // Query the texture to get its width and height to use
         SDL_QueryTexture(tex, nullptr, nullptr, &width, &height);
     }
     void Texture::render(core::Renderer *ren, int x, int y)
@@ -90,8 +106,9 @@ namespace graphics
 
     void Texture::render(core::Renderer *ren, const Rect &pSrc, const Rect &pDest)
     {
-        SDL_FRect dst = pDest.sdlFRect();
-        SDL_Rect src = pSrc.sdlRect();
+
+        sdlRectP(pSrc, &src);
+        sdlFRectP(pDest, &dst);
         SDL_RenderCopyF(ren->getRenderer(), tex, &src, &dst);
     }
 
@@ -154,13 +171,13 @@ namespace graphics
     {
         bool success = true;
 
-        //Texture is already locked
+        // Texture is already locked
         if (pixels != nullptr)
         {
             printf("Texture is already locked!\n");
             success = false;
         }
-        //Lock texture
+        // Lock texture
         else
         {
             if (SDL_LockTexture(tex, nullptr, &pixels, &pitch) != 0)
@@ -177,13 +194,13 @@ namespace graphics
     {
         bool success = true;
 
-        //Texture is not locked
+        // Texture is not locked
         if (pixels == nullptr)
         {
             printf("Texture is not locked!\n");
             success = false;
         }
-        //Unlock texture
+        // Unlock texture
         else
         {
             SDL_UnlockTexture(tex);
@@ -201,10 +218,10 @@ namespace graphics
 
     void Texture::copyPixels(void *pixels)
     {
-        //Texture is locked
+        // Texture is locked
         if (pixels != NULL)
         {
-            //Copy to locked pixels
+            // Copy to locked pixels
             memcpy(this->pixels, pixels, pitch * height);
         }
     }
@@ -216,10 +233,10 @@ namespace graphics
 
     Uint32 Texture::getPixel32(unsigned int x, unsigned int y)
     {
-        //Convert the pixels to 32 bit
+        // Convert the pixels to 32 bit
         Uint32 *_pixels = (Uint32 *)this->pixels;
 
-        //Get the pixel requested
+        // Get the pixel requested
         return _pixels[(y * (pitch / 4)) + x];
     }
 
