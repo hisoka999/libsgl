@@ -56,7 +56,6 @@ namespace UI
             rect.height = 28;
 
             SDL_Color textColor = {255, 255, 255, 255};
-            SDL_Color selectionColor = {93, 103, 108, 255};
 
             graphics::Rect leftButtonRect = {rect.x, rect.y, rect.height, rect.height};
             graphics::Rect rightButtonRect = {rect.x + rect.width - rect.height, rect.y, rect.height, rect.height};
@@ -105,7 +104,6 @@ namespace UI
         }
         virtual void handleEvents(core::Input *pInput)
         {
-            SDL_Event e = pInput->getEvent();
             int tx = getX();
 
             int ty = getY();

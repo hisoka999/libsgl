@@ -25,10 +25,10 @@ namespace utils
 
             std::string format();
 
-            const uint16_t getYear() const;
-            const uint16_t getMonth() const;
-            const uint16_t getDay() const;
-            const uint64_t toNumber() const;
+            uint16_t getYear() const;
+            uint16_t getMonth() const;
+            uint16_t getDay() const;
+            uint64_t toNumber() const;
 
             bool operator==(const Date &date);
             bool operator>=(const Date &date);

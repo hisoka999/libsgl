@@ -54,22 +54,22 @@ namespace utils
             return utils::string_format("%.2i.%.2i.%i", day, month + 1, year);
         }
 
-        const uint16_t Date::getYear() const
+        uint16_t Date::getYear() const
         {
             return year;
         }
 
-        const uint16_t Date::getMonth() const
+        uint16_t Date::getMonth() const
         {
             return month;
         }
 
-        const uint16_t Date::getDay() const
+        uint16_t Date::getDay() const
         {
             return day;
         }
 
-        const uint64_t Date::toNumber() const
+        uint64_t Date::toNumber() const
         {
             return (year * 365) + (month * 12) + day;
         }

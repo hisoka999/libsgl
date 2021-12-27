@@ -21,18 +21,18 @@ namespace utils
                 char data = jsonData[i];
                 switch (data)
                 {
-                case '[': //array begin
-                    //parse sub string
+                case '[': // array begin
+                    // parse sub string
                     parseArray(jsonData.substr(i + 1));
                     break;
-                case ']': //array end
+                case ']': // array end
                     break;
-                case '{': //object begin
+                case '{': // object begin
                     parseObject(jsonData.substr(i + 1));
                     break;
-                case '}': //object end
+                case '}': // object end
                     break;
-                case ':': //object end
+                case ':': // object end
                     break;
                 }
             }
@@ -71,13 +71,14 @@ namespace utils
 
             // t = tokens[0]
 
-            //if(isRoot && tokens[0] == "{")
+            // if(isRoot && tokens[0] == "{")
             size_t start = 0;
             if (tokens[start] == "[")
             {
                 start++;
                 return parse_array(tokens, &start);
             }
+            return vector;
         }
 
         JsonValue Parser::parse_value(const std::string_view &token)
@@ -240,7 +241,7 @@ namespace utils
 
             start = std::chrono::high_resolution_clock::now();
 
-            //if(isRoot && tokens[0] == "{")
+            // if(isRoot && tokens[0] == "{")
             size_t startPos = 0;
 
             if (tokens[startPos] == "{")
