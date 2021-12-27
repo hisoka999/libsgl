@@ -15,11 +15,11 @@ if(MINGW)
     set(SDL2_DIR ${PROJECT_SOURCE_DIR}/deps/SDL2)
     set(SDL2_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/deps/SDL2/include)
 
-    set(SDL2_IMAGE_LIBRARY sdl2_image)
+    set(SDL2_IMAGE_LIBRARY SDL2_image)
     set(SDL2_IMAGE_DIR ${PROJECT_SOURCE_DIR}/deps/SDL2)
     set(SDL2_IMAGE_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/deps/SDL2/include)
 
-    set(SDL2TTF_LIBRARY sdl2ttf)
+    set(SDL2TTF_LIBRARY SDL2ttf)
     set(SDL2TTF_DIR ${PROJECT_SOURCE_DIR}/deps/SDL2)
     set(SDL2TTF_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/deps/SDL2/include)
 
@@ -38,11 +38,11 @@ elseif (WIN32)
     set(SDL2_DIR ${PROJECT_SOURCE_DIR}/deps/vcpp/SDL2)
     set(SDL2_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/deps/vcpp/SDL2/include)
 
-    set(SDL2_IMAGE_LIBRARY sdl2_image)
+    set(SDL2_IMAGE_LIBRARY SDL2_image)
     set(SDL2_IMAGE_DIR ${PROJECT_SOURCE_DIR}/deps/vcpp/SDL2)
     set(SDL2_IMAGE_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/deps/vcpp/SDL2/include)
 
-    set(SDL2TTF_LIBRARY sdl2ttf)
+    set(SDL2TTF_LIBRARY SDL2_ttf)
     set(SDL2TTF_DIR ${PROJECT_SOURCE_DIR}/deps/vcpp/SDL2)
     set(SDL2TTF_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/deps/vcpp/SDL2/include)
 
