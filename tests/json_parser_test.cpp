@@ -28,7 +28,7 @@ TEST(LexerTest, LexObject)
     utils::JSON::Lexer lexer;
     auto tokens = lexer.lex("{\"id\":1 ,\"name\":\"Test\", \"attr\" : {\"test\":22},\"alive\":false  }");
 
-    //std::vector<std::string> tokens(tokenList.begin(), tokenList.end());
+    // std::vector<std::string> tokens(tokenList.begin(), tokenList.end());
 
     EXPECT_EQ(tokens.size(), 21);
     EXPECT_EQ(tokens[0], "{");
@@ -140,6 +140,18 @@ TEST(ParserTest, ParseObjectWithArray)
     EXPECT_EQ(std::get<std::string>(vec.at(2)), "file.ext");
 }
 
+TEST(ParserTest, ParseNegativeNumbers)
+{
+    std::shared_ptr<utils::JSON::Parser> parser = std::make_shared<utils::JSON::Parser>();
+
+    auto obj = parser->parseObject("{\"id\":1 ,\"cash\": -2003.45, \"pos\": -332 }");
+    EXPECT_TRUE(obj->hasAttribute("id"));
+    EXPECT_TRUE(obj->hasAttribute("cash"));
+    EXPECT_TRUE(obj->hasAttribute("pos"));
+    EXPECT_EQ(obj->getIntValue("id"), 1);
+    EXPECT_EQ(obj->getFloatValue("cash"), -2003.45f);
+    EXPECT_EQ(obj->getIntValue("pos"), -332);
+}
 TEST(ParserTest, LoadComplexSaveGame)
 {
     auto prog_dir = std::string(get_current_dir_name());
@@ -160,7 +172,7 @@ TEST(ParserTest, LoadComplexSaveGame)
     auto jsonObject = parser.parseObject(buffer);
 
     file.close();
-    //for debugging
+    // for debugging
     for (auto name : jsonObject->getAttributes())
     {
         std::cout << "found attr: " << name << std::endl;
@@ -193,7 +205,7 @@ TEST(ParserTest, TestSpeed)
     long long milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(elapsed).count();
     std::cout << "TestSpeed: " << milliseconds << "ms" << std::endl;
     EXPECT_LE(milliseconds, 100);
-    //test lexer speed
+    // test lexer speed
     start = std::chrono::high_resolution_clock::now();
 
     utils::JSON::Lexer lexer;
@@ -205,7 +217,7 @@ TEST(ParserTest, TestSpeed)
     std::cout << "TestSpeed Lexer: " << milliseconds << "ms for a list of size" << result.size() << std::endl;
 
     file.close();
-    //for debugging
+    // for debugging
     for (auto name : jsonObject->getAttributes())
     {
         std::cout << "found attr: " << name << std::endl;

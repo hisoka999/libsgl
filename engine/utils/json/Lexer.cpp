@@ -39,7 +39,7 @@ namespace utils
                     continue;
                 }
                 lex_number(jsonData, &start, &end);
-                if (end != -1)
+                if (end != -1 && end - (start - 1) > 0)
                 {
                     auto token = jsonData.substr(start, end - (start - 1));
                     tokens.push_back(token);
@@ -123,7 +123,7 @@ namespace utils
                 for (size_t pos = *start; pos < jsonData.size(); ++pos)
                 {
                     startChar = jsonData[pos];
-                    if (!((startChar >= '0' && startChar <= '9') || startChar == '.'))
+                    if (!((startChar >= '0' && startChar <= '9') || startChar == '.' || startChar == '-'))
                     {
                         *end = pos - 1;
                         return;
