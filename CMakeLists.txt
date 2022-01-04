@@ -32,7 +32,7 @@ if(MINGW)
     #message("${PROJECT_SOURCE_DIR}/deps/gettext/lib/")
 
     link_directories(${SDL2_DIR}/lib/ ${PROJECT_SOURCE_DIR}/deps/gettext/lib/ )
-elseif(${CMAKE_CXX_COMPILER_ID} STREQUAL "MSVC")
+elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     set(SDL2_LIBRARY sdl2)
     set(SDL2MAIN_LIBRARY SDL2main)
     set(SDL2_DIR ${PROJECT_SOURCE_DIR}/deps/vcpp/SDL2)
@@ -97,10 +97,17 @@ fetch_magic_enum(
 
 message(${MAGIC_ENUM_SRC})
 
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+    add_library(${PROJECT_NAME} SHARED ${SRC})
+elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+    add_library(${PROJECT_NAME} STATIC ${SRC})
+endif()
+
+
 # add the binary tree to the search path for include files
 # so that we will find TutorialConfig.h
 include_directories("${PROJECT_BINARY_DIR}" ${SDL2_INCLUDE_DIR} ${GETTEXT_INCLUDE_DIR} ${Intl_INCLUDE_DIR} ${MAGIC_ENUM_SRC})
-if (WIN32)
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     set (CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
     set (WINDOWS_EXPORT_ALL_SYMBOLS ON)
     add_compile_options("$<$<C_COMPILER_ID:MSVC>:/utf-8>")
@@ -108,21 +115,16 @@ if (WIN32)
 endif()
 
 # Let's set compiler-specific flags
-if (${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     # G++
     add_compile_options(-Wall -Wextra)
-elseif(${CMAKE_CXX_COMPILER_ID} STREQUAL "MSVC")
+elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     # MSVC
     target_compile_options(${PROJECT_NAME} PRIVATE /EHsc /MTd /W2 /c)
     # Set the DLLEXPORT variable to export symbols
     target_compile_definitions(${PROJECT_NAME} PRIVATE WIN_EXPORT)
 endif()
 
-if (${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
-    add_library(${PROJECT_NAME} SHARED ${SRC})
-elseif(${CMAKE_CXX_COMPILER_ID} STREQUAL "MSVC")
-    add_library(${PROJECT_NAME} STATIC ${SRC})
-endif()
 
 
 
