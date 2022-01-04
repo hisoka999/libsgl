@@ -32,7 +32,7 @@ if(MINGW)
     #message("${PROJECT_SOURCE_DIR}/deps/gettext/lib/")
 
     link_directories(${SDL2_DIR}/lib/ ${PROJECT_SOURCE_DIR}/deps/gettext/lib/ )
-elseif (WIN32)
+elseif(${CMAKE_CXX_COMPILER_ID} STREQUAL "MSVC")
     set(SDL2_LIBRARY sdl2)
     set(SDL2MAIN_LIBRARY SDL2main)
     set(SDL2_DIR ${PROJECT_SOURCE_DIR}/deps/vcpp/SDL2)
@@ -51,7 +51,14 @@ elseif (WIN32)
     set(SDL2_MIXER_DIR ${PROJECT_SOURCE_DIR}/deps/vcpp/SDL2)
     set(SDL2_MIXER_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/deps/vcpp/SDL2/include)
 
-    link_directories(${SDL2_DIR}/lib/x64)
+    #link_directories(${SDL2_DIR}/lib/x64)
+    if("${CMAKE_GENERATOR_PLATFORM}" STREQUAL "x64")
+    # 64 bits
+        link_directories(${SDL2_DIR}/lib/x64)
+    elseif("${CMAKE_GENERATOR_PLATFORM}" STREQUAL "Win32")
+        # 32 bits
+        link_directories(${SDL2_DIR}/lib/x86)
+    endif()
 endif()
 
 find_package(SDL2 REQUIRED)
