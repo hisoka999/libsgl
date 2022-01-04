@@ -36,6 +36,7 @@ elseif (WIN32)
     set(SDL2_LIBRARY sdl2)
     set(SDL2MAIN_LIBRARY SDL2main)
     set(SDL2_DIR ${PROJECT_SOURCE_DIR}/deps/vcpp/SDL2)
+    set(SDLDIR  ${PROJECT_SOURCE_DIR}/deps/vcpp/SDL2)
     set(SDL2_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/deps/vcpp/SDL2/include)
 
     set(SDL2_IMAGE_LIBRARY SDL2_image)
