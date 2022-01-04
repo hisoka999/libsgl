@@ -5,7 +5,7 @@
 namespace utils
 {
 
-    constexpr bool areSame(const float a, const float b)
+    bool areSame(const float a, const float b)
     {
         return std::fabs(a - b) < std::numeric_limits<float>::epsilon();
     }

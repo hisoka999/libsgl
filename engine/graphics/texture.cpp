@@ -91,10 +91,10 @@ namespace graphics
                                 int pHeight)
     {
         SDL_FRect dst;
-        dst.x = x;
-        dst.y = y;
-        dst.w = pWidth;
-        dst.h = pHeight;
+        dst.x = float(x);
+        dst.y = float(y);
+        dst.w = float(pWidth);
+        dst.h = float(pHeight);
 
         SDL_Rect src;
         src.x = 0;
@@ -116,10 +116,10 @@ namespace graphics
                          int pSrcX, int pSrcY)
     {
         SDL_FRect dst;
-        dst.x = x;
-        dst.y = y;
-        dst.w = pWidth;
-        dst.h = pHeight;
+        dst.x = float(x);
+        dst.y = float(y);
+        dst.w = float(pWidth);
+        dst.h = float(pHeight);
 
         SDL_Rect src;
         src.x = pSrcX;
@@ -136,10 +136,10 @@ namespace graphics
         SDL_FPoint *center = nullptr;
 
         SDL_FRect dst;
-        dst.x = x;
-        dst.y = y;
-        dst.w = pWidth;
-        dst.h = pHeight;
+        dst.x = float(x);
+        dst.y = float(y);
+        dst.w = float(pWidth);
+        dst.h = float(pHeight);
 
         SDL_Rect src;
         src.x = 0;

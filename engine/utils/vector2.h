@@ -4,7 +4,7 @@
 namespace utils
 {
 
-    constexpr bool areSame(const float a, const float b);
+    bool areSame(const float a, const float b);
 
     class Vector2
     {

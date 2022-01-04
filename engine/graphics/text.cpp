@@ -29,7 +29,7 @@ namespace graphics
         }
     }
 
-    Text::Text(__attribute__((unused)) const Text &org)
+    Text::Text([[maybe_unused]] const Text &org)
     {
         font = nullptr;
         this->fontFile = "";
