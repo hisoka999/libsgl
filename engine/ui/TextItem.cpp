@@ -65,16 +65,14 @@ namespace UI
         {
             if (eventRect().intersects(pInput->getMousePostion()))
             {
-                SDL_Rect rect = eventRect().sdlRect();
-                SDL_SetTextInputRect(&rect);
-                SDL_StartTextInput();
+                pInput->startTextInput(eventRect());
                 isSelected = true;
             }
             else
             {
                 if (isSelected)
                 {
-                    SDL_StopTextInput();
+                    pInput->stopTextInput();
                     isSelected = false;
                 }
             }
@@ -83,7 +81,7 @@ namespace UI
         {
             std::string txt = pInput->getTextInput();
             text = text.substr(0, cursorPosition) + txt + text.substr(cursorPosition);
-            cursorPosition++;
+            cursorPosition += txt.length();
             fireFuncionCall("textChanged", text);
         }
         else if (pInput->isKeyDown(SDLK_BACKSPACE) && isSelected)
@@ -91,6 +89,15 @@ namespace UI
             if (text.size() > 0)
             {
                 text = text.substr(0, cursorPosition - 1) + text.substr(cursorPosition);
+                cursorPosition--;
+                fireFuncionCall("textChanged", text);
+            }
+        }
+        else if (pInput->isKeyDown(SDLK_DELETE))
+        {
+            if (text.size() > 0 && cursorPosition < text.size() - 1)
+            {
+                text = text.substr(0, cursorPosition) + text.substr(cursorPosition + 1);
                 cursorPosition--;
                 fireFuncionCall("textChanged", text);
             }

@@ -5,6 +5,7 @@
 #include <SDL2/SDL.h>
 #include <map>
 #include <string>
+#include "engine/graphics/rect.h"
 
 namespace core
 {
@@ -25,7 +26,7 @@ namespace core
         bool isQuit();
         utils::Vector2 &getMousePostion();
         bool poll();
-        //void clearEvents();
+        // void clearEvents();
         SDL_Event &getEvent()
         {
             return event;
@@ -34,6 +35,10 @@ namespace core
         bool isScrollWheel();
         std::string getTextInput();
         bool isTextInput();
+
+        void startTextInput(const graphics::Rect &rect);
+        void stopTextInput();
+        bool isTextInputActive();
 
     protected:
     private:

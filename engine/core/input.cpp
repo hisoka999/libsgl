@@ -6,7 +6,7 @@ namespace core
     Input::Input()
         : mousePosition(-1, -1)
     {
-        //ctor
+        // ctor
     }
 
     bool Input::poll()
@@ -84,7 +84,7 @@ namespace core
 
     Input::~Input()
     {
-        //dtor
+        // dtor
     }
 
     std::string Input::getTextInput()
@@ -93,6 +93,24 @@ namespace core
     }
     bool Input::isTextInput()
     {
-        return SDL_IsTextInputActive() && event.type == SDL_TEXTINPUT;
+        return isTextInputActive() && event.type == SDL_TEXTINPUT;
     }
+
+    void Input::startTextInput(const graphics::Rect &rect)
+    {
+        SDL_Rect r = rect.sdlRect();
+        SDL_SetTextInputRect(&r);
+        SDL_StartTextInput();
+    }
+
+    void Input::stopTextInput()
+    {
+        SDL_StopTextInput();
+    }
+
+    bool Input::isTextInputActive()
+    {
+        return SDL_IsTextInputActive();
+    }
+
 } // namespace core
