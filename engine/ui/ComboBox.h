@@ -142,10 +142,13 @@ namespace UI
         int getSelection() { return selection; }
         void setSelection(unsigned int selection)
         {
+            if (selection >= elements.size() || elements.size() == 0)
+                return;
+
             this->selection = selection;
             this->fireFuncionCall("selectionChanged", selection);
-            if (selection >= 0 && elements.size() > 0)
-                fireFuncionCall("valueChanged", elements[selection]);
+
+            fireFuncionCall("valueChanged", elements[selection]);
         }
 
         void setSelectionByText(T text)

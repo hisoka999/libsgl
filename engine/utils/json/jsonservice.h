@@ -37,7 +37,7 @@ namespace utils
                 file.seekg(0);
                 file.read(&buffer[0], size);
 
-                //std::cout << buffer << std::endl;
+                // std::cout << buffer << std::endl;
 
                 auto objects = parser.parseArray(buffer);
 
@@ -53,7 +53,7 @@ namespace utils
             }
 
         protected:
-            virtual std::shared_ptr<T> convertJsonObject2Data(const std::shared_ptr<utils::JSON::Object> &object)
+            virtual std::shared_ptr<T> convertJsonObject2Data([[maybe_unused]] const std::shared_ptr<utils::JSON::Object> &object)
             {
                 return nullptr;
             }
