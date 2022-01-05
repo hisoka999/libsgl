@@ -64,6 +64,9 @@ namespace utils
 
     std::vector<std::string> split(std::string str, const std::string &token);
 
+    std::string utf8chr(int cp);
+    int codepoint(const std::string &u);
+
 };
 
 #endif /* UTILS_STRING_H_ */
