@@ -1,6 +1,6 @@
 #include "engine/ui/Object.h"
-#include <stdexcept>
 #include <engine/graphics/TextureManager.h>
+#include <stdexcept>
 
 namespace UI
 {
@@ -26,7 +26,7 @@ namespace UI
 
     Object::~Object()
     {
-        //dtor
+        // dtor
     }
     int Object::getRenderOrder()
     {
@@ -58,7 +58,7 @@ namespace UI
         return objectName;
     }
 
-    const std::shared_ptr<Theme> &Object::getTheme()
+    const std::shared_ptr<Theme> Object::getTheme()
     {
         if (theme != nullptr)
             return theme;

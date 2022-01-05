@@ -5,13 +5,13 @@
             "includePath": [
                 "${workspaceFolder}/engine/",
                 "${workspaceFolder}/",
-                "${workspaceFolder}/build/deps/magic_enum/include"
+                "${workspaceFolder}/build/deps/magic_enum/magic_enum-src/include"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/g++",
             "cStandard": "c11",
             "cppStandard": "c++17",
-            "intelliSenseMode": "gcc-x64",
+            "intelliSenseMode": "linux-gcc-x64",
             "configurationProvider": "ms-vscode.cmake-tools",
             "compileCommands": "${workspaceFolder}/build/compile_commands.json"
         }

@@ -29,7 +29,7 @@ namespace core
     {
     }
 
-    void Scene::fixedUpdate(uint32_t delta)
+    void Scene::fixedUpdate([[maybe_unused]] uint32_t delta)
     {
     }
 

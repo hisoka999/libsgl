@@ -97,6 +97,50 @@ fetch_magic_enum(
 
 message(${MAGIC_ENUM_SRC})
 
+
+
+# add the binary tree to the search path for include files
+# so that we will find TutorialConfig.h
+include_directories("${PROJECT_BINARY_DIR}" ${SDL2_INCLUDE_DIR} ${GETTEXT_INCLUDE_DIR} ${Intl_INCLUDE_DIR} ${MAGIC_ENUM_SRC})
+
+
+
+if( UNIX)
+    option(ENGINE_TESTS "Build the tests" ON)
+    if(ENGINE_TESTS)
+
+        include(googletest)
+        include(GoogleTest)
+        fetch_googletest(
+            ${PROJECT_SOURCE_DIR}/cmake
+            ${PROJECT_BINARY_DIR}/googletest
+            )
+        enable_testing() 
+        add_subdirectory(tests)
+        #add_executable(SimpleTest )
+
+
+    endif()
+endif()
+
+
+# Let's set compiler-specific flags
+if(${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
+    # G++
+    message("ADD G++ Compile commands")
+    add_compile_options(-Wall -Wextra -Werror)
+elseif(${CMAKE_CXX_COMPILER_ID} STREQUAL "MSVC")
+    # MSVC
+    set (CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+    set (WINDOWS_EXPORT_ALL_SYMBOLS ON)
+    add_compile_options("$<$<C_COMPILER_ID:MSVC>:/utf-8>")
+    add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
+    target_compile_options(${PROJECT_NAME} PRIVATE /EHsc /MTd /W2 /c)
+    # Set the DLLEXPORT variable to export symbols
+    target_compile_definitions(${PROJECT_NAME} PRIVATE WIN_EXPORT)
+endif()
+
+
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     add_library(${PROJECT_NAME} SHARED ${SRC})
 elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
@@ -104,48 +148,9 @@ elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 endif()
 
 
-# add the binary tree to the search path for include files
-# so that we will find TutorialConfig.h
-include_directories("${PROJECT_BINARY_DIR}" ${SDL2_INCLUDE_DIR} ${GETTEXT_INCLUDE_DIR} ${Intl_INCLUDE_DIR} ${MAGIC_ENUM_SRC})
-if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
-    set (CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
-    set (WINDOWS_EXPORT_ALL_SYMBOLS ON)
-    add_compile_options("$<$<C_COMPILER_ID:MSVC>:/utf-8>")
-    add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
-endif()
-
-# Let's set compiler-specific flags
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-    # G++
-    add_compile_options(-Wall -Wextra)
-elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
-    # MSVC
-    target_compile_options(${PROJECT_NAME} PRIVATE /EHsc /MTd /W2 /c)
-    # Set the DLLEXPORT variable to export symbols
-    target_compile_definitions(${PROJECT_NAME} PRIVATE WIN_EXPORT)
-endif()
 
 
 
-
-
-if( UNIX)
-option(ENGINE_TESTS "Build the tests" ON)
-if(ENGINE_TESTS)
-
-    include(googletest)
-    include(GoogleTest)
-    fetch_googletest(
-        ${PROJECT_SOURCE_DIR}/cmake
-        ${PROJECT_BINARY_DIR}/googletest
-        )
-    enable_testing() 
-    add_subdirectory(tests)
-    #add_executable(SimpleTest )
-
-
-endif()
-endif()
 if(MINGW)
     IF(CMAKE_BUILD_TYPE MATCHES DEBUG)
         message("debug mode")
@@ -153,7 +158,7 @@ if(MINGW)
     else()
         target_link_libraries(${PROJECT_NAME} mingw32 SDL2main SDL2 -mwindows)
     ENDIF(CMAKE_BUILD_TYPE MATCHES DEBUG)
-elsif(WIN32)
+elseif(WIN32)
     target_link_libraries(${PROJECT_NAME} SDL2main SDL2 -mwindows)
 else()
     target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES})
@@ -163,13 +168,11 @@ endif()
 target_link_libraries(${PROJECT_NAME} SDL2_ttf)
 target_link_libraries(${PROJECT_NAME} SDL2_image)
 target_link_libraries(${PROJECT_NAME} SDL2_mixer)
-if(UNIX)
 
-endif()
 
 if( UNIX)
-target_link_libraries(${PROJECT_NAME} SDL2_gfx)
-target_link_libraries(${PROJECT_NAME} pthread)
+    target_link_libraries(${PROJECT_NAME} SDL2_gfx)
+    target_link_libraries(${PROJECT_NAME} pthread)
 endif()
 
 

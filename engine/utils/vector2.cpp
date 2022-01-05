@@ -13,7 +13,7 @@ namespace utils
     Vector2::Vector2(const float x, const float y)
         : x(x), y(y)
     {
-        //ctor
+        // ctor
     }
     Vector2::Vector2(const Vector2 &pOriginal)
         : x(pOriginal.x), y(pOriginal.y)
@@ -27,7 +27,7 @@ namespace utils
 
     Vector2::~Vector2()
     {
-        //dtor
+        // dtor
     }
 
     float Vector2::distance(const Vector2 &v2)
@@ -72,6 +72,17 @@ namespace utils
         return !areSame(x, other.x) || !areSame(y, other.y);
     }
 
+    Vector2 &Vector2::operator=(const Vector2 &other)
+    {
+        if (this == &other)
+            return *this;
+
+        this->x = other.x;
+        this->y = other.y;
+
+        return *this;
+    }
+
     const Vector2 Vector2::normalize()
     {
         float value = std::sqrt(std::pow(x, 2.f) + std::pow(y, 2.f));
@@ -88,17 +99,17 @@ namespace utils
         return areSame(x, other.x) && areSame(y, other.y);
     }
 
-    //Vector2 utils::operator +(const Vector2& orig, const Vector2& other) {
+    // Vector2 utils::operator +(const Vector2& orig, const Vector2& other) {
     //	return Vector2(orig.getX() + other.getX(), orig.getY() + other.getY());
-    //}
+    // }
     //
-    //Vector2 utils::operator -(const Vector2& orig, const Vector2& other) {
+    // Vector2 utils::operator -(const Vector2& orig, const Vector2& other) {
     //	return Vector2(orig.getX() - other.getX(), orig.getY() - other.getY());
-    //}
+    // }
     //
-    //Vector2 utils::operator *(const Vector2& orig, const Vector2& other) {
+    // Vector2 utils::operator *(const Vector2& orig, const Vector2& other) {
     //	return Vector2(orig.getX() * other.getX(), orig.getY() * other.getY());
-    //}
+    // }
 
     // Vector2 operator*(const Vector2 &orig,const float value)
     // {

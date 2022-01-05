@@ -33,6 +33,7 @@ namespace utils
         void operator-=(const Vector2 &other);
         bool operator==(const Vector2 &other);
         bool operator!=(const Vector2 &other);
+        Vector2 &operator=(const Vector2 &other);
 
         const Vector2 normalize();
         const Vector2 floor();
@@ -41,10 +42,10 @@ namespace utils
     private:
         float x, y;
     };
-    //Vector2 operator+(const Vector2 &orig, const Vector2 &other);
-    //Vector2 operator-(const Vector2 &orig, const Vector2 &other);
-    //Vector2 operator*(const Vector2 &orig, const Vector2 &other);
-    //Vector2 operator*(const Vector2 &orig, float value);
+    // Vector2 operator+(const Vector2 &orig, const Vector2 &other);
+    // Vector2 operator-(const Vector2 &orig, const Vector2 &other);
+    // Vector2 operator*(const Vector2 &orig, const Vector2 &other);
+    // Vector2 operator*(const Vector2 &orig, float value);
     Vector2 lerp(const Vector2 &start, const Vector2 &end, const float percentage);
 } // namespace utils
 
