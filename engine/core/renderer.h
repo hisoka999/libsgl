@@ -34,14 +34,15 @@ namespace core
         float getZoomFactor() const;
         void setZoomFactor(float factor);
         void setDrawBlendMode(SDL_BlendMode blendMode);
+        SDL_BlendMode getDrawBlendMode();
 
-        //drawing routines
+        // drawing routines
         /**
-     * draws a not filled circle on the renderer
-     * @param
-     * @param color of the ellipse
-     * @throws
-     */
+         * draws a not filled circle on the renderer
+         * @param
+         * @param color of the ellipse
+         * @throws
+         */
         void drawCircle(int x, int y, int rad, SDL_Color color);
         void drawPoint(float x, float y);
 

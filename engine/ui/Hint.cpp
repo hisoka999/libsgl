@@ -48,12 +48,13 @@ namespace UI
     {
         graphics::Rect rect = {position.getX(), position.getY(), float(width), float(height)};
 
+        SDL_BlendMode oldBlendMode = renderer->getDrawBlendMode();
         renderer->setDrawBlendMode(SDL_BLENDMODE_BLEND);
         renderer->setDrawColor(0x5b, 0xad, 0xf7, 150);
         renderer->fillRect(rect);
         renderer->setDrawColor(200, 200, 200, 255);
         renderer->drawRect(rect);
-        renderer->setDrawBlendMode(SDL_BLENDMODE_MOD);
+        renderer->setDrawBlendMode(oldBlendMode);
     }
 
     const std::string &Hint::getHintText()

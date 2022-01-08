@@ -99,23 +99,23 @@ namespace core
         Sint32 ellipseOverscan;
 
         /*
-    * Sanity check radii
-    */
+         * Sanity check radii
+         */
         if ((rx < 0) || (ry < 0))
         {
             return (-1);
         }
 
         /*
-    * Set color
-    */
+         * Set color
+         */
         result = 0;
         result |= SDL_SetRenderDrawBlendMode(renderer, (a == 255) ? SDL_BLENDMODE_NONE : SDL_BLENDMODE_BLEND);
         result |= SDL_SetRenderDrawColor(renderer, r, g, b, a);
 
         /*
-    * Special cases for rx=0 and/or ry=0: draw a hline/vline/pixel
-    */
+         * Special cases for rx=0 and/or ry=0: draw a hline/vline/pixel
+         */
         if (rx == 0)
         {
             if (ry == 0)
@@ -136,8 +136,8 @@ namespace core
         }
 
         /*
-     * Adjust overscan
-     */
+         * Adjust overscan
+         */
         rxi = rx;
         ryi = ry;
         if (rxi >= 512 || ryi >= 512)
@@ -154,8 +154,8 @@ namespace core
         }
 
         /*
-     * Top/bottom center points.
-     */
+         * Top/bottom center points.
+         */
         oldX = scrX = 0;
         oldY = scrY = ryi;
         result |= _drawQuadrants(renderer, x, y, 0, ry, f);
@@ -503,6 +503,13 @@ namespace core
     void Renderer::setDrawBlendMode(SDL_BlendMode blendMode)
     {
         SDL_SetRenderDrawBlendMode(ren, blendMode);
+    }
+
+    SDL_BlendMode Renderer::getDrawBlendMode()
+    {
+        SDL_BlendMode blendMode;
+        SDL_GetRenderDrawBlendMode(ren, &blendMode);
+        return blendMode;
     }
 
     void Renderer::drawLine(utils::Vector2 &start, utils::Vector2 &end)
