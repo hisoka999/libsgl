@@ -20,6 +20,8 @@ namespace UI
         virtual ~Window();
 
         virtual void render(core::Renderer *pRender);
+        virtual void postRender(core::Renderer *renderer);
+
         virtual void handleEvents(core::Input *pInput);
         void setVisible(bool visible)
         {

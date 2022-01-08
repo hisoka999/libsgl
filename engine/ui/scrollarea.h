@@ -16,6 +16,7 @@ namespace UI
         /** Default destructor */
         virtual ~ScrollArea();
         virtual void render(core::Renderer *pRender);
+        virtual void postRender(core::Renderer *renderer);
         virtual graphics::Rect displayRect();
         virtual graphics::Rect eventRect();
         virtual void handleEvents(core::Input *pInput);

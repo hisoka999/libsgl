@@ -1,7 +1,7 @@
 #include "engine/ui/Window.h"
 #include "engine/ui/Theme.h"
-#include <functional>
 #include <engine/graphics/TextureManager.h>
+#include <functional>
 namespace UI
 {
 
@@ -10,7 +10,7 @@ namespace UI
     Window::Window()
         : Window(50, 50, 300, 400)
     {
-        //addObject()
+        // addObject()
     }
 
     Window::Window(int x, int y, int width, int height)
@@ -58,7 +58,7 @@ namespace UI
         {
             SDL_Color titleColor = getTheme()->getStyleColor(this, UI::StyleType::TitleColor);
 
-            //draw top
+            // draw top
             graphics::Rect topRect;
             topRect.x = getX();
             topRect.y = getY();
@@ -77,7 +77,7 @@ namespace UI
 
             pRender->fillRect(backgroundRect);
             pRender->drawRect(backgroundRect);
-            //draw title
+            // draw title
             getFont()->render(pRender, title, titleColor, backgroundRect.x + 16, backgroundRect.y + 5);
 
             pRender->setDrawColor(getTheme()->getStyleColor(this, UI::StyleType::BorderColor));
@@ -87,6 +87,12 @@ namespace UI
 
             UI::Container::render(pRender);
         }
+    }
+
+    void Window::postRender(core::Renderer *renderer)
+    {
+        if (visible)
+            UI::Container::postRender(renderer);
     }
 
     Window::~Window()

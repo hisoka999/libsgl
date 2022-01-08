@@ -31,7 +31,7 @@ namespace UI
 
     ScrollArea::~ScrollArea()
     {
-        //dtor
+        // dtor
         delete renderArea;
     }
 
@@ -52,8 +52,8 @@ namespace UI
         if (getParent() != nullptr)
             parentRect = getParent()->displayRect();
 
-        //render scroolbar
-        //82 354
+        // render scroolbar
+        // 82 354
         int lastScrollWidth = scrollWidth;
         int lastScrollHeight = scrollHeight;
         scrollWidth = 0;
@@ -84,7 +84,7 @@ namespace UI
             renderArea = nullptr;
         }
 
-        //render Objects to Texture
+        // render Objects to Texture
         if (renderArea == nullptr)
         {
 
@@ -140,7 +140,7 @@ namespace UI
         borderRect.height = renderRect.height;
 
         pRender->drawRect(borderRect);
-        //TODO render scrollbars
+        // TODO render scrollbars
         if (renderArea->getHeight() > renderRect.height)
         {
             graphics::Rect scrollbarRect;
@@ -156,6 +156,11 @@ namespace UI
 
             uiText->render(pRender, "\uf0d8", uiColor, scrollbarRect.x + 2, scrollbarRect.y + 2);
         }
+    }
+
+    void ScrollArea::postRender(core::Renderer *renderer)
+    {
+        Container::postRender(renderer);
     }
 
     graphics::Rect ScrollArea::displayRect()
@@ -224,13 +229,13 @@ namespace UI
                 std::cout << " left edge clicked" << std::endl;
             }
 
-            //render right edge
+            // render right edge
             destRect.x = parentRect.x + renderRect.width - 14 + getX();
             if (destRect.intersects(pInput->getMousePostion()))
             {
                 std::cout << " right edge clicked" << std::endl;
             }
-            //render bar
+            // render bar
             destRect.width = renderRect.width - 28;
             destRect.height = 5;
             destRect.x = parentRect.x + 14 + getX();
@@ -240,7 +245,7 @@ namespace UI
                 std::cout << " bar clicked" << std::endl;
             }
 
-            //check horizontal
+            // check horizontal
 
             destRect.width = 14;
             destRect.height = 14;
@@ -256,7 +261,7 @@ namespace UI
                         scrollPosY = 0;
                 }
             }
-            //render right edge
+            // render right edge
             destRect.x = parentRect.x + renderRect.width - 14 + getX();
             destRect.y = parentRect.y + renderRect.height + getY() - 14;
             if (destRect.intersects(pInput->getMousePostion()))
@@ -265,7 +270,7 @@ namespace UI
                     scrollPosY += std::round(
                         (scrollHeight - renderRect.height - 14) / 100);
             }
-            //render bar
+            // render bar
 
             destRect.width = 4;
             destRect.height = renderRect.height - 24;
@@ -275,7 +280,7 @@ namespace UI
             {
                 std::cout << " bar 2 clicked" << std::endl;
             }
-            //render slider
+            // render slider
             destRect.width = 14;
             destRect.height = 10;
             destRect.x = parentRect.x + renderRect.width - 14 + getX();
