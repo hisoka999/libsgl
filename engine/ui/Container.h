@@ -21,6 +21,7 @@ namespace UI
         void removeObject(const std::shared_ptr<Object> &obj);
         virtual void clear();
         virtual void render(core::Renderer *pRender);
+        virtual void postRender(core::Renderer *pRender);
         virtual void handleEvents(core::Input *pInput);
         size_t size();
         std::shared_ptr<Object> get(size_t pos);

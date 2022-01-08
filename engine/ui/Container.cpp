@@ -6,7 +6,7 @@ namespace UI
 
     Container::Container()
     {
-        //ctor
+        // ctor
     }
 
     Container::~Container()
@@ -35,6 +35,15 @@ namespace UI
         {
             if (obj != nullptr)
                 obj->render(pRender);
+        }
+    }
+
+    void Container::postRender(core::Renderer *pRender)
+    {
+        for (const auto &obj : objects)
+        {
+            if (obj != nullptr)
+                obj->postRender(pRender);
         }
     }
     void Container::handleEvents(core::Input *pInput)

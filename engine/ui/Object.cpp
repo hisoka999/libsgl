@@ -80,13 +80,18 @@ namespace UI
         this->objectName = objectName;
     }
 
-    void Object::render(core::Renderer *pRender)
+    void Object::render([[maybe_unused]] core::Renderer *renderer)
+    {
+    }
+
+    void Object::postRender(core::Renderer *renderer)
     {
         if (showHint)
         {
-            hint->render(pRender);
+            hint->render(renderer);
         }
     }
+
     void Object::handleEvents(core::Input *pInput)
     {
         if (hint != nullptr)
@@ -95,9 +100,7 @@ namespace UI
             if (eventRect().intersects(pInput->getMousePostion()))
             {
                 showHint = true;
-                utils::Vector2 hintPosition = pInput->getMousePostion();
-                hintPosition -= {eventRect().x - displayRect().x, eventRect().y - displayRect().y};
-                hint->setPosition(hintPosition);
+                hint->setPosition(pInput->getMousePostion());
             }
         }
     }

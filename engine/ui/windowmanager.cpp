@@ -36,6 +36,7 @@ namespace UI
         for (auto c : containers)
         {
             c->render(ren);
+            c->postRender(ren);
         }
     }
 
