@@ -95,7 +95,9 @@ namespace UI
             if (eventRect().intersects(pInput->getMousePostion()))
             {
                 showHint = true;
-                hint->setPosition(pInput->getMousePostion());
+                utils::Vector2 hintPosition = pInput->getMousePostion();
+                hintPosition -= {eventRect().x - displayRect().x, eventRect().y - displayRect().y};
+                hint->setPosition(hintPosition);
             }
         }
     }
