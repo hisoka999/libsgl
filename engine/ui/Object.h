@@ -128,6 +128,7 @@ namespace UI
         const std::shared_ptr<Theme> getTheme();
         void setTheme(const std::shared_ptr<Theme> &theme);
 
+
     protected:
         void setObjectName(const std::string &objectName);
         template <typename... Args>
@@ -140,7 +141,7 @@ namespace UI
             }
         }
         int renderOrder;
-
+        bool isShowHint();
     private:
         std::shared_ptr<UI::Hint> hint;
         bool showHint;

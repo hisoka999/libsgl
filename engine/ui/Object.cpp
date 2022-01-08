@@ -152,4 +152,9 @@ namespace UI
         }
         return r;
     }
+
+    bool Object::isShowHint()
+    {
+        return showHint;
+    }
 } // namespace UI
