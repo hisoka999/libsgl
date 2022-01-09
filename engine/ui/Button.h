@@ -47,6 +47,12 @@ namespace UI
         SDL_Color getDisabledColor() const;
         void setDisabledColor(const SDL_Color &value);
 
+        bool isToggleAllowed();
+        bool isToggled();
+
+        void setToggleAllowed(bool toggleAllowed);
+        void toggle();
+
     protected:
         void renderBackground(core::Renderer *pRenderer);
         std::string label;
@@ -60,6 +66,8 @@ namespace UI
         std::shared_ptr<graphics::Texture> texture;
         SDL_Color hoverColor;
         SDL_Color disabledColor;
+        bool toggleAllowed = false;
+        bool toggled = false;
     };
 
 } // namespace UI

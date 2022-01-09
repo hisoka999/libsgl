@@ -44,7 +44,7 @@ namespace UI
 
     void Button::setFont(const std::string &fontname, unsigned int font_size)
     {
-        //TODO error handling
+        // TODO error handling
         auto text = graphics::TextureManager::Instance().loadFont(fontname, font_size);
         Object::setFont(text.get());
     }
@@ -168,7 +168,7 @@ namespace UI
         if (!borderless)
         {
 
-            //draw background rect
+            // draw background rect
             graphics::Rect backgroundRect;
             backgroundRect.x = tx;
             backgroundRect.y = ty;
@@ -178,11 +178,11 @@ namespace UI
             pRenderer->setDrawColor(getTheme()->getStyleColor(this, UI::StyleType::BackgroundColor));
             pRenderer->fillRect(backgroundRect);
 
-            //left top corner
+            // left top corner
             if (texture != nullptr)
             {
                 texture->render(pRenderer, tx, ty, 9, 9, 0, 0);
-                //left bottom corner
+                // left bottom corner
                 texture->render(pRenderer, tx, ty + getHeight() - 9, 9, 9, 0, 20);
 
                 texture->render(pRenderer, tx + getWidth() + 25 - 9, ty, 9, 9, 174, 0);
@@ -205,6 +205,26 @@ namespace UI
     void Button::setDisabledColor(const SDL_Color &value)
     {
         disabledColor = value;
+    }
+
+    bool Button::isToggleAllowed()
+    {
+        return toggleAllowed;
+    }
+
+    bool Button::isToggled()
+    {
+        return toggled && toggleAllowed;
+    }
+
+    void Button::setToggleAllowed(bool toggleAllowed)
+    {
+        this->toggleAllowed = toggleAllowed;
+    }
+
+    void Button::toggle()
+    {
+        toggled = !toggled;
     }
 
     SDL_Color Button::getHoverColor() const
@@ -232,7 +252,7 @@ namespace UI
         {
             displayColor = disabledColor;
         }
-        else if (hover)
+        else if (hover || isToggled())
         {
             displayColor = hoverColor;
         }

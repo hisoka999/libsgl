@@ -17,7 +17,7 @@ namespace UI
         {
             displayColor = getDisabledColor();
         }
-        else if (isHovered())
+        else if (isHovered() || isToggled())
         {
             displayColor = getHoverColor();
         }
