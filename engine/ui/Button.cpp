@@ -227,6 +227,11 @@ namespace UI
         toggled = !toggled;
     }
 
+    void Button::setToggled(bool value)
+    {
+        toggled = value;
+    }
+
     SDL_Color Button::getHoverColor() const
     {
         return hoverColor;

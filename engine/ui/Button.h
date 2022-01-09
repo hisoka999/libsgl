@@ -52,6 +52,7 @@ namespace UI
 
         void setToggleAllowed(bool toggleAllowed);
         void toggle();
+        void setToggled(bool value);
 
     protected:
         void renderBackground(core::Renderer *pRenderer);
