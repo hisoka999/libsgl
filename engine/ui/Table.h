@@ -78,24 +78,43 @@ namespace UI
 
         int yHeader = displayRect().y;
         const float rowHeight = 25.f;
-        for (std::string &header : m_headerNames)
-        {
 
+        std::vector<int> cellSizes;
+        for (size_t col = 0; col < m_cellRenderer.size(); ++col)
+        {
+            cellSizes.push_back(0);
+            for (size_t row = 0; row < m_data.size(); ++row)
+            {
+                auto &value = m_data[row];
+
+                std::string cellValue = m_cellRenderer[col](value);
+                int tmpWidth, tmpHeight = 0;
+                getFont()->size(cellValue, &tmpWidth, &tmpHeight);
+
+                cellSizes[col] = std::max(std::max(cellSizes[col], tmpWidth), 50);
+            }
+        }
+        for (size_t col = 0; col < m_headerNames.size(); ++col)
+        {
+            std::string header = m_headerNames[col];
             getFont()->render(renderer, header, m_headerColor, x, yHeader + 5);
-            x += 100; // for now fixed width
+            x += cellSizes[col] + 10;
         }
         yHeader += rowHeight;
+
         for (size_t row = 0; row < m_data.size(); ++row)
         {
             auto &value = m_data[row];
             int y = yHeader + (float(row) * rowHeight);
+            x = displayRect().x + 10;
 
             for (size_t col = 0; col < m_cellRenderer.size(); ++col)
             {
-                int x = displayRect().x + (col * 100) + 10;
 
                 std::string cellValue = m_cellRenderer[col](value);
+
                 getFont()->render(renderer, cellValue, m_textColor, x, y + 5);
+                x += cellSizes[col] + 10;
             }
             utils::Vector2 lineStart(displayRect().x, yHeader + (float(row) * rowHeight));
             utils::Vector2 lineEnd(displayRect().x + displayRect().width, yHeader + (float(row) * rowHeight));
@@ -115,7 +134,6 @@ namespace UI
     {
         m_headerNames = headerNames;
     }
-
 }
 
 #endif
