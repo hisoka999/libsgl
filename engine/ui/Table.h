@@ -82,13 +82,16 @@ namespace UI
         std::vector<int> cellSizes;
         for (size_t col = 0; col < m_cellRenderer.size(); ++col)
         {
-            cellSizes.push_back(0);
+            int tmpWidth, tmpHeight = 0;
+
+            std::string header = m_headerNames[col];
+            getFont()->size(header, &tmpWidth, &tmpHeight);
+            cellSizes.push_back(tmpWidth);
             for (size_t row = 0; row < m_data.size(); ++row)
             {
                 auto &value = m_data[row];
 
                 std::string cellValue = m_cellRenderer[col](value);
-                int tmpWidth, tmpHeight = 0;
                 getFont()->size(cellValue, &tmpWidth, &tmpHeight);
 
                 cellSizes[col] = std::max(std::max(cellSizes[col], tmpWidth), 50);
