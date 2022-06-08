@@ -40,20 +40,27 @@ namespace UI
         }
     }
 
-    void WindowManager::handleInput(core::Input *inp)
+    bool WindowManager::handleInput(core::Input *inp)
     {
-
+        bool eventHandled = false;
         for (auto c : containers)
         {
             Window *win = dynamic_cast<Window *>(c);
             if (win == nullptr)
-                c->handleEvents(inp);
+                eventHandled = c->handleEvents(inp);
+
+            if (eventHandled)
+                break;
         };
-        auto win = lastActiveWindow();
-        if (win != nullptr)
+        if (!eventHandled)
         {
-            win->handleEvents(inp);
+            auto win = lastActiveWindow();
+            if (win != nullptr)
+            {
+                eventHandled = win->handleEvents(inp);
+            }
         }
+        return eventHandled;
     }
 
     bool WindowManager::isWindowOpen()

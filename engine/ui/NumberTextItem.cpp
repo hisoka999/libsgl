@@ -54,8 +54,9 @@ namespace UI
         utils::Vector2 lineEnd(textW + rect.x + 2, rect.y + textH);
         pRender->drawLine(lineStart, lineEnd);
     }
-    void NumberTextItem::handleEvents(core::Input *pInput)
+    bool NumberTextItem::handleEvents(core::Input *pInput)
     {
+        bool eventHandled = false;
         if (pInput->isMouseButtonPressed(SDL_BUTTON_LEFT))
         {
             if (eventRect().intersects(pInput->getMousePostion()))
@@ -64,6 +65,7 @@ namespace UI
                 SDL_SetTextInputRect(&rect);
                 SDL_StartTextInput();
                 isSelected = true;
+                eventHandled = true;
             }
             else
             {
@@ -93,6 +95,7 @@ namespace UI
                 cursorPosition++;
                 fireFuncionCall("valueChanged", value);
             }
+            eventHandled = true;
         }
         else if (pInput->isKeyDown(SDLK_BACKSPACE) && isSelected)
         {
@@ -104,23 +107,27 @@ namespace UI
                 cursorPosition--;
                 fireFuncionCall("valueChanged", value);
             }
+            eventHandled = true;
         }
         else if (pInput->isKeyDown(SDLK_LEFT))
         {
             if (cursorPosition == 0)
             {
-                return;
+                return eventHandled;
             }
             cursorPosition--;
+            eventHandled = true;
         }
         else if (pInput->isKeyDown(SDLK_RIGHT))
         {
             if (cursorPosition == text.size())
             {
-                return;
+                return eventHandled;
             }
             cursorPosition++;
+            eventHandled = true;
         }
+        return eventHandled;
     }
     void NumberTextItem::setFont(const std::string &fontname, unsigned int font_size)
     {

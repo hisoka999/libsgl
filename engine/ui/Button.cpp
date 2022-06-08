@@ -124,13 +124,14 @@ namespace UI
     {
         borderless = value;
     }
-    void Button::handleEvents(core::Input *pInput)
+    bool Button::handleEvents(core::Input *pInput)
     {
         if (!enabled)
         {
             hover = false;
-            return;
+            return false;
         }
+        bool eventHandled = false;
         graphics::Rect r = eventRect();
 
         if (r.intersects(pInput->getMousePostion()))
@@ -138,6 +139,7 @@ namespace UI
             if (pInput->isMouseButtonPressed(SDL_BUTTON_LEFT))
             {
                 this->fireFuncionCall(buttonClickCallback());
+                eventHandled = true;
             }
             hover = true;
         }
@@ -146,6 +148,7 @@ namespace UI
             hover = false;
         }
         Object::handleEvents(pInput);
+        return eventHandled;
     }
 
     void Button::renderBackground(core::Renderer *pRenderer)

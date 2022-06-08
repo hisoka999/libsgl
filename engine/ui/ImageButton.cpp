@@ -50,16 +50,17 @@ namespace UI
         clickColor = color;
     }
 
-    void ImageButton::handleEvents(core::Input *pInput)
+    bool ImageButton::handleEvents(core::Input *pInput)
     {
         if (image == nullptr)
-            return;
+            return false;
 
         graphics::Rect rect = eventRect();
         rect.width = getWidth();
         rect.height = getHeight();
 
         utils::Vector2 pos = pInput->getMousePostion();
+        bool eventHandled = false;
         if (rect.intersects(pos))
         {
             state = ButtonState::Hovered;
@@ -71,12 +72,15 @@ namespace UI
                                       utils::Vector2(pos.getX() - displayRect().x, pos.getY() - displayRect().y));
 
                 state = ButtonState::Clicked;
+                eventHandled = true;
             }
         }
         else
         {
             state = ButtonState::None;
         }
+        Object::handleEvents(pInput);
+        return eventHandled;
     }
 
     void ImageButton::render(core::Renderer *pRender)

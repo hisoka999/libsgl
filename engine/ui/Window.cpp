@@ -41,10 +41,12 @@ namespace UI
         title = "Demo";
     }
 
-    void Window::handleEvents(core::Input *pInput)
+    bool Window::handleEvents(core::Input *pInput)
     {
         if (visible)
-            UI::Container::handleEvents(pInput);
+            return UI::Container::handleEvents(pInput);
+
+        return false;
     }
 
     void Window::buttonClick()

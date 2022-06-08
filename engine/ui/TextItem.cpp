@@ -59,14 +59,16 @@ namespace UI
         utils::Vector2 lineEnd(textW + rect.x + 2, rect.y + textH);
         pRender->drawLine(lineStart, lineEnd);
     }
-    void TextItem::handleEvents(core::Input *pInput)
+    bool TextItem::handleEvents(core::Input *pInput)
     {
+        bool eventHandled = false;
         if (pInput->isMouseButtonPressed(SDL_BUTTON_LEFT))
         {
             if (eventRect().intersects(pInput->getMousePostion()))
             {
                 pInput->startTextInput(eventRect());
                 isSelected = true;
+                eventHandled = true;
             }
             else
             {
@@ -83,6 +85,7 @@ namespace UI
             text = text.substr(0, cursorPosition) + txt + text.substr(cursorPosition);
             cursorPosition += txt.length();
             fireFuncionCall("textChanged", text);
+            eventHandled = true;
         }
         else if (pInput->isKeyDown(SDLK_BACKSPACE) && isSelected)
         {
@@ -91,6 +94,7 @@ namespace UI
                 text = text.substr(0, cursorPosition - 1) + text.substr(cursorPosition);
                 cursorPosition--;
                 fireFuncionCall("textChanged", text);
+                eventHandled = true;
             }
         }
         else if (pInput->isKeyDown(SDLK_DELETE))
@@ -100,28 +104,33 @@ namespace UI
                 text = text.substr(0, cursorPosition) + text.substr(cursorPosition + 1);
                 cursorPosition--;
                 fireFuncionCall("textChanged", text);
+                eventHandled = true;
             }
         }
         else if (pInput->isKeyDown(SDLK_LEFT))
         {
             if (cursorPosition == 0)
             {
-                return;
+                return eventHandled;
             }
             cursorPosition--;
+            eventHandled = true;
         }
         else if (pInput->isKeyDown(SDLK_RIGHT))
         {
             if (cursorPosition == text.size())
             {
-                return;
+                return eventHandled;
             }
             cursorPosition++;
+            eventHandled = true;
         }
         else if (pInput->isKeyDown(SDLK_RETURN))
         {
             fireFuncionCall("inputSubmit", text);
+            eventHandled = true;
         }
+        return eventHandled;
     }
     void TextItem::setFont(const std::string &fontname, unsigned int font_size)
     {

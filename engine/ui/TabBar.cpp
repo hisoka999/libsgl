@@ -37,7 +37,7 @@ namespace UI
     }
     void TabBar::render(core::Renderer *pRender)
     {
-        //render tabbar
+        // render tabbar
         graphics::Rect displayRect;
         if (getParent() != nullptr)
         {
@@ -54,7 +54,7 @@ namespace UI
         for (auto &tab : tabs)
         {
             const std::string &title = tab->getTitle();
-            //render tab
+            // render tab
             int w = 0;
             int h = 0;
             getFont()->size(title, &w, &h);
@@ -84,10 +84,10 @@ namespace UI
 
             if (btnTexture != nullptr)
             {
-                //left top corner
+                // left top corner
 
                 btnTexture->render(pRender, tabX, taby, 9, 9, 0, 0);
-                //left bottom corner
+                // left bottom corner
                 btnTexture->render(pRender, tabX, taby + tabHeight - 9, 9, 9, 0, 20);
 
                 btnTexture->render(pRender, tabX + tabWidth + 25 - 9, taby, 9, 9, 174, 0);
@@ -99,8 +99,8 @@ namespace UI
                 pRender->drawRect(backgroundRect);
             }
 
-            //tabX += 10; // offset
-            //render title
+            // tabX += 10; // offset
+            // render title
             getFont()->render(pRender, title, currentColor, tabX + 10, taby + 5);
             taby += tabHeight + 10;
             index++;
@@ -116,12 +116,13 @@ namespace UI
             tabs[currentTab]->render(pRender);
         }
     }
-    void TabBar::handleEvents(core::Input *pInput)
+    bool TabBar::handleEvents(core::Input *pInput)
     {
+        bool eventHandled = false;
         if (currentTab != -1)
         {
-            tabs[currentTab]->handleEvents(pInput);
-            //handle tabbar events
+            eventHandled = tabs[currentTab]->handleEvents(pInput);
+            // handle tabbar events
         }
 
         hoveredTab = -1;
@@ -137,12 +138,12 @@ namespace UI
         for (auto &tab : tabs)
         {
             std::string title = tab->getTitle();
-            //render tab
+            // render tab
             int w = 0;
             int h = 0;
             getFont()->size(title, &w, &h);
 
-            //render background
+            // render background
             tabRect.x = tabX;
             tabRect.y = taby;
             tabRect.width = tabWidth + 20;
@@ -153,8 +154,9 @@ namespace UI
                 if (pInput->isMouseButtonPressed(SDL_BUTTON_LEFT))
                 {
                     currentTab = index;
+                    eventHandled = true;
                 }
-                //hover
+                // hover
                 hoveredTab = index;
             }
 
@@ -162,6 +164,7 @@ namespace UI
             taby += tabHeight + 10;
             index++;
         }
+        return eventHandled;
     }
 
     void TabBar::addTab(std::shared_ptr<Tab> tab)

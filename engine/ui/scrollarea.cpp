@@ -183,10 +183,10 @@ namespace UI
         return r;
     }
 
-    void ScrollArea::handleEvents(core::Input *pInput)
+    bool ScrollArea::handleEvents(core::Input *pInput)
     {
         reset();
-        Container::handleEvents(pInput);
+        bool eventHandled = Container::handleEvents(pInput);
         int i = 0;
 
         graphics::Rect parentRect;
@@ -259,6 +259,8 @@ namespace UI
                         (scrollHeight - renderRect.height - 14) / 100);
                     if (scrollPosY < 0)
                         scrollPosY = 0;
+
+                    eventHandled = true;
                 }
             }
             // render right edge
@@ -269,6 +271,7 @@ namespace UI
                 if (scrollPosY < scrollHeight - renderRect.height - 14)
                     scrollPosY += std::round(
                         (scrollHeight - renderRect.height - 14) / 100);
+                eventHandled = true;
             }
             // render bar
 
@@ -293,27 +296,26 @@ namespace UI
         if (pInput->isScrollWheel())
         {
             if (!r.intersects(pInput->getMousePostion()))
-                return;
+                return eventHandled;
             utils::Vector2 pos = pInput->getMouseWheelPosition();
             if (scrollWidth - renderRect.width > 0)
             {
-                if ((scrollPosX + (pos.getY() * 5) >= 0 && pos.getY() == -1) || (pos.getY() == 1 && scrollPosX < scrollWidth - renderRect.width - 14))
+                if ((scrollPosX + (pos.getY() * -5) >= 0 && pos.getY() == -1) || (pos.getY() == 1 && scrollPosX < scrollWidth - renderRect.width - 14))
                 {
-                    scrollPosX += pos.getY() * 5;
-                    std::cout << "wheel x: " << pos.getX() << " y: " << pos.getY()
-                              << " scrollPosX: " << scrollPosX << std::endl;
+                    scrollPosX += pos.getY() * -5;
+                    eventHandled = true;
                 }
             }
             else
             {
-                if ((scrollPosY + (pos.getY() * 5) >= 0 && pos.getY() == -1) || (pos.getY() == 1 && scrollPosY < scrollHeight - renderRect.height - 14))
+                if ((scrollPosY + (pos.getY() * -5) >= 0 && pos.getY() == -1) || (pos.getY() == 1 && scrollPosY < scrollHeight - renderRect.height - 14))
                 {
-                    scrollPosY += pos.getY() * 5;
-                    std::cout << "wheel y: " << pos.getY() << " x: " << pos.getX()
-                              << " scrollPosY: " << scrollPosY << std::endl;
+                    scrollPosY += pos.getY() * -5;
+                    eventHandled = true;
                 }
             }
         }
+        return eventHandled;
     }
 
 } // namespace UI

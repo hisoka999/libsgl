@@ -102,7 +102,7 @@ namespace UI
             elements.clear();
             selection = 0;
         }
-        virtual void handleEvents(core::Input *pInput)
+        virtual bool handleEvents(core::Input *pInput)
         {
             int tx = getX();
 
@@ -123,12 +123,14 @@ namespace UI
 
             graphics::Rect leftButtonRect = {rect.x, rect.y, rect.height, rect.height};
             graphics::Rect rightButtonRect = {rect.x + rect.width - rect.height, rect.y, rect.height, rect.height};
+            bool eventHandled = false;
 
             if (leftButtonRect.intersects(pInput->getMousePostion()) && pInput->isMouseButtonPressed(SDL_BUTTON_LEFT))
             {
                 if (selection > 0)
                 {
                     setSelection(selection - 1);
+                    eventHandled = true;
                 }
             }
             else if (rightButtonRect.intersects(pInput->getMousePostion()) && pInput->isMouseButtonPressed(SDL_BUTTON_LEFT))
@@ -136,8 +138,10 @@ namespace UI
                 if (selection < elements.size() - 1 && elements.size() > 0)
                 {
                     setSelection(selection + 1);
+                    eventHandled = true;
                 }
             }
+            return eventHandled;
         }
         int getSelection() { return selection; }
         void setSelection(unsigned int selection)

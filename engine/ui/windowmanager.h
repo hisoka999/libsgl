@@ -21,7 +21,7 @@ namespace UI
         void addWindow(Window *win);
 
         void render(core::Renderer *ren);
-        void handleInput(core::Input *inp);
+        bool handleInput(core::Input *inp);
 
         bool isWindowOpen();
 

@@ -19,7 +19,7 @@ namespace UI
         virtual void postRender(core::Renderer *renderer);
         virtual graphics::Rect displayRect();
         virtual graphics::Rect eventRect();
-        virtual void handleEvents(core::Input *pInput);
+        virtual bool handleEvents(core::Input *pInput);
         void reset(bool noscrollreset = true);
 
     protected:

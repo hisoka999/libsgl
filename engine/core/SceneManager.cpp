@@ -27,11 +27,11 @@ namespace core
             return;
         scenes[currentScene]->render();
     }
-    void SceneManager::handleEvents(core::Input *pInput)
+    bool SceneManager::handleEvents(core::Input *pInput)
     {
         if (currentScene.empty())
-            return;
-        scenes[currentScene]->handleEvents(pInput);
+            return false;
+        return scenes[currentScene]->handleEvents(pInput);
     }
 
     void SceneManager::update()

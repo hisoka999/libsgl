@@ -27,7 +27,7 @@ namespace UI
         void disable();
         bool isEnabled();
         virtual void render(core::Renderer *pRender);
-        virtual void handleEvents(core::Input *pInput);
+        virtual bool handleEvents(core::Input *pInput);
         virtual graphics::Rect displayRect();
         virtual graphics::Rect eventRect();
 

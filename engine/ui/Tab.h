@@ -22,7 +22,7 @@ namespace UI
         const std::string &getTitle() const;
         void setTitle(const std::string &title);
         virtual void render(core::Renderer *pRender);
-        virtual void handleEvents(core::Input *pInput);
+        virtual bool handleEvents(core::Input *pInput);
 
     private:
         std::string title;

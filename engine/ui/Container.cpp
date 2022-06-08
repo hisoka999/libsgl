@@ -46,13 +46,19 @@ namespace UI
                 obj->postRender(pRender);
         }
     }
-    void Container::handleEvents(core::Input *pInput)
+    bool Container::handleEvents(core::Input *pInput)
     {
+        bool eventHandled = false;
         for (const auto &obj : objects)
         {
             if (obj != nullptr)
-                obj->handleEvents(pInput);
+            {
+                eventHandled = obj->handleEvents(pInput);
+                if (eventHandled)
+                    break;
+            }
         }
+        return eventHandled;
     }
 
     size_t Container::size()

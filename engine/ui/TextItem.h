@@ -22,7 +22,7 @@ namespace UI
         void setText(const std::string &text);
 
         void render(core::Renderer *pRender);
-        void handleEvents(core::Input *pInput);
+        bool handleEvents(core::Input *pInput);
         void setFont(const std::string &fontname, unsigned int font_size);
         void setColor(int r, int g, int b);
 

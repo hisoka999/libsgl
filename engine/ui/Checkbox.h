@@ -21,7 +21,7 @@ namespace UI
         void toggleChecked();
         void setText(std::string text) { this->text = text; }
         virtual void render(core::Renderer *pRender);
-        virtual void handleEvents(core::Input *pInput);
+        virtual bool handleEvents(core::Input *pInput);
 
     protected:
     private:

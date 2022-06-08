@@ -40,7 +40,7 @@ namespace UI
         setChecked(!checked);
     }
 
-    void Checkbox::handleEvents(core::Input *pInput)
+    bool Checkbox::handleEvents(core::Input *pInput)
     {
         int tx = getX();
 
@@ -66,7 +66,9 @@ namespace UI
         {
             std::cout << "toggle checked" << std::endl;
             toggleChecked();
+            return true;
         }
+        return false;
     }
 
     void Checkbox::render(core::Renderer *pRender)

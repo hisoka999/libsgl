@@ -29,7 +29,7 @@ namespace core
         }
 
         void render();
-        void handleEvents(core::Input *pInput);
+        bool handleEvents(core::Input *pInput);
 
         void addScene(std::string name, const std::shared_ptr<Scene> &scene);
         void setCurrentScene(std::string name);

@@ -75,7 +75,7 @@ namespace UI
 
         virtual void render(core::Renderer *renderer);
         virtual void postRender(core::Renderer *renderer);
-        virtual void handleEvents(core::Input *pInput);
+        virtual bool handleEvents(core::Input *pInput);
         Object *getParent() const
         {
             return parent;

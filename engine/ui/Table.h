@@ -16,7 +16,7 @@ namespace UI
 
         virtual void render(core::Renderer *renderer);
         // virtual void postRender(core::Renderer *renderer);
-        virtual void handleEvents(core::Input *input);
+        virtual bool handleEvents(core::Input *input);
         void setData(std::vector<std::shared_ptr<T>> &data)
         {
             m_data = data;
@@ -126,10 +126,10 @@ namespace UI
     }
 
     template <typename T>
-    void Table<T>::handleEvents(core::Input *input)
+    bool Table<T>::handleEvents(core::Input *input)
     {
 
-        UI::Object::handleEvents(input);
+        return UI::Object::handleEvents(input);
     }
 
     template <typename T>

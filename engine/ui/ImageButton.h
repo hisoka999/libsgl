@@ -24,7 +24,7 @@ namespace UI
         /** Default destructor */
         virtual ~ImageButton();
         virtual void render(core::Renderer *pRender);
-        virtual void handleEvents(core::Input *pInput);
+        virtual bool handleEvents(core::Input *pInput);
         void loadImage(std::string pFilename);
         void loadClickedImage(std::string pFilename);
         void setImage(std::shared_ptr<graphics::Texture> pImage)

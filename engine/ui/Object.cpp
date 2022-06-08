@@ -92,7 +92,7 @@ namespace UI
         }
     }
 
-    void Object::handleEvents(core::Input *pInput)
+    bool Object::handleEvents(core::Input *pInput)
     {
         if (hint != nullptr)
         {
@@ -103,6 +103,7 @@ namespace UI
                 hint->setPosition(pInput->getMousePostion());
             }
         }
+        return false;
     }
     graphics::Text *Object::getFont()
     {

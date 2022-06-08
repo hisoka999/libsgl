@@ -22,7 +22,7 @@ namespace UI
         virtual void clear();
         virtual void render(core::Renderer *pRender);
         virtual void postRender(core::Renderer *pRender);
-        virtual void handleEvents(core::Input *pInput);
+        virtual bool handleEvents(core::Input *pInput);
         size_t size();
         std::shared_ptr<Object> get(size_t pos);
         void needsRefresh();
