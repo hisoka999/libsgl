@@ -43,10 +43,15 @@ namespace UI
 
     bool Window::handleEvents(core::Input *pInput)
     {
+        bool eventsHandled = false;
         if (visible)
-            return UI::Container::handleEvents(pInput);
+        {
+            eventsHandled = UI::Container::handleEvents(pInput);
 
-        return false;
+            if (!eventsHandled)
+                eventsHandled = displayRect().intersects(pInput->getMousePostion());
+        }
+        return eventsHandled;
     }
 
     void Window::buttonClick()
