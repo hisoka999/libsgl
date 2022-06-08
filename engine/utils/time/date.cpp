@@ -1,5 +1,7 @@
 #include "date.h"
 #include <engine/utils/string.h>
+#include <cmath>
+
 namespace utils
 {
     namespace time
@@ -72,6 +74,23 @@ namespace utils
         uint64_t Date::toNumber() const
         {
             return (year * 365) + (month * 12) + day;
+        }
+
+        uint16_t Date::getDayOfWeek()
+        {
+            int letter = int(1 + year + std::floor(float(year / 4)) + std::floor(float((year - 1600) / 400)) - std::floor(float((year - 1600) / 100))) % 7;
+            std::string weekday = "";
+
+            int dayOfYear = 0;
+            for (int month = 0; month <= this->month; month++)
+            {
+                if (month < this->month)
+                    dayOfYear += utils::time::lastDayOfMonth(year, this->month);
+                else
+                    dayOfYear += this->day;
+            }
+            int weekOfYear = dayOfYear / 7;
+            return (letter + dayOfYear) - (weekOfYear * 7) - 1;
         }
 
         bool Date::operator==(const Date &date)

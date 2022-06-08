@@ -29,6 +29,7 @@ namespace utils
             uint16_t getMonth() const;
             uint16_t getDay() const;
             uint64_t toNumber() const;
+            uint16_t getDayOfWeek();
 
             bool operator==(const Date &date);
             bool operator>=(const Date &date);
