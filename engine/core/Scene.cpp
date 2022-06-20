@@ -39,4 +39,8 @@ namespace core
         music = nullptr;
     }
 
+    void Scene::update()
+    {
+    }
+
 } /* namespace character */

@@ -19,7 +19,7 @@ namespace core
 
         virtual void render() = 0;
         virtual bool handleEvents(core::Input *pInput) = 0;
-        virtual void update(){};
+        virtual void update();
         virtual void unload();
         virtual void load();
         virtual void fixedUpdate(uint32_t delta);

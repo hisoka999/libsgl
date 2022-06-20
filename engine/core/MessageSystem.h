@@ -69,11 +69,20 @@ namespace core
         template <typename Data>
         void sendMessage(const std::shared_ptr<Message<Type, Data>> pMessage)
         {
-            auto rng = _consumer.equal_range(pMessage->getType());
-            for (auto it = rng.first; it != rng.second; ++it)
+            _messageQueue.push_back(pMessage);
+        }
+
+        void processMessages()
+        {
+            for (auto &message : _messageQueue)
             {
-                call(it->second.dispatcher, pMessage->getData());
+                auto rng = _consumer.equal_range(message->getType());
+                for (auto it = rng.first; it != rng.second; ++it)
+                {
+                    call(it->second.dispatcher, message->getData());
+                }
             }
+            _messageQueue.clear();
         }
 
     private:
@@ -84,6 +93,8 @@ namespace core
             f(v);
         }
         std::unordered_multimap<Type, MessageDispatcher> _consumer;
+        std::vector < std::shared_ptr<Message<Type, void *>> _messageQueue;
+
         int reference_count;
     };
 
