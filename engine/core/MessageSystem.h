@@ -26,6 +26,13 @@ struct MessageDispatcher
 namespace core
 {
     template <typename Type>
+    struct MessageData
+    {
+        std::any data;
+        Type type;
+    };
+
+    template <typename Type>
     class MessageSystem
     {
     public:
@@ -69,17 +76,20 @@ namespace core
         template <typename Data>
         void sendMessage(const std::shared_ptr<Message<Type, Data>> pMessage)
         {
-            _messageQueue.push_back(pMessage);
+            MessageData<Type> data;
+            data.data = pMessage->getData();
+            data.type = pMessage->getType();
+            _messageQueue.push_back(data);
         }
 
         void processMessages()
         {
             for (auto &message : _messageQueue)
             {
-                auto rng = _consumer.equal_range(message->getType());
+                auto rng = _consumer.equal_range(message.type);
                 for (auto it = rng.first; it != rng.second; ++it)
                 {
-                    call(it->second.dispatcher, message->getData());
+                    call(it->second.dispatcher, message.data);
                 }
             }
             _messageQueue.clear();
@@ -93,7 +103,7 @@ namespace core
             f(v);
         }
         std::unordered_multimap<Type, MessageDispatcher> _consumer;
-        std::vector < std::shared_ptr<Message<Type, void *>> _messageQueue;
+        std::vector<MessageData<Type>> _messageQueue;
 
         int reference_count;
     };
