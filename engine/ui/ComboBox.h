@@ -19,6 +19,7 @@ namespace UI
         /** Default constructor */
         ComboBox(Object *parent = nullptr) : UI::Object(parent), selection(0)
         {
+            setObjectName("combobox");
             setWidth(100);
             iconFont = graphics::TextureManager::Instance().loadFont("fonts/fa-solid-900.ttf", 20);
 

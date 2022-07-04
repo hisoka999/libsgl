@@ -1,8 +1,14 @@
 #include "Hint.h"
+#include "engine/graphics/TextureManager.h"
+
 namespace UI
 {
     Hint::Hint() : position(0, 0), width(0), height(0)
     {
+
+        auto theme = graphics::TextureManager::Instance().getDefaultTheme();
+        backgroundColor = theme->getStyleColor("hint", UI::StyleType::BackgroundColor);
+        borderColor = theme->getStyleColor("hint", UI::StyleType::BorderColor);
     }
 
     Hint::~Hint()
@@ -50,9 +56,9 @@ namespace UI
 
         SDL_BlendMode oldBlendMode = renderer->getDrawBlendMode();
         renderer->setDrawBlendMode(SDL_BLENDMODE_BLEND);
-        renderer->setDrawColor(0x5b, 0xad, 0xf7, 150);
+        renderer->setDrawColor(backgroundColor);
         renderer->fillRect(rect);
-        renderer->setDrawColor(200, 200, 200, 255);
+        renderer->setDrawColor(borderColor);
         renderer->drawRect(rect);
         renderer->setDrawBlendMode(oldBlendMode);
     }

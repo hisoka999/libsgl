@@ -129,7 +129,7 @@ endif()
 
 
 # Let's set compiler-specific flags
-if(${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     # G++
     message("ADD G++ Compile commands")
     add_compile_options(-Wall -Wextra -Werror)
