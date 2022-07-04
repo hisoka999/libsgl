@@ -14,6 +14,7 @@ namespace UI
     template <typename T>
     class ComboBox : public UI::Object
     {
+
     public:
         /** Default constructor */
         ComboBox(Object *parent = nullptr) : UI::Object(parent), selection(0)
@@ -29,6 +30,13 @@ namespace UI
             {
                 setTheme(graphics::TextureManager::Instance().getDefaultTheme());
             }
+
+            textColor = getTheme()->getStyleColor(this, UI::StyleType::Color);
+
+            disabledColor = getTheme()->getStyleColor(this, UI::StyleType::DisabledColor);
+
+            hoverColor = getTheme()->getStyleColor(this, UI::StyleType::HoverColor);
+            backGroundColor = getTheme()->getStyleColor(this, UI::StyleType::BackgroundColor);
         }
         /** Default destructor */
         virtual ~ComboBox()
@@ -55,8 +63,6 @@ namespace UI
             rect.width = getWidth();
             rect.height = 28;
 
-            SDL_Color textColor = {255, 255, 255, 255};
-
             graphics::Rect leftButtonRect = {rect.x, rect.y, rect.height, rect.height};
             graphics::Rect rightButtonRect = {rect.x + rect.width - rect.height, rect.y, rect.height, rect.height};
             pRender->setDrawColor(12, 21, 24, 255);
@@ -68,14 +74,14 @@ namespace UI
 
             // draw left and right button filling
             if (selection > 0)
-                pRender->setDrawColor(0, 200, 200, 255);
+                pRender->setDrawColor(hoverColor);
             else
-                pRender->setDrawColor(93, 103, 108, 255);
+                pRender->setDrawColor(backgroundColor);
             pRender->fillRect(leftButtonRect);
             if (selection < elements.size() - 1 && elements.size() > 0)
-                pRender->setDrawColor(0, 200, 200, 255);
+                pRender->setDrawColor(hoverColor);
             else
-                pRender->setDrawColor(93, 103, 108, 255);
+                pRender->setDrawColor(backgroundColor);
 
             pRender->fillRect(rightButtonRect);
 
@@ -181,6 +187,10 @@ namespace UI
         std::shared_ptr<graphics::Text> iconFont;
 
         std::function<std::string(T)> elementFunction;
+        SDL_Color hoverColor;
+        SDL_Color disabledColor;
+        SDL_Color textColor;
+        SDL_Color backgroundColor;
     };
 
 } // namespace UI
