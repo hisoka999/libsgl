@@ -133,15 +133,15 @@ if(${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
     # G++
     message("ADD G++ Compile commands")
     add_compile_options(-Wall -Wextra -Werror)
-elseif(${CMAKE_CXX_COMPILER_ID} STREQUAL "MSVC")
+elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     # MSVC
     set (CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
     set (WINDOWS_EXPORT_ALL_SYMBOLS ON)
     add_compile_options("$<$<C_COMPILER_ID:MSVC>:/utf-8>")
     add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
-    target_compile_options(${PROJECT_NAME} PRIVATE /EHsc /MTd /W2 /c)
+    #target_compile_options(${PROJECT_NAME} PRIVATE /EHsc /MTd /W2 /c)
     # Set the DLLEXPORT variable to export symbols
-    target_compile_definitions(${PROJECT_NAME} PRIVATE WIN_EXPORT)
+    #target_compile_definitions(${PROJECT_NAME} PRIVATE WIN_EXPORT)
 endif()
 
 
