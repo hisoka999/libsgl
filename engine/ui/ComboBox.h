@@ -36,7 +36,7 @@ namespace UI
             disabledColor = getTheme()->getStyleColor(this, UI::StyleType::DisabledColor);
 
             hoverColor = getTheme()->getStyleColor(this, UI::StyleType::HoverColor);
-            backGroundColor = getTheme()->getStyleColor(this, UI::StyleType::BackgroundColor);
+            backgroundColor = getTheme()->getStyleColor(this, UI::StyleType::BackgroundColor);
         }
         /** Default destructor */
         virtual ~ComboBox()
