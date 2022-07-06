@@ -157,7 +157,6 @@ namespace UI
     void Window::clear()
     {
         UI::Container::clear();
-        addObject(m_closeButton);
     }
 
     void Window::setWithoutTitle(bool withoutTitle)
