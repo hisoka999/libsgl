@@ -71,6 +71,11 @@ namespace UI
         return m_visible;
     }
 
+    void Window::setTitle(std::string title)
+    {
+        m_title = title;
+    }
+
     void Window::buttonClick()
     {
         this->setVisible(false);
