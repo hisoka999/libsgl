@@ -5,8 +5,6 @@
 namespace UI
 {
 
-    int Window::windowCount = 0;
-
     Window::Window()
         : Window(50, 50, 300, 400)
     {
@@ -14,44 +12,63 @@ namespace UI
     }
 
     Window::Window(int x, int y, int width, int height)
-        : width(width), height(height)
+        : m_width(width), m_height(height)
     {
         setObjectName("window");
         setTheme(graphics::TextureManager::Instance().getDefaultTheme());
         setX(x);
         setY(y);
-        visible = false;
-        windowCount++;
+        m_visible = false;
 
-        closeButton = std::make_shared<UI::Button>(this);
-        closeButton->setX(width - 23 - 5 - 16);
-        closeButton->setY(7 - 40);
+        m_closeButton = std::make_shared<UI::Button>(this);
+        m_closeButton->setX(width - 23 - 5 - 16);
+        m_closeButton->setY(7 - 40);
         std::string iconFontName = getTheme()->getStyleText(this, UI::StyleType::IconFontName);
         int iconFontSize = getTheme()->getStyleInt(this, UI::StyleType::IconFontSize);
 
-        closeButton->setFont(iconFontName, iconFontSize);
-        closeButton->setLabel("\uf00d");
-        closeButton->setBorderless(true);
+        m_closeButton->setFont(iconFontName, iconFontSize);
+        m_closeButton->setLabel("\uf00d");
+        m_closeButton->setBorderless(true);
         SDL_Color buttonColor = getTheme()->getStyleColor(this, UI::StyleType::TitleColor); //{195, 129, 42, 255};
-        closeButton->setColor(buttonColor);
+        m_closeButton->setColor(buttonColor);
 
-        this->addObject(closeButton);
-        closeButton->connect("buttonClick", [&]()
-                             { buttonClick(); });
-        title = "Demo";
+        m_closeButton->connect("buttonClick", [&]()
+                               { buttonClick(); });
+        m_title = "Demo";
     }
 
     bool Window::handleEvents(core::Input *pInput)
     {
         bool eventsHandled = false;
-        if (visible)
+        if (m_visible)
         {
             eventsHandled = UI::Container::handleEvents(pInput);
 
             if (!eventsHandled)
                 eventsHandled = displayRect().intersects(pInput->getMousePostion());
+
+            if (!eventsHandled)
+                eventsHandled = m_closeButton->handleEvents(pInput);
         }
         return eventsHandled;
+    }
+
+    void Window::setVisible(bool visible)
+    {
+        m_visible = visible;
+        if (!m_visible)
+        {
+            this->fireFuncionCall("closed");
+        }
+        else
+        {
+            onOpen();
+        }
+    }
+
+    bool Window::getVisible()
+    {
+        return m_visible;
     }
 
     void Window::buttonClick()
@@ -61,7 +78,7 @@ namespace UI
 
     void Window::render(core::Renderer *pRender)
     {
-        if (visible)
+        if (m_visible)
         {
             SDL_Color titleColor = getTheme()->getStyleColor(this, UI::StyleType::TitleColor);
 
@@ -69,7 +86,7 @@ namespace UI
             graphics::Rect topRect;
             topRect.x = getX();
             topRect.y = getY();
-            topRect.width = width;
+            topRect.width = m_width;
             topRect.height = 2;
             pRender->setDrawColor(titleColor);
             pRender->fillRect(topRect);
@@ -78,34 +95,37 @@ namespace UI
             graphics::Rect backgroundRect;
             backgroundRect.x = getX();
             backgroundRect.y = getY() + topRect.height;
-            backgroundRect.width = width;
-            backgroundRect.height = height - topRect.height;
+            backgroundRect.width = m_width;
+            backgroundRect.height = m_height - topRect.height;
             pRender->setDrawColor(getTheme()->getStyleColor(this, UI::StyleType::BackgroundColor));
 
             pRender->fillRect(backgroundRect);
             pRender->drawRect(backgroundRect);
             // draw title
-            getFont()->render(pRender, title, titleColor, backgroundRect.x + 16, backgroundRect.y + 5);
+            if (!m_withoutTitle)
+            {
+                getFont()->render(pRender, m_title, titleColor, backgroundRect.x + 16, backgroundRect.y + 5);
 
-            pRender->setDrawColor(getTheme()->getStyleColor(this, UI::StyleType::BorderColor));
-            utils::Vector2 start(backgroundRect.x + 16, getY() + 29);
-            utils::Vector2 end(backgroundRect.x + width - 16, getY() + 29);
-            pRender->drawLine(start, end);
-
+                pRender->setDrawColor(getTheme()->getStyleColor(this, UI::StyleType::BorderColor));
+                utils::Vector2 start(backgroundRect.x + 16, getY() + 29);
+                utils::Vector2 end(backgroundRect.x + m_width - 16, getY() + 29);
+                pRender->drawLine(start, end);
+                m_closeButton->render(pRender);
+            }
             UI::Container::render(pRender);
         }
     }
 
     void Window::postRender(core::Renderer *renderer)
     {
-        if (visible)
+        if (m_visible)
             UI::Container::postRender(renderer);
     }
 
     Window::~Window()
     {
         UI::Container::clear();
-        closeButton = nullptr;
+        m_closeButton = nullptr;
     }
 
     graphics::Rect Window::displayRect()
@@ -113,8 +133,8 @@ namespace UI
         graphics::Rect r;
         r.x = getX() + 16;
         r.y = getY() + 30;
-        r.width = width - 5;
-        r.height = height - 40;
+        r.width = m_width - 5;
+        r.height = m_height - 40;
         return r;
     }
 
@@ -123,10 +143,21 @@ namespace UI
         return displayRect();
     }
 
+    void Window::setSize(int width, int height)
+    {
+        m_width = width;
+        m_height = height;
+    }
+
     void Window::clear()
     {
         UI::Container::clear();
-        addObject(closeButton);
+        addObject(m_closeButton);
+    }
+
+    void Window::setWithoutTitle(bool withoutTitle)
+    {
+        m_withoutTitle = withoutTitle;
     }
 
 } // namespace UI

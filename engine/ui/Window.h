@@ -22,50 +22,31 @@ namespace UI
         virtual void render(core::Renderer *pRender);
         virtual void postRender(core::Renderer *renderer);
         virtual bool handleEvents(core::Input *pInput);
-        void setVisible(bool visible)
-        {
-            this->visible = visible;
-            if (!visible)
-            {
-                this->fireFuncionCall("closed");
-            }
-            else
-            {
-                onOpen();
-            }
-        }
-        bool getVisible()
-        {
-            return visible;
-        }
+        void setVisible(bool visible);
+        bool getVisible();
 
-        void setTitle(std::string title)
-        {
-            this->title = title;
-        }
+        void setTitle(std::string title);
 
         virtual graphics::Rect displayRect();
         virtual graphics::Rect eventRect();
 
-        void setSize(int width, int height)
-        {
-            this->width = width;
-            this->height = height;
-        }
+        void setSize(int width, int height);
         virtual void clear();
 
     protected:
         virtual void onOpen(){
 
         };
+        void setWithoutTitle(bool withoutTitle);
 
     private:
-        int width, height;
-        bool visible;
+        int m_width;
+        int m_height;
+        bool m_visible = false;
         virtual void buttonClick();
-        std::shared_ptr<UI::Button> closeButton;
-        std::string title;
-        static int windowCount;
+        std::shared_ptr<UI::Button> m_closeButton;
+        std::string m_title;
+        bool m_withoutTitle = false;
     };
 
 } // namespace UI
