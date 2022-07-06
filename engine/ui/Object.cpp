@@ -100,7 +100,7 @@ namespace UI
             if (eventRect().intersects(pInput->getMousePostion()))
             {
                 showHint = true;
-                hint->setPosition(pInput->getMousePostion());
+                hint->setPosition(pInput->getMousePostion() + utils::Vector2(16, 16));
             }
         }
         return false;
