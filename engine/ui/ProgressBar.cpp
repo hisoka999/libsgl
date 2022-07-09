@@ -1,0 +1,91 @@
+#include "ProgressBar.h"
+#include "engine/graphics/TextureManager.h"
+namespace UI
+{
+    ProgressBar::ProgressBar(Object *parent)
+        : UI::Object(parent), m_minValue(0), m_maxValue(100), m_currentValue(0)
+    {
+        init();
+    }
+
+    ProgressBar::ProgressBar(Object *parent, int pWidth, int pHeight)
+        : UI::Object(parent, pWidth, pHeight), m_minValue(0), m_maxValue(100), m_currentValue(0)
+    {
+        init();
+    }
+
+    ProgressBar::~ProgressBar()
+    {
+    }
+
+    void ProgressBar::render(core::Renderer *renderer)
+    {
+        renderer->setDrawColor(m_backgroundColor);
+        renderer->drawRect(displayRect());
+
+        renderer->setDrawColor(m_borderColor);
+        renderer->fillRect(displayRect());
+
+        graphics::Rect progressRect = displayRect();
+        progressRect.x++;
+        progressRect.y++;
+        progressRect.width = ((m_currentValue / (m_maxValue - m_minValue)) * progressRect.width) - 2;
+        progressRect.height -= 2;
+
+        renderer->setDrawColor(m_progressColor);
+        renderer->fillRect(progressRect);
+    }
+
+    void ProgressBar::postRender(core::Renderer *renderer)
+    {
+    }
+
+    bool ProgressBar::handleEvents(core::Input *pInput)
+    {
+        auto _eventRect = eventRect();
+        if (_eventRect.intersects(pInput->getMousePostion()))
+        {
+            if (pInput->isMouseButtonPressed(SDL_BUTTON_LEFT))
+            {
+                int relativeCurrentValue = pInput->getMousePostion().getX() - _eventRect.x;
+                m_currentValue = (relativeCurrentValue % m_maxValue) + m_minValue;
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    void ProgressBar::setMinValue(int minValue)
+    {
+        m_minValue = minValue;
+    }
+
+    void ProgressBar::setMaxValue(int maxValue)
+    {
+        m_maxValue = maxValue;
+    }
+
+    void ProgressBar::setCurrentValue(int currentValue)
+    {
+        m_currentValue = currentValue;
+    }
+
+    int ProgressBar::getCurrentValue()
+    {
+        return m_currentValue;
+    }
+
+    void ProgressBar::init()
+    {
+        setObjectName("ProgressBar");
+        if (getTheme() == nullptr)
+        {
+            setTheme(graphics::TextureManager::Instance().getDefaultTheme());
+        }
+
+        m_borderColor = getTheme()->getStyleColor(this, UI::StyleType::BorderColor);
+        m_backgroundColor = getTheme()->getStyleColor(this, UI::StyleType::BackgroundColor);
+        m_progressColor = getTheme()->getStyleColor(this, UI::StyleType::ForgroundColor);
+    }
+}
