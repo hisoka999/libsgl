@@ -35,6 +35,7 @@ namespace core
         std::shared_ptr<utils::IniBase> getSettings() const;
         void setFullScreen(FullScreenMode mode);
         void setWindowSize(int width, int height);
+        void setWindowIcon(const std::string &iconPath);
 
     protected:
     private:
@@ -44,7 +45,7 @@ namespace core
         virtual ~GameWindow();
 
         SDL_Window *win;
-
+        SDL_Surface *icon = nullptr;
         int width;
         int height;
         std::string title;

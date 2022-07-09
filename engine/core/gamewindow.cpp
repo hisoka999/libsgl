@@ -86,6 +86,11 @@ namespace core
 
     GameWindow::~GameWindow()
     {
+        if (icon != nullptr)
+        {
+            SDL_FreeSurface(icon);
+        }
+
         if (win != nullptr)
         {
             SDL_DestroyWindow(win);
@@ -141,6 +146,12 @@ namespace core
         SDL_SetWindowSize(win, width, height);
         this->width = width;
         this->height = height;
+    }
+
+    void GameWindow::setWindowIcon(const std::string &iconPath)
+    {
+        icon = IMG_Load(iconPath.c_str());
+        SDL_SetWindowIcon(win, icon);
     }
 
 } // namespace core
