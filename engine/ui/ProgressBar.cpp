@@ -1,5 +1,6 @@
 #include "ProgressBar.h"
 #include "engine/graphics/TextureManager.h"
+#include <cmath>
 namespace UI
 {
     ProgressBar::ProgressBar(Object *parent)
@@ -29,7 +30,7 @@ namespace UI
         graphics::Rect progressRect = displayRect();
         progressRect.x++;
         progressRect.y++;
-        progressRect.width = ((m_currentValue / (m_maxValue - m_minValue)) * progressRect.width) - 2;
+        progressRect.width = std::max(float((float(m_currentValue) / (m_maxValue - m_minValue)) * progressRect.width) - 2, 0.0f);
         progressRect.height -= 2;
 
         renderer->setDrawColor(m_progressColor);
@@ -47,8 +48,8 @@ namespace UI
         {
             if (pInput->isMouseButtonPressed(SDL_BUTTON_LEFT))
             {
-                int relativeCurrentValue = pInput->getMousePostion().getX() - _eventRect.x;
-                m_currentValue = (relativeCurrentValue % m_maxValue) + m_minValue;
+                float relativeCurrentValue = (pInput->getMousePostion().getX() - _eventRect.x) / _eventRect.width;
+                m_currentValue = (relativeCurrentValue * m_maxValue) + m_minValue;
                 return true;
             }
         }
