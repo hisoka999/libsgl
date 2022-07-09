@@ -31,6 +31,8 @@ namespace UI
         SDL_Color color;
         bool isSelected;
         size_t cursorPosition;
+        SDL_Color borderColor;
+        SDL_Color backgroundColor;
     };
 
 } /* namespace UI */

@@ -1,7 +1,7 @@
 #include "NumberTextItem.h"
 #include "engine/utils/string.h"
 #include "engine/utils/localisation.h"
-
+#include <engine/graphics/TextureManager.h>
 namespace UI
 {
     NumberTextItem::NumberTextItem(Object *parent, int pWidth, int pHeight)
@@ -12,11 +12,17 @@ namespace UI
         SDL_StopTextInput();
         color = {255, 255, 255, 255};
         cursorPosition = 0;
+        if (getTheme() == nullptr)
+        {
+            setTheme(graphics::TextureManager::Instance().getDefaultTheme());
+        }
+
+        borderColor = getTheme()->getStyleColor(this, UI::StyleType::BorderColor);
+        backgroundColor = getTheme()->getStyleColor(this, UI::StyleType::BackgroundColor);
     }
 
     NumberTextItem::~NumberTextItem()
     {
-        // TODO Auto-generated destructor stub
     }
 
     float NumberTextItem::getValue()
@@ -35,10 +41,10 @@ namespace UI
     {
         graphics::Rect rect = displayRect();
 
-        pRender->setDrawColor(12, 21, 24, 255);
+        pRender->setDrawColor(backgroundColor);
 
         pRender->fillRect(rect);
-        pRender->setDrawColor(93, 103, 108, 255);
+        pRender->setDrawColor(borderColor);
         pRender->drawRect(rect);
 
         int textW, textH = 0;

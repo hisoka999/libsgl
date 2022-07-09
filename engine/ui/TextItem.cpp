@@ -6,7 +6,7 @@
  */
 
 #include <engine/ui/TextItem.h>
-
+#include <engine/graphics/TextureManager.h>
 namespace UI
 {
 
@@ -14,15 +14,20 @@ namespace UI
         : UI::Object(parent, pWidth, pHeight), isSelected(false)
     {
         setObjectName("TextItem");
-        // TODO Auto-generated constructor stub
         SDL_StopTextInput();
         color = {255, 255, 255, 255};
         cursorPosition = 0;
+        if (getTheme() == nullptr)
+        {
+            setTheme(graphics::TextureManager::Instance().getDefaultTheme());
+        }
+
+        borderColor = getTheme()->getStyleColor(this, UI::StyleType::BorderColor);
+        backgroundColor = getTheme()->getStyleColor(this, UI::StyleType::BackgroundColor);
     }
 
     TextItem::~TextItem()
     {
-        // TODO Auto-generated destructor stub
     }
 
     std::string TextItem::getText()
@@ -40,10 +45,10 @@ namespace UI
     {
         graphics::Rect rect = displayRect();
 
-        pRender->setDrawColor(12, 21, 24, 255);
+        pRender->setDrawColor(backgroundColor);
 
         pRender->fillRect(rect);
-        pRender->setDrawColor(93, 103, 108, 255);
+        pRender->setDrawColor(borderColor);
         pRender->drawRect(rect);
 
         int textW, textH = 0;
