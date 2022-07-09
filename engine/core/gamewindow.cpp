@@ -94,6 +94,7 @@ namespace core
         if (win != nullptr)
         {
             SDL_DestroyWindow(win);
+            Mix_CloseAudio();
             TTF_Quit();
             IMG_Quit();
             Mix_Quit();

@@ -3,9 +3,13 @@
 //#include <SDL2/SDL2_gfxPrimitives.h>
 #include <exception>
 #include <iostream>
+#include <vector>
 
 namespace core
 {
+
+    std::vector<SDL_Point> points;
+
     inline int vline(SDL_Renderer *renderer, Sint16 x, Sint16 y1, Sint16 y2)
     {
         return SDL_RenderDrawLine(renderer, x, y1, x, y2);
@@ -22,11 +26,21 @@ namespace core
         Sint16 xpdx, xmdx;
         Sint16 ypdy, ymdy;
 
+        if (points.size() == 0)
+        {
+            points.reserve(7);
+        }
+        else
+        {
+            points.clear();
+        }
+
         if (dx == 0)
         {
             if (dy == 0)
             {
-                result |= pixel(renderer, x, y);
+                // result |= pixel(renderer, x, y);
+                points.push_back({x, y});
             }
             else
             {
@@ -38,8 +52,10 @@ namespace core
                 }
                 else
                 {
-                    result |= pixel(renderer, x, ypdy);
-                    result |= pixel(renderer, x, ymdy);
+                    points.push_back({x, ypdy});
+                    points.push_back({x, ymdy});
+                    // result |= pixel(renderer, x, ypdy);
+                    // result |= pixel(renderer, x, ymdy);
                 }
             }
         }
@@ -56,12 +72,18 @@ namespace core
             }
             else
             {
-                result |= pixel(renderer, xpdx, ypdy);
-                result |= pixel(renderer, xmdx, ypdy);
-                result |= pixel(renderer, xpdx, ymdy);
-                result |= pixel(renderer, xmdx, ymdy);
+                // result |= pixel(renderer, xpdx, ypdy);
+                // result |= pixel(renderer, xmdx, ypdy);
+                // result |= pixel(renderer, xpdx, ymdy);
+                // result |= pixel(renderer, xmdx, ymdy);
+
+                points.push_back({xpdx, ypdy});
+                points.push_back({xmdx, ypdy});
+                points.push_back({xpdx, ymdy});
+                points.push_back({xmdx, ymdy});
             }
         }
+        result |= SDL_RenderDrawPoints(renderer, points.data(), points.size());
 
         return result;
     }
@@ -364,6 +386,8 @@ namespace core
     {
         if (ren != nullptr)
             SDL_DestroyRenderer(ren);
+
+        points.clear();
     }
 
     SDL_Renderer *Renderer::getRenderer()
