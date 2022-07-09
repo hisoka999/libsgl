@@ -36,7 +36,7 @@ namespace UI
         renderer->fillRect(progressRect);
     }
 
-    void ProgressBar::postRender(core::Renderer *renderer)
+    void ProgressBar::postRender([[maybe_unused]] core::Renderer *renderer)
     {
     }
 
