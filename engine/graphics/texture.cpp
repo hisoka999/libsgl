@@ -5,22 +5,6 @@
 namespace graphics
 {
 
-    void sdlRectP(const graphics::Rect &src, SDL_Rect *r)
-    {
-        r->h = int(src.height);
-        r->w = int(src.width);
-        r->x = int(src.x);
-        r->y = int(src.y);
-    }
-
-    void sdlFRectP(const graphics::Rect &src, SDL_FRect *r)
-    {
-        r->h = src.height;
-        r->w = src.width;
-        r->x = src.x;
-        r->y = src.y;
-    }
-
     Texture::Texture()
         : width(0), height(0)
     {
@@ -107,8 +91,8 @@ namespace graphics
     void Texture::render(core::Renderer *ren, const Rect &pSrc, const Rect &pDest)
     {
 
-        sdlRectP(pSrc, &src);
-        sdlFRectP(pDest, &dst);
+        core::sdlRectP(pSrc, &src);
+        core::sdlFRectP(pDest, &dst);
         SDL_RenderCopyF(ren->getRenderer(), tex, &src, &dst);
     }
 

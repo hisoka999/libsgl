@@ -9,7 +9,21 @@ namespace core
 {
 
     std::vector<SDL_Point> points;
+    void sdlRectP(const graphics::Rect &src, SDL_Rect *r)
+    {
+        r->h = int(src.height);
+        r->w = int(src.width);
+        r->x = int(src.x);
+        r->y = int(src.y);
+    }
 
+    void sdlFRectP(const graphics::Rect &src, SDL_FRect *r)
+    {
+        r->h = src.height;
+        r->w = src.width;
+        r->x = src.x;
+        r->y = src.y;
+    }
     inline int vline(SDL_Renderer *renderer, Sint16 x, Sint16 y1, Sint16 y2)
     {
         return SDL_RenderDrawLine(renderer, x, y1, x, y2);
@@ -496,8 +510,8 @@ namespace core
     }
     void Renderer::drawRect(const graphics::Rect &rect)
     {
-        SDL_FRect r = rect.sdlFRect();
-        int result = SDL_RenderDrawRectF(ren, &r);
+        sdlFRectP(rect, &cacheRect);
+        int result = SDL_RenderDrawRectF(ren, &cacheRect);
         if (result != 0)
         {
             logger.logSDLError("Renderer::drawRect");
@@ -507,8 +521,8 @@ namespace core
 
     void Renderer::fillRect(const graphics::Rect &rect)
     {
-        SDL_FRect r = rect.sdlFRect();
-        int result = SDL_RenderFillRectF(ren, &r);
+        sdlFRectP(rect, &cacheRect);
+        int result = SDL_RenderFillRectF(ren, &cacheRect);
         if (result != 0)
         {
             logger.logSDLError("Renderer::fillRect");

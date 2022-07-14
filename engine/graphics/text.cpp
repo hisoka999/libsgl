@@ -8,7 +8,7 @@ namespace graphics
 
     Text::Text()
     {
-        //ctor
+        // ctor
         font = nullptr;
     }
 
@@ -38,7 +38,7 @@ namespace graphics
     void Text::openFont(const std::string fontFile, int fontSize)
     {
         this->fontFile = fontFile + std::string(":" + std::to_string(fontSize));
-        //Open the font
+        // Open the font
         font = TTF_OpenFont(fontFile.c_str(), fontSize);
         if (font == nullptr)
         {
@@ -75,18 +75,9 @@ namespace graphics
     {
         if (message.size() == 0)
             return;
-        //We need to first render to a surface as that's what TTF_RenderText
-        //returns, then load that surface into a texture
-        int w, h;
-        if (size(message, &w, &h) == -1)
-        {
-            throw new SDLException("TTF_SizeText");
-        }
-        if (w == 0)
-        {
-            return;
-        }
+
         auto hash = genTextHash(message, color);
+
         SDL_Surface *surf = nullptr;
         SDL_Texture *texture = nullptr;
         if (textCache.count(hash) > 0)
@@ -95,6 +86,18 @@ namespace graphics
         }
         else
         {
+            // We need to first render to a surface as that's what TTF_RenderText
+            // returns, then load that surface into a texture
+            int w, h;
+            if (size(message, &w, &h) == -1)
+            {
+                throw new SDLException("TTF_SizeText");
+            }
+            if (w == 0)
+            {
+                return;
+            }
+
             surf = TTF_RenderUTF8_Blended_Wrapped(font, message.c_str(),
                                                   color, lineLength);
 
@@ -118,13 +121,11 @@ namespace graphics
         int iW, iH;
         SDL_QueryTexture(texture, nullptr, nullptr, &iW, &iH);
 
-        SDL_Rect dst;
         dst.x = x;
         dst.y = y;
         dst.w = iW;
         dst.h = iH;
 
-        SDL_Rect src;
         src.x = 0;
         src.y = 0;
         src.w = iW;
@@ -148,17 +149,7 @@ namespace graphics
     {
         if (message.size() == 0)
             return;
-        //We need to first render to a surface as that's what TTF_RenderText
-        //returns, then load that surface into a texture
-        int w, h;
-        if (size(message, &w, &h) == -1)
-        {
-            throw new SDLException("TTF_SizeText");
-        }
-        if (w == 0)
-        {
-            return;
-        }
+
         auto hash = genTextHash(message, color);
         SDL_Surface *surf = nullptr;
         SDL_Texture *texture = nullptr;
@@ -168,6 +159,18 @@ namespace graphics
         }
         else
         {
+            // We need to first render to a surface as that's what TTF_RenderText
+            // returns, then load that surface into a texture
+            int w, h;
+            if (size(message, &w, &h) == -1)
+            {
+                throw new SDLException("TTF_SizeText");
+            }
+            if (w == 0)
+            {
+                return;
+            }
+
             surf = TTF_RenderUTF8_Blended(font, message.c_str(),
                                           color);
 
@@ -191,13 +194,11 @@ namespace graphics
         int iW, iH;
         SDL_QueryTexture(texture, nullptr, nullptr, &iW, &iH);
 
-        SDL_Rect dst;
         dst.x = x;
         dst.y = y;
         dst.w = iW;
         dst.h = iH;
 
-        SDL_Rect src;
         src.x = 0;
         src.y = 0;
         src.w = iW;

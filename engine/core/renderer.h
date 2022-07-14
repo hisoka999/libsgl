@@ -9,7 +9,8 @@
 
 namespace core
 {
-
+    void sdlRectP(const graphics::Rect &src, SDL_Rect *r);
+    void sdlFRectP(const graphics::Rect &src, SDL_FRect *r);
     class Renderer
     {
     public:
@@ -66,6 +67,7 @@ namespace core
         graphics::Rect viewPort;
         Camera *camera;
         float zoomFactor;
+        SDL_FRect cacheRect;
     };
 
 } // namespace core

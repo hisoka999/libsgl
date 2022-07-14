@@ -40,6 +40,8 @@ namespace graphics
         utils::Logger logger;
         std::map<size_t, SDL_Texture *> textCache;
         std::string fontFile;
+        SDL_Rect dst;
+        SDL_Rect src;
     };
 
 } // namespace graphics
