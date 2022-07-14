@@ -63,7 +63,7 @@ namespace core
         }
 
         template <typename F>
-        int registerForType(Type pType, F &&f)
+        [[nodiscard]] int registerForType(Type pType, F &&f)
 
         {
             reference_count++;
