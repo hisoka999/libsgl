@@ -1,5 +1,6 @@
 #include "object.h"
 #include <engine/utils/string.h>
+#include "engine/utils/logger.h"
 namespace utils
 {
     namespace JSON
@@ -82,7 +83,7 @@ namespace utils
             }
             catch (std::bad_variant_access const &ex)
             {
-                std::cout << ex.what() << ": w contained int, not float\n";
+                SGL_LOG_WARN(std::string(ex.what()) + ": " + attr + " is empty");
                 return nullptr;
             }
         }

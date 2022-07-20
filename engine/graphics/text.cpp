@@ -20,10 +20,10 @@ namespace graphics
         }
         textCache.clear();
 
-        logger.trace(__FILE__, "delete font" + fontFile);
+        SGL_LOG_TRACE("delete font" + fontFile);
         if (font != nullptr)
         {
-            logger.trace(__FILE__, "ttf was initialised: " + std::to_string(TTF_WasInit()));
+            SGL_LOG_TRACE("ttf was initialised: " + std::to_string(TTF_WasInit()));
             TTF_CloseFont(font);
             font = nullptr;
         }
@@ -39,10 +39,11 @@ namespace graphics
     {
         this->fontFile = fontFile + std::string(":" + std::to_string(fontSize));
         // Open the font
+        SGL_LOG_TRACE("open font: " + this->fontFile);
         font = TTF_OpenFont(fontFile.c_str(), fontSize);
         if (font == nullptr)
         {
-            logger.logSDLError("TTF_OpenFont");
+            SGL_LOG_ERROR_SDL();
             throw new SDLException("TTF_OpenFont");
         }
     }
@@ -104,7 +105,7 @@ namespace graphics
             if (surf == nullptr)
             {
                 TTF_GetError();
-                logger.logSDLError("TTF_RenderText_Blended");
+                SGL_LOG_ERROR_SDL();
                 TTF_CloseFont(font);
                 font = nullptr;
                 throw new SDLException("TTF_RenderText_Blended");
@@ -112,7 +113,7 @@ namespace graphics
             texture = SDL_CreateTextureFromSurface(ren->getRenderer(), surf);
             if (texture == nullptr)
             {
-                logger.logSDLError("SDL_CreateTextureFromSurface");
+                SGL_LOG_ERROR_SDL();
                 throw new SDLException("SDL_CreateTextureFromSurface");
             }
             textCache[hash] = texture;
@@ -177,7 +178,7 @@ namespace graphics
             if (surf == nullptr)
             {
                 TTF_GetError();
-                logger.logSDLError("TTF_RenderText_Blended");
+                SGL_LOG_ERROR_SDL();
                 TTF_CloseFont(font);
                 font = nullptr;
                 throw new SDLException("TTF_RenderText_Blended");
@@ -185,7 +186,7 @@ namespace graphics
             texture = SDL_CreateTextureFromSurface(ren->getRenderer(), surf);
             if (texture == nullptr)
             {
-                logger.logSDLError("SDL_CreateTextureFromSurface");
+                SGL_LOG_ERROR_SDL();
                 throw new SDLException("SDL_CreateTextureFromSurface");
             }
             textCache[hash] = texture;

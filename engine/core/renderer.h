@@ -4,7 +4,6 @@
 #include "engine/core/Camera.h"
 #include "engine/core/gamewindow.h"
 #include "engine/graphics/rect.h"
-#include "engine/utils/logger.h"
 #include <SDL2/SDL_render.h>
 
 namespace core
@@ -15,7 +14,7 @@ namespace core
     {
     public:
         /** Default constructor */
-        Renderer(const utils::Logger &pLogger);
+        Renderer();
         /** Default destructor */
         virtual ~Renderer();
 
@@ -59,7 +58,6 @@ namespace core
 
     protected:
     private:
-        utils::Logger logger;
         SDL_Renderer *ren;
         Uint32 lastTick;
         Uint32 end;

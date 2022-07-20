@@ -4,10 +4,10 @@
 #include <engine/utils/exceptions.h>
 #include <engine/utils/string.h>
 #include <fstream>
-#include <iostream>
 #include <magic_enum.hpp>
 #include <sstream>
 #include <exception>
+#include "engine/utils/logger.h"
 #ifdef _WIN32
 #include <stdio.h>
 #include <tchar.h>
@@ -55,7 +55,7 @@ std::locale Localisation::getLocale()
         return std::locale("en_US.utf8");
     }
 #elif _WIN32
-    //TODO fix later
+    // TODO fix later
     switch (lang)
     {
     case Language::de:
@@ -98,15 +98,15 @@ void Localisation::detectLanguage(const std::string &appName)
         GetLocaleInfo(Lang1, LOCALE_SNAME, &*s.begin(), cch);
     }
     language = s;
-    std::cout << "language: " << language << std::endl;
 #endif
 
     if (language.empty())
     {
         language = lang;
     }
-
+    SGL_LOG_TRACE("language = " + language);
     language = language.substr(0, 2);
+    SGL_LOG_TRACE("language = " + language);
     std::transform(language.begin(), language.end(), language.begin(), ::tolower);
     this->lang = magic_enum::enum_cast<Language>(language).value();
 
@@ -128,7 +128,7 @@ void Localisation::loadLocalisation(std::string filename)
     std::istringstream is;
     std::string s;
     std::string group;
-    std::cout << filename << std::endl;
+    SGL_LOG_INFO("load locale " + filename);
 
     file.open(filename.c_str(), std::ios::in);
     if (!file.is_open())
@@ -141,7 +141,6 @@ void Localisation::loadLocalisation(std::string filename)
     {
 
         std::size_t pos = 0;
-        //std::cout << "line = " << s << std::endl;
         pos = s.find("#");
         if (pos < s.length() - 1)
         {
@@ -166,6 +165,6 @@ void Localisation::loadLocalisation(std::string filename)
             }
         }
     }
-    //while(!s.empty());
+    // while(!s.empty());
     file.close();
 }

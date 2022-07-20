@@ -24,7 +24,6 @@ namespace utils
                 std::istringstream is;
                 std::string s;
                 std::string group;
-                //  std::cout << filename << std::endl;
 
                 file.open(fileName.c_str(), std::ios::in);
                 if (!file.is_open())
@@ -36,8 +35,6 @@ namespace utils
                 std::string buffer(size, ' ');
                 file.seekg(0);
                 file.read(&buffer[0], size);
-
-                // std::cout << buffer << std::endl;
 
                 auto objects = parser.parseArray(buffer);
 

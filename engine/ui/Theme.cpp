@@ -14,7 +14,6 @@ namespace UI
         std::istringstream is;
         std::string s;
         std::string group;
-        //  std::cout << filename << std::endl;
 
         file.open(themeName.c_str());
         assert(file.is_open());

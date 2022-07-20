@@ -56,7 +56,6 @@ namespace UI
         {
             // fint the selected item
             int res = (pos.getY() - rect.y) / 23;
-            std::cout << res << std::endl;
             items[res].selected = !items[res].selected;
             return true;
         }
@@ -74,7 +73,6 @@ namespace UI
             {
                 tx2 += 23;
             }
-            // pTexture->render(pRender, tx, ty + i * 30, 23, 23, tx2, 284);
             SDL_Color color = {255, 255, 255, 255};
             font->render(pRender, item.text, color, tx + 40, ty + i * 30);
         }

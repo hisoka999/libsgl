@@ -151,7 +151,13 @@ elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     add_library(${PROJECT_NAME} STATIC ${SRC})
 endif()
 
-
+target_compile_definitions(${PROJECT_NAME} 
+    PUBLIC
+      $<$<CONFIG:Debug>:SGL_DEBUG>
+      $<$<CONFIG:RelWithDebInfo>:SGL_DEBUG>
+      $<$<CONFIG:Release>:SGL_RELEASE>
+      $<$<CONFIG:MinSizeRel>:SGL_RELEASE>
+)
 
 
 

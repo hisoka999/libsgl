@@ -1,6 +1,6 @@
 #include "engine/graphics/texture.h"
 #include "engine/utils/exceptions.h"
-#include <iostream>
+#include <engine/utils/logger.h>
 
 namespace graphics
 {
@@ -58,8 +58,7 @@ namespace graphics
         if (surface == nullptr)
         {
 
-            std::cout << "SDL_CreateTextureFromSurface Error: " << SDL_GetError()
-                      << std::endl;
+            SGL_LOG_ERROR_SDL();
             throw SDLException("IMG_LoadTexture");
         }
         tex = SDL_CreateTextureFromSurface(ren->getRenderer(), surface);
@@ -158,7 +157,7 @@ namespace graphics
         // Texture is already locked
         if (pixels != nullptr)
         {
-            printf("Texture is already locked!\n");
+            SGL_LOG_ERROR("Texture is already locked!");
             success = false;
         }
         // Lock texture
@@ -166,7 +165,7 @@ namespace graphics
         {
             if (SDL_LockTexture(tex, nullptr, &pixels, &pitch) != 0)
             {
-                printf("Unable to lock texture! %s\n", SDL_GetError());
+                SGL_LOG_ERROR(std::string("Unable to lock texture! ") + SDL_GetError());
                 success = false;
             }
         }
@@ -181,7 +180,7 @@ namespace graphics
         // Texture is not locked
         if (pixels == nullptr)
         {
-            printf("Texture is not locked!\n");
+            SGL_LOG_ERROR("Texture is not locked!\n");
             success = false;
         }
         // Unlock texture

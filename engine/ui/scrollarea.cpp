@@ -2,7 +2,7 @@
 #include <algorithm>
 #include <cmath>
 #include <engine/graphics/TextureManager.h>
-#include <iostream>
+#include <engine/utils/logger.h>
 
 namespace UI
 {
@@ -226,14 +226,14 @@ namespace UI
 
             if (destRect.intersects(pInput->getMousePostion()))
             {
-                std::cout << " left edge clicked" << std::endl;
+                SGL_LOG_TRACE(" left edge clicked");
             }
 
             // render right edge
             destRect.x = parentRect.x + renderRect.width - 14 + getX();
             if (destRect.intersects(pInput->getMousePostion()))
             {
-                std::cout << " right edge clicked" << std::endl;
+                SGL_LOG_TRACE(" right edge clicked");
             }
             // render bar
             destRect.width = renderRect.width - 28;
@@ -242,7 +242,7 @@ namespace UI
             destRect.y = parentRect.y + renderRect.height + 4 + getY();
             if (destRect.intersects(pInput->getMousePostion()))
             {
-                std::cout << " bar clicked" << std::endl;
+                SGL_LOG_TRACE(" bar clicked");
             }
 
             // check horizontal
@@ -281,7 +281,7 @@ namespace UI
             destRect.y = parentRect.y + 14 + getY();
             if (destRect.intersects(pInput->getMousePostion()))
             {
-                std::cout << " bar 2 clicked" << std::endl;
+                SGL_LOG_TRACE(" bar 2 clicked");
             }
             // render slider
             destRect.width = 14;

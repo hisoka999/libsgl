@@ -4,6 +4,7 @@
 #include <exception>
 #include <iostream>
 #include <vector>
+#include "engine/utils/logger.h"
 
 namespace core
 {
@@ -310,8 +311,8 @@ namespace core
         return ellipseRGBA(renderer, x, y, rad, rad, r, g, b, a);
     }
 
-    Renderer::Renderer(const utils::Logger &pLogger)
-        : logger(pLogger), camera(nullptr)
+    Renderer::Renderer()
+        : camera(nullptr)
     {
         delta = 0;
         this->end = 0;
@@ -328,8 +329,8 @@ namespace core
     {
 
         int numdrivers = SDL_GetNumRenderDrivers();
-        logger.trace("Renderer::open",
-                     "Render driver count: " + std::to_string(numdrivers));
+        SGL_LOG_INFO(
+            "Render driver count: " + std::to_string(numdrivers));
 
         unsigned int renderFlags = SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE;
         if (pVSync)
@@ -341,20 +342,19 @@ namespace core
         {
             SDL_RendererInfo drinfo;
             SDL_GetRenderDriverInfo(i, &drinfo);
-            logger.trace("Renderer::open",
-                         "Driver name (" + std::to_string(i) + "): " + drinfo.name);
+            SGL_LOG_TRACE("Driver name (" + std::to_string(i) + "): " + drinfo.name);
             if (drinfo.flags & SDL_RENDERER_SOFTWARE)
-                logger.trace("Renderer::open",
-                             " the renderer is a software fallback");
+                SGL_LOG_TRACE(
+                    " the renderer is a software fallback");
             if (drinfo.flags & SDL_RENDERER_ACCELERATED)
-                logger.trace("Renderer::open",
-                             " the renderer uses hardware acceleration");
+                SGL_LOG_TRACE(
+                    " the renderer uses hardware acceleration");
             if (drinfo.flags & SDL_RENDERER_PRESENTVSYNC)
-                logger.trace("Renderer::open",
-                             " present is synchronized	with the refresh rate");
+                SGL_LOG_TRACE(
+                    " present is synchronized	with the refresh rate");
             if (drinfo.flags & SDL_RENDERER_TARGETTEXTURE)
-                logger.trace("Renderer::open",
-                             " the renderer supports rendering to	texture");
+                SGL_LOG_TRACE(
+                    " the renderer supports rendering to texture");
 
             if (drinfo.flags & renderFlags)
             {
@@ -373,14 +373,14 @@ namespace core
 #endif
         }
 
-        logger.trace("Renderer::open", "use driver id = " + std::to_string(drvId));
+        SGL_LOG_TRACE("use driver id = " + std::to_string(drvId));
 
         ren = SDL_CreateRenderer(const_cast<SDL_Window *>(pWin->getSDLWindow()), drvId,
                                  renderFlags);
 
         if (ren == nullptr)
         {
-            logger.logSDLError("Renderer::open");
+            SGL_LOG_ERROR_SDL();
             throw SDLException("Renderer::open");
         }
 
@@ -437,7 +437,7 @@ namespace core
     {
         if (SDL_SetRenderTarget(ren, pTexture) != 0)
         {
-            logger.logSDLError("Renderer::setRenderTarget");
+            SGL_LOG_ERROR_SDL();
             throw SDLException("SDL_SetRenderTarget");
         }
     }
@@ -466,7 +466,7 @@ namespace core
         SDL_Rect r = viewPort.sdlRect();
         if (SDL_RenderSetViewport(ren, &r) != 0)
         {
-            logger.logSDLError("Renderer::setViewPort");
+            SGL_LOG_ERROR_SDL();
             throw SDLException("SDL_RenderSetViewport");
         }
     }
@@ -485,7 +485,7 @@ namespace core
         int result = circleRGBA(ren, x, y, rad, color.r, color.g, color.b, color.a);
         if (result == -1)
         {
-            logger.logSDLError("Renderer::drawCircle");
+            SGL_LOG_ERROR_SDL();
             throw SDLException("drawCircle");
         }
     }
@@ -499,7 +499,7 @@ namespace core
         int result = SDL_SetRenderDrawColor(ren, r, g, b, a);
         if (result != 0)
         {
-            logger.logSDLError("Renderer::setDrawColor");
+            SGL_LOG_ERROR_SDL();
             throw SDLException("setDrawColor");
         }
     }
@@ -514,7 +514,7 @@ namespace core
         int result = SDL_RenderDrawRectF(ren, &cacheRect);
         if (result != 0)
         {
-            logger.logSDLError("Renderer::drawRect");
+            SGL_LOG_ERROR_SDL();
             throw SDLException("drawRect");
         }
     }
@@ -525,7 +525,7 @@ namespace core
         int result = SDL_RenderFillRectF(ren, &cacheRect);
         if (result != 0)
         {
-            logger.logSDLError("Renderer::fillRect");
+            SGL_LOG_ERROR_SDL();
             throw SDLException("fillRect");
         }
     }

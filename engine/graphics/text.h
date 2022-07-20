@@ -4,7 +4,6 @@
 #include <SDL2/SDL_ttf.h>
 #include <string>
 #include <engine/core/renderer.h>
-#include <engine/utils/logger.h>
 
 namespace graphics
 {
@@ -37,7 +36,6 @@ namespace graphics
     private:
         size_t genTextHash(const std::string &message, SDL_Color color);
         TTF_Font *font;
-        utils::Logger logger;
         std::map<size_t, SDL_Texture *> textCache;
         std::string fontFile;
         SDL_Rect dst;

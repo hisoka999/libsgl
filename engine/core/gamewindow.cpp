@@ -2,6 +2,7 @@
 #include "engine/utils/exceptions.h"
 #include <SDL2/SDL_mixer.h>
 #include <engine/utils/os.h>
+#include <engine/utils/logger.h>
 #include <fstream>
 #include <iostream>
 
@@ -24,7 +25,8 @@ namespace core
         if (!utils::os::is_dir(utils::os::get_pref_dir("", prefDir)))
         {
             utils::os::create_dir(utils::os::get_pref_dir("", prefDir));
-            std::cout << "config dir: " << utils::os::get_pref_dir("", prefDir) << std::endl;
+
+            SGL_LOG_TRACE("config dir: " + utils::os::get_pref_dir("", prefDir));
         }
 
         std::string path = utils::os::combine(utils::os::get_pref_dir("", prefDir), "settings.conf");
@@ -37,7 +39,7 @@ namespace core
             filestream << "Height=" << std::to_string(pHeight) << std::endl;
             filestream << "Fullscreen=0" << std::endl;
 
-            std::cout << path << " created!" << std::endl;
+            SGL_LOG_TRACE(path + " created!");
             filestream.close();
         }
         settings->Setfilename(path);

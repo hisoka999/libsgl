@@ -14,9 +14,8 @@
 #include <typeindex>
 #include <vector>
 #include <any>
-#include <iostream>
 #include <exception>
-
+#include <engine/utils/logger.h>
 namespace core
 {
     template <typename... Args>
@@ -31,7 +30,7 @@ namespace core
         {
             if (v.size() < sizeof...(Args))
             {
-                std::cout << "Bad arity!" << std::endl; // Throw if you prefer
+                SGL_LOG_ERROR("Bad arity!"); // Throw if you prefer
                 return;
             }
 
@@ -48,7 +47,7 @@ namespace core
             }
             catch (std::bad_any_cast const &)
             {
-                std::cerr << "Bad argument!" << std::endl; // Throw if you prefer
+                SGL_LOG_ERROR("Bad argument!");
                 throw std::runtime_error("bad argument");
             }
         }

@@ -1,9 +1,8 @@
 #include "parser.h"
 #include <algorithm>
-#include <iostream>
 #include "Lexer.h"
 #include <chrono>
-
+#include "engine/utils/logger.h"
 namespace utils
 {
     namespace JSON
@@ -185,11 +184,6 @@ namespace utils
 
                 auto valueStart = tokens[*start];
 
-                if (jsonKey == "active")
-                {
-                    std::cout << "key: " << jsonKey << " value: " << valueStart << std::endl;
-                }
-
                 if (valueStart == "{")
                 {
                     *start = *start + 1;
@@ -237,11 +231,9 @@ namespace utils
             auto elapsed = std::chrono::high_resolution_clock::now() - start;
 
             long long milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(elapsed).count();
-            std::cout << "parseObject(after lex): " << milliseconds << "ms" << std::endl;
-
+            SGL_LOG_TRACE("after lex: " + std::to_string(milliseconds) + "ms");
             start = std::chrono::high_resolution_clock::now();
 
-            // if(isRoot && tokens[0] == "{")
             size_t startPos = 0;
 
             if (tokens[startPos] == "{")
@@ -251,7 +243,7 @@ namespace utils
                 elapsed = std::chrono::high_resolution_clock::now() - start;
 
                 milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(elapsed).count();
-                std::cout << "parseObject(after parse_object): " << milliseconds << "ms" << std::endl;
+                SGL_LOG_TRACE("after parse_object: " + std::to_string(milliseconds) + "ms");
                 return result;
             }
 
