@@ -300,7 +300,7 @@ namespace UI
             utils::Vector2 pos = pInput->getMouseWheelPosition();
             if (scrollWidth - renderRect.width > 0)
             {
-                if ((scrollPosX + (pos.getY() * -5) >= 0 && pos.getY() == -1) || (pos.getY() == 1 && scrollPosX < scrollWidth - renderRect.width - 14))
+                if ((scrollPosX + (pos.getY() * -5) >= 0 && pos.getY() == 1) || (pos.getY() == -1 && scrollPosX < scrollWidth - renderRect.width - 14))
                 {
                     scrollPosX += pos.getY() * -5;
                     eventHandled = true;
@@ -308,7 +308,7 @@ namespace UI
             }
             else
             {
-                if ((scrollPosY + (pos.getY() * -5) >= 0 && pos.getY() == -1) || (pos.getY() == 1 && scrollPosY < scrollHeight - renderRect.height - 14))
+                if ((scrollPosY + (pos.getY() * -5) >= 0 && pos.getY() == 1) || (pos.getY() == -1 && scrollPosY < scrollHeight - renderRect.height - 14))
                 {
                     scrollPosY += pos.getY() * -5;
                     eventHandled = true;
