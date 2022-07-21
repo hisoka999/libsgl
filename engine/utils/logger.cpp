@@ -37,7 +37,23 @@ namespace utils
 
     Logger::~Logger()
     {
-        // dtor
+#ifndef SGL_DEBUG
+        out.close());
+#endif
+    }
+
+    void Logger::init(std::filesystem::path &outputDir, LogLevel pLevel)
+    {
+        level = pLevel;
+        if (!std::filesystem::exists(outputDir))
+            std::filesystem::create_directories(outputDir);
+
+        std::string fileName = m_loggerName + "_log_" + std::to_string(std::chrono::system_clock::now().time_since_epoch().count()) + ".log";
+        std::filesystem::path filePath = outputDir / fileName;
+
+#ifndef SGL_DEBUG
+        out.open(filePath, std::ofstream::app);
+#endif
     }
 
     void Logger::log(LogLevel pLevel, const std::string &src,

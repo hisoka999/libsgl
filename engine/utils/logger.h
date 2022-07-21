@@ -2,7 +2,8 @@
 #define UTILS_LOGGER_H
 #include <string>
 #include <SDL2/SDL.h>
-#include <ostream>
+#include <fstream>
+#include <filesystem>
 
 #ifndef __FUNCTION_NAME__
 #ifdef WIN32 // WINDOWS
@@ -35,6 +36,8 @@ namespace utils
 		Logger();
 		/** Default destructor */
 		virtual ~Logger();
+
+		void init(std::filesystem::path &outputDir, LogLevel pLevel);
 		void logSDLError(const std::string &msg);
 		void error(const std::string &src, const std::string &msg);
 		void warn(const std::string &src, const std::string &msg);
@@ -48,7 +51,7 @@ namespace utils
 	private:
 		std::string m_loggerName;
 		LogLevel level;
-		// std::ostream out;
+		std::ofstream out;
 	};
 
 } // namespace utils
