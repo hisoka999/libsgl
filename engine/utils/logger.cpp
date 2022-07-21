@@ -38,7 +38,7 @@ namespace utils
     Logger::~Logger()
     {
 #ifndef SGL_DEBUG
-        out.close());
+        out.close();
 #endif
     }
 
