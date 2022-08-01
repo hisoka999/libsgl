@@ -1,11 +1,10 @@
 #include "engine/core/renderer.h"
 #include "engine/utils/exceptions.h"
-//#include <SDL2/SDL2_gfxPrimitives.h>
 #include <exception>
 #include <iostream>
 #include <vector>
 #include "engine/utils/logger.h"
-
+#include "engine/graphics/texture.h"
 namespace core
 {
 
@@ -433,13 +432,21 @@ namespace core
     {
         return SDL_GetTicks();
     }
-    void Renderer::setRenderTarget(SDL_Texture *pTexture)
+    void Renderer::setRenderTargetInternal(SDL_Texture *pTexture)
     {
         if (SDL_SetRenderTarget(ren, pTexture) != 0)
         {
             SGL_LOG_ERROR_SDL();
             throw SDLException("SDL_SetRenderTarget");
         }
+    }
+
+    void Renderer::setRenderTarget(graphics::Texture *texture)
+    {
+        if (texture == nullptr)
+            setRenderTargetInternal(nullptr);
+        else
+            setRenderTargetInternal(texture->getSDLTexture());
     }
 
     float Renderer::getTimeDelta()

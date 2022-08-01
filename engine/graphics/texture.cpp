@@ -16,7 +16,7 @@ namespace graphics
 
     Texture::Texture(core::Renderer *pRenderer, const int pWidth, const int pHeight)
     {
-        tex = SDL_CreateTexture(pRenderer->getRenderer(), SDL_PIXELFORMAT_RGBA8888,
+        tex = SDL_CreateTexture(pRenderer->getRenderer(), SDL_PIXELFORMAT_ARGB8888,
                                 SDL_TEXTUREACCESS_TARGET, pWidth, pHeight);
 
         width = pWidth;
@@ -52,7 +52,7 @@ namespace graphics
 
     void Texture::loadTexture(core::Renderer *ren, std::string filename)
     {
-        // tex = IMG_LoadTexture(ren->getRenderer(), filename.c_str());
+        SGL_LOG_TRACE("load texture: " + filename);
         surface = IMG_Load(filename.c_str());
 
         if (surface == nullptr)

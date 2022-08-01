@@ -6,6 +6,11 @@
 #include "engine/graphics/rect.h"
 #include <SDL2/SDL_render.h>
 
+namespace graphics
+{
+    class Texture;
+}
+
 namespace core
 {
     void sdlRectP(const graphics::Rect &src, SDL_Rect *r);
@@ -25,7 +30,8 @@ namespace core
         void renderPresent();
         Uint32 getTickCount();
         float getTimeDelta();
-        void setRenderTarget(SDL_Texture *pTexture);
+
+        void setRenderTarget(graphics::Texture *texture);
         const graphics::Rect &getViewPort();
         void setViewPort(const graphics::Rect &rect);
         void setMainCamera(Camera *pCamera);
@@ -58,6 +64,7 @@ namespace core
 
     protected:
     private:
+        void setRenderTargetInternal(SDL_Texture *pTexture);
         SDL_Renderer *ren;
         Uint32 lastTick;
         Uint32 end;

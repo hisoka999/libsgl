@@ -18,7 +18,6 @@ namespace UI
 
         void render(core::Renderer *pRender);
         bool handleEvents(core::Input *pInput);
-        void setFont(const std::string &fontname, unsigned int font_size);
         void setColor(int r, int g, int b);
 
     private:

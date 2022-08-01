@@ -135,12 +135,7 @@ namespace UI
         }
         return eventHandled;
     }
-    void NumberTextItem::setFont(const std::string &fontname, unsigned int font_size)
-    {
-        graphics::Text *text = new graphics::Text();
-        text->openFont(fontname, font_size);
-        Object::setFont(text);
-    }
+
     void NumberTextItem::setColor(int r, int g, int b)
     {
         color.r = r;

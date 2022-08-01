@@ -37,7 +37,7 @@ namespace UI
     protected:
     private:
         std::vector<ListBoxItem> items;
-        graphics::Text *font;
+        std::shared_ptr<graphics::Text> font;
     };
 
 } // namespace UI

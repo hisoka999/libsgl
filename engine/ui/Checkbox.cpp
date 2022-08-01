@@ -9,8 +9,6 @@ namespace UI
     {
         setObjectName("checkbox");
 
-        //    textCore = new graphics::Text();
-        //    textCore->openFont("arial.ttf", 12);
         checked = false;
         if (getTheme() == nullptr)
         {

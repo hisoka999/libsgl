@@ -34,7 +34,7 @@ namespace graphics
     TextureManager::~TextureManager()
     {
         textures.clear();
-        //fonts.clear();
+        // fonts.clear();
         textureMaps.clear();
         themeMaps.clear();
     }
@@ -45,7 +45,7 @@ namespace graphics
         {
             if ((*it).second.use_count() == 0)
             {
-                textures.erase(it);
+                it = textures.erase(it);
             }
         }
 
@@ -53,7 +53,7 @@ namespace graphics
         {
             if ((*it).second.use_count() == 0)
             {
-                fonts.erase(it);
+                it = fonts.erase(it);
             }
         }
 
@@ -61,7 +61,7 @@ namespace graphics
         {
             if ((*it).second.use_count() == 0)
             {
-                textureMaps.erase(it);
+                it = textureMaps.erase(it);
             }
         }
     }

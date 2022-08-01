@@ -1,14 +1,13 @@
 #include "engine/ui/ListBox.h"
 #include "engine/graphics/gameobject.h"
-
+#include "engine/graphics/TextureManager.h"
 namespace UI
 {
 
     ListBox::ListBox(Object *parent)
         : UI::Object(parent)
     {
-        font = new graphics::Text();
-        font->openFont("arial.ttf", 12);
+        font = graphics::TextureManager::Instance().loadFont("fonts/arial.ttf", 12);
     }
 
     ListBox::~ListBox()

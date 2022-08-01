@@ -90,7 +90,7 @@ namespace UI
 
             renderArea = new graphics::Texture(pRender, scrollWidth, scrollHeight);
 
-            pRender->setRenderTarget(renderArea->getSDLTexture());
+            pRender->setRenderTarget(renderArea);
 
             pRender->setDrawColor(backgroundColor);
             pRender->clear();
@@ -140,7 +140,7 @@ namespace UI
         borderRect.height = renderRect.height;
 
         pRender->drawRect(borderRect);
-        // TODO render scrollbars
+
         if (renderArea->getHeight() > renderRect.height)
         {
             graphics::Rect scrollbarRect;
@@ -151,10 +151,18 @@ namespace UI
             scrollbarRect.height = renderRect.height - 2;
 
             pRender->drawRect(scrollbarRect);
+
             SDL_Color uiColor = foregroundColor;
             uiText->render(pRender, "\uf0d7", uiColor, scrollbarRect.x + 2, scrollbarRect.y + scrollbarRect.height - 14);
 
             uiText->render(pRender, "\uf0d8", uiColor, scrollbarRect.x + 2, scrollbarRect.y + 2);
+
+            scrollbarRect.x += 2;
+            float relativeHeight = (renderRect.height - 26) / renderArea->getHeight();
+            scrollbarRect.y += (relativeHeight * scrollPosY) + 16;
+            scrollbarRect.height = (relativeHeight * (renderRect.height - 16));
+            scrollbarRect.width -= 4;
+            pRender->fillRect(scrollbarRect);
         }
     }
 
