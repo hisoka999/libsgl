@@ -116,6 +116,15 @@ namespace UI
             tabs[currentTab]->render(pRender);
         }
     }
+
+    void TabBar::postRender(core::Renderer *renderer)
+    {
+        if (currentTab != -1)
+        {
+            tabs[currentTab]->postRender(renderer);
+        }
+        UI::Object::postRender(renderer);
+    }
     bool TabBar::handleEvents(core::Input *pInput)
     {
         bool eventHandled = false;
@@ -164,6 +173,7 @@ namespace UI
             taby += tabHeight + 10;
             index++;
         }
+        UI::Object::handleEvents(pInput);
         return eventHandled;
     }
 

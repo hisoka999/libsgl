@@ -27,6 +27,7 @@ namespace UI
         void removeTab(std::shared_ptr<Tab> tab);
 
         virtual void render(core::Renderer *pRender);
+        virtual void postRender(core::Renderer *renderer);
         virtual bool handleEvents(core::Input *pInput);
         virtual graphics::Rect displayRect();
         virtual graphics::Rect eventRect();

@@ -35,4 +35,9 @@ namespace UI
         return UI::Container::handleEvents(pInput);
     }
 
+    void Tab::postRender(core::Renderer *renderer)
+    {
+        UI::Container::postRender(renderer);
+    }
+
 } /* namespace UI */

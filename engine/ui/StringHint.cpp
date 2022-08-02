@@ -9,6 +9,13 @@ namespace UI
         font = graphics::TextureManager::Instance().loadFont("fonts/arial.ttf", 14);
     }
 
+    StringHint::StringHint(const std::string &hintText)
+        : Hint()
+    {
+        font = graphics::TextureManager::Instance().loadFont("fonts/arial.ttf", 14);
+        setHintText(hintText);
+    }
+
     StringHint::~StringHint()
     {
     }

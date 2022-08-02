@@ -10,6 +10,7 @@ namespace UI
     {
     public:
         StringHint();
+        StringHint(const std::string &hintText);
         ~StringHint();
 
         virtual void render(core::Renderer *renderer);
