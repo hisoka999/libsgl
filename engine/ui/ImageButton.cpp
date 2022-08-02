@@ -67,12 +67,12 @@ namespace UI
             if (pInput->isMouseButtonPressed(SDL_BUTTON_LEFT))
             {
 
-                this->fireFuncionCall("buttonClick");
-                this->fireFuncionCall("buttonClickPara",
-                                      utils::Vector2(pos.getX() - displayRect().x, pos.getY() - displayRect().y));
+                eventHandled = this->fireFuncionCall("buttonClick");
+                if (!eventHandled)
+                    eventHandled = this->fireFuncionCall("buttonClickPara",
+                                                         utils::Vector2(pos.getX() - displayRect().x, pos.getY() - displayRect().y));
 
                 state = ButtonState::Clicked;
-                eventHandled = true;
             }
         }
         else

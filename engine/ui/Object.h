@@ -132,13 +132,16 @@ namespace UI
     protected:
         void setObjectName(const std::string &objectName);
         template <typename... Args>
-        void fireFuncionCall(std::string const &event, Args const &...args)
+        bool fireFuncionCall(std::string const &event, Args const &...args)
         {
+            bool functionCalled = false;
             auto rng = _callbacks.equal_range(event);
             for (auto it = rng.first; it != rng.second; ++it)
             {
                 call(it->second, args...);
+                functionCalled = true;
             }
+            return functionCalled;
         }
         int renderOrder;
         bool isShowHint();
