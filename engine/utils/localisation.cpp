@@ -8,6 +8,8 @@
 #include <sstream>
 #include <exception>
 #include "engine/utils/logger.h"
+#include <cmath>
+
 #ifdef _WIN32
 #include <stdio.h>
 #include <tchar.h>
@@ -30,11 +32,74 @@ static WORD GetLangFromLocale(LCID lcid)
 #endif // _WIN32
 Localisation::Localisation()
 {
+
+    currencyMap[Language::de] = {"Euro", "EUR", "€", ",", "."};
+    currencyMap[Language::en] = {"Pound", "GBP", "£", ".", ","};
+}
+
+std::string format_currency(float amount)
+{
+    Currency &currency = Localisation::Instance().getCurrency();
+
+    int base = amount;
+    float remainder = std::fmod(std::abs(amount), 1);
+
+    std::string remainderString = std::to_string(int(remainder * 100));
+    std::string baseString = std::to_string(std::abs(base));
+    std::string result = "";
+    int offset = 0;
+    int pos = 1;
+
+    std::stringstream stream;
+
+    if (base < 0)
+    {
+        stream << "-";
+    }
+
+    if (std::abs(base) > 999)
+    {
+        for (int i = baseString.size(); i >= 0; --i)
+        {
+            if (pos % 3 == 0)
+            {
+                baseString.substr(i, 3);
+                if (i - 1 > 0)
+                {
+                    result = currency.thousandsSeparator + baseString.substr(i - 1, 3) + result;
+                }
+                else
+                {
+                    result = baseString.substr(i - 1, 3) + result;
+                }
+
+                offset++;
+            }
+            if (pos > (int(baseString.size()) / 3 * 3))
+            {
+                std::string remainderX = baseString.substr(0, i);
+                result = remainderX + result;
+                break;
+            }
+            pos++;
+        }
+        stream << result;
+    }
+    else
+        stream << base;
+
+    stream << currency.decimalSeparator << remainderString << " " << currency.unicodeValue;
+    return stream.str();
 }
 
 Language Localisation::getLang() const
 {
     return lang;
+}
+
+Currency &Localisation::getCurrency()
+{
+    return currencyMap.at(lang);
 }
 
 std::string Localisation::getLanguage() const
@@ -72,8 +137,10 @@ std::locale Localisation::getLocale()
 
 void Localisation::loadLanguage(const Language lang, const std::string &appName)
 {
-    std::string langName = std::string(magic_enum::enum_name(lang));
-    std::string fileName = "locale/" + langName + "/LC_MESSAGES/" + appName + ".po";
+    this->lang = lang;
+
+    language = std::string(magic_enum::enum_name(lang));
+    std::string fileName = "locale/" + language + "/LC_MESSAGES/" + appName + ".po";
     loadLocalisation(fileName);
 }
 void Localisation::detectLanguage(const std::string &appName)

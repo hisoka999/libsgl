@@ -11,6 +11,15 @@ enum class Language : long
     en
 };
 
+struct Currency
+{
+    std::string name;
+    std::string isoKey;
+    std::string unicodeValue;
+    std::string decimalSeparator;
+    std::string thousandsSeparator;
+};
+
 class Localisation
 {
 public:
@@ -31,6 +40,8 @@ public:
 
     Language getLang() const;
 
+    Currency &getCurrency();
+
 private:
     void loadLocalisation(std::string filename);
     Localisation();
@@ -41,6 +52,9 @@ private:
     std::map<std::string, std::string> translations;
     std::string language;
     Language lang;
+    std::map<Language, Currency> currencyMap;
 };
+
+std::string format_currency(float amount);
 
 #endif // LOCALISATION_H
