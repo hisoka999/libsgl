@@ -1,5 +1,6 @@
 #include "engine/ui/Container.h"
 #include <algorithm>
+#include "engine/ui/layout/Layout.h"
 
 namespace UI
 {
@@ -30,7 +31,15 @@ namespace UI
     void Container::render(core::Renderer *pRender)
     {
         if (needRefresh)
+        {
             refresh();
+            if (m_layout)
+            {
+                graphics::Rect layoutRect;
+                boundsRect(layoutRect);
+                m_layout->updateLayout(layoutRect);
+            }
+        }
         for (const auto &obj : objects)
         {
             if (obj != nullptr)
@@ -49,8 +58,10 @@ namespace UI
     bool Container::handleEvents(core::Input *pInput)
     {
         bool eventHandled = false;
-        for (const auto &obj : objects)
+        for (auto it = objects.rbegin(); it != objects.rend(); it++)
+        // for (const auto &obj : objects)
         {
+            auto &obj = *it;
             if (obj != nullptr)
             {
                 eventHandled = obj->handleEvents(pInput);
@@ -76,6 +87,11 @@ namespace UI
         needRefresh = true;
     }
 
+    void Container::setLayout(const std::shared_ptr<layout::Layout> &layout)
+    {
+        m_layout = layout;
+    }
+
     void Container::refresh()
     {
         endRefresh();
@@ -84,6 +100,28 @@ namespace UI
     void Container::endRefresh()
     {
         needRefresh = false;
+    }
+
+    void Container::boundsRect(graphics::Rect &rect)
+    {
+        rect.x = 0;
+        rect.y = 0;
+        rect.width = 0;
+        rect.height = 0;
+        for (auto &object : objects)
+        {
+            if (object->getParent() != nullptr)
+            {
+                rect.x = std::max(rect.x, float(object->getX() + object->getParent()->getX()));
+                rect.y = std::max(rect.y, float(object->getY() + object->getParent()->getY()));
+                rect.width = std::max(rect.width, float(object->getWidth()));
+                rect.height = std::max(rect.height, float(object->getHeight()));
+            }
+            rect.x = std::max(rect.x, float(object->getX()));
+            rect.y = std::max(rect.y, float(object->getY()));
+            rect.width = std::max(rect.x, float(object->getWidth()));
+            rect.height = std::max(rect.x, float(object->getHeight()));
+        }
     }
     void Container::clear()
     {
