@@ -39,9 +39,9 @@ namespace utils
 
         const std::string get_current_work_dir();
 
-        bool is_dir(const std::string path);
+        bool is_dir(const std::string &path);
 
-        bool is_file(const std::string path);
+        bool is_file(const std::string &path);
 
         void create_dir(const std::string path);
 

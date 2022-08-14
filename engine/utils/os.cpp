@@ -87,7 +87,7 @@ namespace utils
 #endif
         }
 
-        bool is_file(const std::string path)
+        bool is_file(const std::string &path)
         {
 #ifdef __linux
             struct stat sb;
