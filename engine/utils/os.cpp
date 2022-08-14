@@ -71,10 +71,10 @@ namespace utils
 
         const std::string get_pref_dir(const std::string &org, const std::string &app)
         {
-            return SDL_GetPrefPath(org.c_str(), app.c_str());
+            return std::string(SDL_GetPrefPath(org.c_str(), app.c_str()));
         }
 
-        bool is_dir(const std::string path)
+        bool is_dir(const std::string &path)
         {
 #ifdef __linux
             struct stat sb;

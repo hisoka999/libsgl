@@ -372,6 +372,11 @@ namespace core
 #endif
         }
 
+        if (!SDL_SetHint(SDL_HINT_RENDER_BATCHING, "1"))
+        {
+            SGL_LOG_ERROR_SDL();
+        }
+
         SGL_LOG_TRACE("use driver id = " + std::to_string(drvId));
 
         ren = SDL_CreateRenderer(const_cast<SDL_Window *>(pWin->getSDLWindow()), drvId,
@@ -382,10 +387,6 @@ namespace core
             SGL_LOG_ERROR_SDL();
             throw SDLException("Renderer::open");
         }
-
-        //    if (!SDL_SetHint(SDL_HINT_RENDER_VSYNC, "1")) {
-        //        logger.logSDLError("Renderer::SDL_HINT_RENDER_VSYNC");
-        //    }
 
         // set viewport
         graphics::Rect rect;
