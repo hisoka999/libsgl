@@ -164,4 +164,12 @@ namespace UI
         m_withoutTitle = withoutTitle;
     }
 
+    void Window::boundsRect(graphics::Rect &rect)
+    {
+        rect.x = 0;
+        rect.y = 0;
+        rect.width = m_width - 51;
+        rect.height = m_height - 70;
+    }
+
 } // namespace UI

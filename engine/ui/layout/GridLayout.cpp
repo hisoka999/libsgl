@@ -29,8 +29,10 @@ namespace UI
                     if (i % columns == column - 1)
                     {
                         auto item = container->get(i);
-
-                        width = std::max(width, int(item->displayRect().width));
+                        float itemWidth = item->displayRect().width;
+                        width = std::max(width, int(itemWidth));
+                        if (columns == 1)
+                            width = std::max(width, int(bounds.width));
                         item->setX(xOffset);
                         item->setY(yOffset);
                         yOffset = item->getY() + height + padding.getY();

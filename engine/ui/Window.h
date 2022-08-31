@@ -34,10 +34,12 @@ namespace UI
         virtual void clear();
 
     protected:
-        virtual void onOpen(){
-
+        virtual void onOpen()
+        {
+            needsRefresh();
         };
         void setWithoutTitle(bool withoutTitle);
+        virtual void boundsRect(graphics::Rect &rect) override;
 
     private:
         int m_width;
