@@ -19,13 +19,9 @@ namespace core
     class GameWindow
     {
     public:
-        static GameWindow &Instance()
-        {
-            static GameWindow instance;
-
-            return instance;
-        }
-        int open(std::string pTitle, const int pWidth, const int pHeight, const std::string &prefDir);
+        GameWindow(std::string pTitle, const int pWidth, const int pHeight, const std::string &prefDir);
+        /** Default destructor */
+        virtual ~GameWindow();
 
         const SDL_Window *getSDLWindow() const;
 
@@ -39,11 +35,6 @@ namespace core
 
     protected:
     private:
-        /** Default constructor */
-        GameWindow();
-        /** Default destructor */
-        virtual ~GameWindow();
-
         SDL_Window *win;
         SDL_Surface *icon = nullptr;
         int width;

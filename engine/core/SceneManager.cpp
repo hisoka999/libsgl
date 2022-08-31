@@ -94,4 +94,9 @@ namespace core
         nextScene = scene;
     }
 
+    void SceneManager::freeScenes()
+    {
+        scenes.clear();
+    }
+
 } /* namespace core */

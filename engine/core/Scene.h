@@ -3,6 +3,7 @@
 
 #include "engine/core/input.h"
 #include "engine/core/renderer.h"
+#include "engine/core/gamewindow.h"
 #include "engine/graphics/texture.h"
 #include "engine/ui/windowmanager.h"
 #include <engine/core/Music.h>
@@ -23,11 +24,13 @@ namespace core
         virtual void unload();
         virtual void load();
         virtual void fixedUpdate(uint32_t delta);
+        void setGameWindow(core::GameWindow *gameWindow);
 
     protected:
         core::Renderer *renderer;
         std::shared_ptr<UI::WindowManager> winMgr;
         std::shared_ptr<core::Music> music;
+        core::GameWindow *m_gameWindow = nullptr;
 
     private:
     };

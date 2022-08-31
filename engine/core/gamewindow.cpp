@@ -8,16 +8,9 @@
 
 namespace core
 {
-
-    GameWindow::GameWindow()
-        : win(nullptr)
+    GameWindow::GameWindow(std::string pTitle, const int pWidth, const int pHeight, const std::string &prefDir)
     {
-        // ctor
         settings = std::make_shared<utils::IniBase>();
-    }
-
-    int GameWindow::open(const std::string pTitle, const int pWidth, const int pHeight, const std::string &prefDir)
-    {
         width = pWidth;
         height = pHeight;
         title = pTitle;
@@ -83,7 +76,6 @@ namespace core
         }
         FullScreenMode fullscreen = (FullScreenMode)settings->getValueI("Base", "Fullscreen");
         setFullScreen(fullscreen);
-        return 0;
     }
 
     GameWindow::~GameWindow()
@@ -101,6 +93,7 @@ namespace core
             IMG_Quit();
             Mix_Quit();
             SDL_Quit();
+            SGL_LOG_WARN("GameWindow destroyed");
         }
     }
     const SDL_Window *GameWindow::getSDLWindow() const

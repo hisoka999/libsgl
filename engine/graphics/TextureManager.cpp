@@ -31,12 +31,17 @@ namespace graphics
         return themeMaps[filename];
     }
 
-    TextureManager::~TextureManager()
+    void TextureManager::clear()
     {
         textures.clear();
-        // fonts.clear();
+        fonts.clear();
         textureMaps.clear();
         themeMaps.clear();
+    }
+
+    TextureManager::~TextureManager()
+    {
+        clear();
     }
     void TextureManager::updateRessources()
     {

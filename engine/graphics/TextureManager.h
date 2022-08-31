@@ -91,6 +91,7 @@ namespace graphics
         const std::shared_ptr<UI::Theme> &loadTheme(std::string filename, bool markAsDefault = false);
 
         void updateRessources();
+        void clear();
         const std::shared_ptr<UI::Theme> &getDefaultTheme();
 
     private:

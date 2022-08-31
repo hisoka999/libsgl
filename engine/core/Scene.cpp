@@ -33,6 +33,11 @@ namespace core
     {
     }
 
+    void Scene::setGameWindow(core::GameWindow *gameWindow)
+    {
+        m_gameWindow = gameWindow;
+    }
+
     Scene::~Scene()
     {
         winMgr = nullptr;
