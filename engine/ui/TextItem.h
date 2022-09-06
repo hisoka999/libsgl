@@ -32,6 +32,7 @@ namespace UI
         size_t cursorPosition;
         SDL_Color borderColor;
         SDL_Color backgroundColor;
+        SDL_Color hoverColor;
     };
 
 } /* namespace UI */
