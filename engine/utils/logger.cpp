@@ -59,7 +59,7 @@ namespace utils
     void Logger::log(LogLevel pLevel, const std::string &src,
                      const std::string &msg)
     {
-        if (level < pLevel)
+        if (int(level) < int(pLevel))
             return;
 
         char mbstr[100];

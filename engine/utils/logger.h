@@ -4,6 +4,7 @@
 #include <SDL2/SDL.h>
 #include <fstream>
 #include <filesystem>
+#include "string.h"
 
 #ifndef __FUNCTION_NAME__
 #ifdef WIN32 // WINDOWS
@@ -44,6 +45,30 @@ namespace utils
 		void info(const std::string &src, const std::string &msg);
 		void trace(const std::string &src, const std::string &msg);
 
+		template <typename... Args>
+		void info(const std::string &src, const std::string &msg, Args const &...args)
+		{
+			info(src, utils::string_format(msg, process_arg(args)...));
+		}
+
+		template <typename... Args>
+		void error(const std::string &src, const std::string &msg, Args const &...args)
+		{
+			error(src, utils::string_format(msg, process_arg(args)...));
+		}
+
+		template <typename... Args>
+		void warn(const std::string &src, const std::string &msg, Args const &...args)
+		{
+			warn(src, utils::string_format(msg, process_arg(args)...));
+		}
+
+		template <typename... Args>
+		void trace(const std::string &src, const std::string &msg, Args const &...args)
+		{
+			trace(src, utils::string_format(msg, process_arg(args)...));
+		}
+
 	protected:
 		void log(LogLevel pLevel, const std::string &src, const std::string &msg);
 		std::ostream &getStreamWriter();
@@ -57,8 +82,11 @@ namespace utils
 } // namespace utils
 static utils::Logger g_sglLogger("SGL", utils::LogLevel::trace);
 static utils::Logger g_appLogger("APP", utils::LogLevel::trace);
+#define VA_ARGS(...) , ##__VA_ARGS__
 
-#define SGL_LOG_TRACE(msg) g_sglLogger.trace(__FUNCSIG__, msg);
+#define SGL_LOG_TRACE(msg, ...) g_sglLogger.trace(__FUNCSIG__, msg VA_ARGS(__VA_ARGS__));
+//#define SGL_LOG_TRACE(msg) g_sglLogger.trace(__FUNCSIG__, msg);
+
 #define SGL_LOG_ERROR(msg) g_sglLogger.error(__FUNCSIG__, msg);
 #define SGL_LOG_WARN(msg) g_sglLogger.warn(__FUNCSIG__, msg);
 #define SGL_LOG_INFO(msg) g_sglLogger.info(__FUNCSIG__, msg);
