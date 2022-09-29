@@ -15,12 +15,12 @@ namespace graphics
     }
     void TextureMap::render(const std::string_view &subTexture, const graphics::Rect &destRect, core::Renderer *renderer)
     {
-        texture->render(renderer, subTextures[hasher(subTexture)], destRect);
+        texture->render(renderer, subTextures[hasher(subTexture)].rect, destRect);
     }
 
     void TextureMap::render(const size_t subTextureHash, const graphics::Rect &destRect, core::Renderer *renderer)
     {
-        texture->render(renderer, subTextures[subTextureHash], destRect);
+        texture->render(renderer, subTextures[subTextureHash].rect, destRect);
     }
     void TextureMap::loadFromFile(const std::string &fileName)
     {
@@ -53,25 +53,42 @@ namespace graphics
             textureData.width = subTexObject->getFloatValue("width");
             textureData.height = subTexObject->getFloatValue("height");
             auto subTextureName = subTexObject->getStringValue("name");
-            subTextures[hasher(subTextureName)] = textureData;
+            utils::Vector2 offset = {0.f, 0.f};
+            if (subTexObject->hasAttribute("offset"))
+            {
+                auto offsetObject = subTexObject->getObjectValue("offset");
+                offset = {offsetObject->getFloatValue("x"), offsetObject->getFloatValue("y")};
+            }
+            SubTexture subTexture = {textureData, offset};
+            subTextures[hasher(subTextureName)] = subTexture;
         }
     }
     void TextureMap::getSourceRect(const std::string_view &subTexture, graphics::Rect *src)
     {
         auto &r = subTextures[hasher(subTexture)];
-        src->x = r.x;
-        src->y = r.y;
-        src->width = r.width;
-        src->height = r.height;
+        src->x = r.rect.x;
+        src->y = r.rect.y;
+        src->width = r.rect.width;
+        src->height = r.rect.height;
     }
 
     void TextureMap::getSourceRect(const size_t subTexture, graphics::Rect *src)
     {
         auto &r = subTextures[subTexture];
-        src->x = r.x;
-        src->y = r.y;
-        src->width = r.width;
-        src->height = r.height;
+        src->x = r.rect.x;
+        src->y = r.rect.y;
+        src->width = r.rect.width;
+        src->height = r.rect.height;
+    }
+
+    utils::Vector2 &TextureMap::getOffset(const std::string_view &subTexture)
+    {
+        return subTextures[hasher(subTexture)].offset;
+    }
+
+    utils::Vector2 &TextureMap::getOffset(const size_t subTexture)
+    {
+        return subTextures[subTexture].offset;
     }
 
     const std::shared_ptr<graphics::Texture> &TextureMap::getTexture()

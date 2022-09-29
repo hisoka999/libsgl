@@ -10,6 +10,12 @@
 namespace graphics
 {
 
+    struct SubTexture
+    {
+        graphics::Rect rect;
+        utils::Vector2 offset;
+    };
+
     class TextureMap
     {
     public:
@@ -20,12 +26,14 @@ namespace graphics
         std::string getFileName();
         void getSourceRect(const std::string_view &subTexture, graphics::Rect *src);
         void getSourceRect(const size_t subTexture, graphics::Rect *src);
+        utils::Vector2 &getOffset(const std::string_view &subTexture);
+        utils::Vector2 &getOffset(const size_t subTexture);
         const std::shared_ptr<graphics::Texture> &getTexture();
 
     private:
         std::string textureName;
         std::shared_ptr<graphics::Texture> texture;
-        std::unordered_map<size_t, graphics::Rect> subTextures;
+        std::unordered_map<size_t, SubTexture> subTextures;
         std::hash<std::string_view> hasher;
     };
 
