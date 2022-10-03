@@ -16,12 +16,15 @@
 #include <iostream>
 #include <unordered_map>
 #include <vector>
+#include <mutex>
 
 struct MessageDispatcher
 {
     core::dispatcher_type dispatcher;
     int reference;
 };
+
+static std::mutex g_MessageSystemMutex;
 
 namespace core
 {
@@ -52,6 +55,7 @@ namespace core
         }
         void deregister(int reference)
         {
+            std::lock_guard guard(g_MessageSystemMutex);
             for (auto it = _consumer.begin(); it != _consumer.end(); ++it)
             {
                 if (it->second.reference == reference)
@@ -66,6 +70,7 @@ namespace core
         [[nodiscard]] int registerForType(Type pType, F &&f)
 
         {
+            std::lock_guard guard(g_MessageSystemMutex);
             reference_count++;
             MessageDispatcher disp;
             disp.dispatcher = core::make_dispatcher(std::forward<F>(f));
@@ -76,6 +81,7 @@ namespace core
         template <typename Data>
         void sendMessage(const std::shared_ptr<Message<Type, Data>> pMessage)
         {
+            std::lock_guard guard(g_MessageSystemMutex);
             MessageData<Type> data;
             data.data = pMessage->getData();
             data.type = pMessage->getType();
@@ -84,6 +90,7 @@ namespace core
 
         void processMessages()
         {
+            std::lock_guard guard(g_MessageSystemMutex);
             for (auto &message : _messageQueue)
             {
                 auto rng = _consumer.equal_range(message.type);
