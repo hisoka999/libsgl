@@ -7,6 +7,21 @@ namespace utils
 {
     const std::string get_loglevel(LogLevel pLevel)
     {
+#ifdef _WIN32
+        switch (pLevel)
+        {
+        case LogLevel::error:
+            return "error";
+        case LogLevel::info:
+            return "info";
+        case LogLevel::trace:
+            return "trace";
+        case LogLevel::warn:
+            return "warn";
+        default:
+            return "";
+        }
+#else
         switch (pLevel)
         {
         case LogLevel::error:
@@ -20,6 +35,7 @@ namespace utils
         default:
             return "";
         }
+#endif
     }
 
     Logger::Logger(const std::string &loggerName, LogLevel pLevel) : m_loggerName(loggerName), level(pLevel)
