@@ -47,9 +47,9 @@ namespace UI
         void render(core::Renderer *pRender)
         {
 
-            int tx = getX();
+            float tx = float(getX());
 
-            int ty = getY();
+            float ty = float(getY());
 
             if (this->getParent())
             {
@@ -61,8 +61,8 @@ namespace UI
             graphics::Rect rect;
             rect.x = tx;
             rect.y = ty;
-            rect.width = getWidth();
-            rect.height = 28;
+            rect.width = float(getWidth());
+            rect.height = 28.f;
 
             graphics::Rect leftButtonRect = {rect.x, rect.y, rect.height, rect.height};
             graphics::Rect rightButtonRect = {rect.x + rect.width - rect.height, rect.y, rect.height, rect.height};
@@ -86,8 +86,8 @@ namespace UI
 
             pRender->fillRect(rightButtonRect);
 
-            iconFont->render(pRender, "\uf0da", textColor, rightButtonRect.x + (rect.height / 2) - 5, rightButtonRect.y + (rect.height / 2) - 10);
-            iconFont->render(pRender, "\uf0d9", textColor, leftButtonRect.x + (rect.height / 2) - 5, leftButtonRect.y + (rect.height / 2) - 10);
+            iconFont->render(pRender, "\uf0da", textColor, int(rightButtonRect.x + (rect.height / 2) - 5), int(rightButtonRect.y + (rect.height / 2) - 10));
+            iconFont->render(pRender, "\uf0d9", textColor, int(leftButtonRect.x + (rect.height / 2) - 5), int(leftButtonRect.y + (rect.height / 2) - 10));
 
             std::string text = "empty";
             if (elements.size() > 0)
@@ -96,7 +96,7 @@ namespace UI
             int textW, textH = 0;
             getFont()->size(text, &textW, &textH);
 
-            getFont()->render(pRender, text, textColor, rect.x + rect.height + 5, rect.y + (rect.height / 2) - (textH / 2));
+            getFont()->render(pRender, text, textColor, int(rect.x + rect.height + 5), int(rect.y + (rect.height / 2) - (textH / 2)));
         }
 
         void addElement(T elem) { elements.push_back(elem); }
@@ -111,9 +111,10 @@ namespace UI
         }
         virtual bool handleEvents(core::Input *pInput)
         {
-            int tx = getX();
 
-            int ty = getY();
+            float tx = float(getX());
+
+            float ty = float(getY());
 
             if (this->getParent())
             {
@@ -125,7 +126,7 @@ namespace UI
             graphics::Rect rect;
             rect.x = tx;
             rect.y = ty;
-            rect.width = getWidth();
+            rect.width = float(getWidth());
             rect.height = 28;
 
             graphics::Rect leftButtonRect = {rect.x, rect.y, rect.height, rect.height};

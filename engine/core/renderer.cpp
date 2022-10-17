@@ -392,8 +392,8 @@ namespace core
         graphics::Rect rect;
         rect.x = 0;
         rect.y = 0;
-        rect.width = pWin->getWidth();
-        rect.height = pWin->getHeight();
+        rect.width = float(pWin->getWidth());
+        rect.height = float(pWin->getHeight());
         setViewPort(rect);
     }
     Renderer::~Renderer()
@@ -423,9 +423,7 @@ namespace core
         // calc time delta
         Uint32 end = getTickCount();
         delta = end - lastTick;
-        //	if (delta == 0)
-        //		logger.error("calcDelta", "time delta is null");
-        //	else
+
         lastTick = end;
     }
 
@@ -461,10 +459,10 @@ namespace core
         {
             SDL_Rect rect;
             SDL_RenderGetViewport(ren, &rect);
-            viewPort.width = rect.w;
-            viewPort.height = rect.h;
-            viewPort.x = rect.x;
-            viewPort.y = rect.y;
+            viewPort.width = float(rect.w);
+            viewPort.height = float(rect.h);
+            viewPort.x = float(rect.x);
+            viewPort.y = float(rect.y);
         }
         return viewPort;
     }
@@ -566,8 +564,8 @@ namespace core
     void Renderer::updateViewportSizeByWindow(const GameWindow *pWin)
     {
         auto viewPort = getViewPort();
-        viewPort.width = pWin->getWidth();
-        viewPort.height = pWin->getHeight();
+        viewPort.width = float(pWin->getWidth());
+        viewPort.height = float(pWin->getHeight());
         setViewPort(viewPort);
     }
 

@@ -40,9 +40,9 @@ namespace UI
 
     bool Checkbox::handleEvents(core::Input *pInput)
     {
-        int tx = getX();
+        float tx = float(getX());
 
-        int ty = getY();
+        float ty = float(getY());
 
         if (this->getParent())
         {
@@ -75,7 +75,7 @@ namespace UI
         graphics::Rect rect = displayRect();
 
         rect.width = 25;
-        rect.height = getHeight();
+        rect.height = float(getHeight());
         pRender->setDrawColor(backgroundColor);
         pRender->fillRect(rect);
         pRender->setDrawColor(borderColor);

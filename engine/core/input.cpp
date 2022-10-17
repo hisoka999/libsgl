@@ -73,7 +73,7 @@ namespace core
 
     utils::Vector2 Input::getMouseWheelPosition()
     {
-        return utils::Vector2(event.wheel.x, event.wheel.y);
+        return utils::Vector2(float(event.wheel.x), float(event.wheel.y));
     }
 
     utils::Vector2 &Input::getMousePostion()

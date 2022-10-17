@@ -81,16 +81,16 @@ namespace UI
         {
             r = getParent()->displayRect();
 
-            r.x += getX();
-            r.y += getY();
+            r.x += float(getX());
+            r.y += float(getY());
         }
         else
         {
-            r.x = getX();
-            r.y = getY();
+            r.x = float(getX());
+            r.y = float(getY());
         }
-        r.width = getWidth() + 25;
-        r.height = getHeight();
+        r.width = float(getWidth() + 25);
+        r.height = float(getHeight());
         return r;
     }
 
@@ -102,16 +102,16 @@ namespace UI
         {
             r = getParent()->eventRect();
 
-            r.x += getX();
-            r.y += getY();
+            r.x += float(getX());
+            r.y += float(getY());
         }
         else
         {
-            r.x = getX();
-            r.y = getY();
+            r.x = float(getX());
+            r.y = float(getY());
         }
-        r.width = getWidth() + 25;
-        r.height = getHeight();
+        r.width = float(getWidth() + 25);
+        r.height = float(getHeight());
         return r;
     }
 
@@ -173,10 +173,10 @@ namespace UI
 
             // draw background rect
             graphics::Rect backgroundRect;
-            backgroundRect.x = tx;
-            backgroundRect.y = ty;
-            backgroundRect.width = getWidth() + 25;
-            backgroundRect.height = getHeight();
+            backgroundRect.x = float(tx);
+            backgroundRect.y = float(ty);
+            backgroundRect.width = float(getWidth() + 25);
+            backgroundRect.height = float(getHeight());
 
             pRenderer->setDrawColor(getTheme()->getStyleColor(this, UI::StyleType::BackgroundColor));
             pRenderer->fillRect(backgroundRect);
