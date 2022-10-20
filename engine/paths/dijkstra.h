@@ -24,11 +24,11 @@ namespace paths
         Neighbor(int _target, const utils::Vector2 &position, double _weight) : targetIndex(_target), position(position), weight(_weight) {}
     };
 
-    typedef std::map<int, std::vector<Neighbor>> Graph;
+    typedef std::vector<std::vector<Neighbor>> Graph;
 
-    void ComputeShortestPathsByDijkstra(int startIndex, const Graph &adjacencyList, std::map<int, double> &minimumDistances, std::map<int, int> &previousVertices, std::map<int, utils::Vector2> &vertexPositions);
+    void ComputeShortestPathsByDijkstra(int startIndex, const Graph &adjacencyList, std::vector<double> &minimumDistances, std::vector<int> &previousVertices, std::map<int, utils::Vector2> &vertexPositions);
 
     // Gibt einen kürzesten Weg für den Knoten mit index zurück
-    std::list<utils::Vector2> GetShortestPathTo(int index, std::map<int, int> &previousVertices, std::map<int, utils::Vector2> &vertexPositions);
+    std::list<utils::Vector2> GetShortestPathTo(int index, std::vector<int> &previousVertices, std::map<int, utils::Vector2> &vertexPositions);
 
 } // namespace paths
