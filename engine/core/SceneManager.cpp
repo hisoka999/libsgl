@@ -68,9 +68,9 @@ namespace core
     {
         return scenes[name];
     }
-    const std::shared_ptr<Scene> &SceneManager::getCurrentScene()
+    Scene *SceneManager::getCurrentScene()
     {
-        return scenes[currentScene];
+        return scenes[currentScene].get();
     }
 
     void SceneManager::fixedUpdate(uint32_t delta)

@@ -35,7 +35,7 @@ namespace core
         void setCurrentScene(std::string name);
         const std::shared_ptr<Scene> &getScene(std::string name);
         void update();
-        const std::shared_ptr<Scene> &getCurrentScene();
+        Scene *getCurrentScene();
         void fixedUpdate(uint32_t delta);
         void changeScene(const std::string &name, const std::shared_ptr<Scene> &scene);
         void freeScenes();
