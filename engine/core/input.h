@@ -9,7 +9,7 @@
 
 namespace core
 {
-    typedef std::multimap<std::string, SDL_KeyCode> KeyMap;
+    typedef std::multimap<std::string, SDL_Keycode> KeyMap;
 
     class Input
     {
