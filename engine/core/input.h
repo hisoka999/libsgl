@@ -9,16 +9,20 @@
 
 namespace core
 {
+    typedef std::multimap<std::string, SDL_KeyCode> KeyMap;
 
     class Input
     {
     public:
         /** Default constructor */
         Input();
+        Input(const KeyMap &keyMap);
         /** Default destructor */
         virtual ~Input();
         bool isKeyDown(SDL_Keycode key);
         bool isKeyUp(SDL_Keycode key);
+        bool isKeyDown(const std::string &key);
+        bool isKeyUp(const std::string &key);
         bool isMouseButtonPressed(int button);
         bool isMouseButtonUp(int button);
         bool isMouseMoving();
@@ -46,6 +50,7 @@ namespace core
 
         std::map<SDL_Keycode, bool> pressedKeys;
         utils::Vector2 mousePosition;
+        KeyMap keyMap;
     };
 
 } // namespace core

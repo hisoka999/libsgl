@@ -9,6 +9,11 @@ namespace core
         // ctor
     }
 
+    Input::Input(const KeyMap &keyMap)
+        : mousePosition(-1, -1), keyMap(keyMap)
+    {
+    }
+
     bool Input::poll()
     {
         bool retval = SDL_PollEvent(&event);
@@ -46,6 +51,28 @@ namespace core
     {
         if (event.type == SDL_KEYUP && key == event.key.keysym.sym && event.key.state == SDL_RELEASED)
             return true;
+        return false;
+    }
+
+    bool Input::isKeyDown(const std::string &key)
+    {
+        auto result = keyMap.equal_range(key);
+        for (auto it = result.first; it != result.second; it++)
+        {
+            if (isKeyDown(it->second))
+                return true;
+        }
+        return false;
+    }
+
+    bool Input::isKeyUp(const std::string &key)
+    {
+        auto result = keyMap.equal_range(key);
+        for (auto it = result.first; it != result.second; it++)
+        {
+            if (isKeyUp(it->second))
+                return true;
+        }
         return false;
     }
 
