@@ -65,6 +65,19 @@ namespace core
         return false;
     }
 
+    void Input::keyDown(bool *keyDown, SDL_Keycode *keyCode)
+    {
+        *keyDown = event.type == SDL_KEYDOWN;
+        if (*keyDown)
+        {
+            *keyCode = event.key.keysym.sym;
+        }
+        else
+        {
+            keyCode = nullptr;
+        }
+    }
+
     bool Input::isKeyUp(const std::string &key)
     {
         auto result = keyMap.equal_range(key);
@@ -138,6 +151,11 @@ namespace core
     bool Input::isTextInputActive()
     {
         return SDL_IsTextInputActive();
+    }
+
+    KeyMap Input::getKeyMap()
+    {
+        return keyMap;
     }
 
 } // namespace core

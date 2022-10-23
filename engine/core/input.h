@@ -22,6 +22,7 @@ namespace core
         bool isKeyDown(SDL_Keycode key);
         bool isKeyUp(SDL_Keycode key);
         bool isKeyDown(const std::string &key);
+        void keyDown(bool *keyDown, SDL_Keycode *keyCode);
         bool isKeyUp(const std::string &key);
         bool isMouseButtonPressed(int button);
         bool isMouseButtonUp(int button);
@@ -43,6 +44,7 @@ namespace core
         void startTextInput(const graphics::Rect &rect);
         void stopTextInput();
         bool isTextInputActive();
+        KeyMap getKeyMap();
 
     protected:
     private:
