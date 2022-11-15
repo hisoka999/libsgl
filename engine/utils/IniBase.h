@@ -18,42 +18,44 @@
 #define SET_BINARY_MODE(file)
 #endif
 
-namespace utils {
+namespace utils
+{
 
 #define CHUNK 16384
 
-typedef std::map<std::string, std::string> Attributes;
-typedef std::map<std::string, Attributes>::iterator GroupIterator;
+    typedef std::map<std::string, std::string> Attributes;
+    typedef std::map<std::string, Attributes>::iterator GroupIterator;
 
-class IniBase {
-public:
-    /** Default constructor */
-    IniBase();
-    /** Default destructor */
-    virtual ~IniBase();
-    /** Access filename
+    class IniBase
+    {
+    public:
+        /** Default constructor */
+        IniBase();
+        /** Default destructor */
+        virtual ~IniBase();
+        /** Access filename
          * \return The current value of filename
          */
-    std::string Getfilename() { return filename; }
-    /** Set filename
+        std::string Getfilename() { return filename; }
+        /** Set filename
          * \param val New value to set
          */
-    void Setfilename(std::string val) { filename = val; }
-    void read();
-    void write();
-    void setAttr(const std::string& group, const std::string& name, std::string value);
-    void setAttrB(const std::string& group, const std::string& name, bool value);
-    void setAttrI(const std::string& group, const std::string& name, int value);
-    std::string getValue(const std::string& group, const std::string& name);
+        void Setfilename(std::string val) { filename = val; }
+        void read();
+        void write();
+        void setAttr(const std::string &group, const std::string &name, std::string value);
+        void setAttrB(const std::string &group, const std::string &name, bool value);
+        void setAttrI(const std::string &group, const std::string &name, int value);
+        std::string getValue(const std::string &group, const std::string &name);
 
-    bool getValueB(const std::string& group, const std::string& name);
-    int getValueI(const std::string& group, const std::string& name);
+        bool getValueB(const std::string &group, const std::string &name);
+        int getValueI(const std::string &group, const std::string &name, int defaultValue = 0);
 
-protected:
-private:
-    std::string filename; //!< Member variable "filename"
-    std::map<std::string, Attributes> groups;
-};
+    protected:
+    private:
+        std::string filename; //!< Member variable "filename"
+        std::map<std::string, Attributes> groups;
+    };
 
 } // namespace utils
 

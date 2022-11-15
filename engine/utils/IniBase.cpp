@@ -103,12 +103,12 @@ namespace utils
         }
     }
 
-    int IniBase::getValueI(const std::string &group, const std::string &name)
+    int IniBase::getValueI(const std::string &group, const std::string &name, int defaultValue)
     {
         std::string val = getValue(group, name);
         if (val.length() > 0)
             return std::stoi(val);
         else
-            return 0;
+            return defaultValue;
     }
 }
