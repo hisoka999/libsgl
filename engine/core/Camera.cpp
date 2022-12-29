@@ -45,6 +45,11 @@ namespace core
         {
                 return viewPort.height;
         }
+
+        utils::Vector2 Camera::getPosition()
+        {
+                return {viewPort.x, viewPort.y};
+        }
         const graphics::Rect &Camera::getViewPortRect() const
         {
                 return viewPort;

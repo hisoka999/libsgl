@@ -30,7 +30,7 @@ namespace core
             filestream << "[Base]" << std::endl;
             filestream << "Width=" << std::to_string(pWidth) << std::endl;
             filestream << "Height=" << std::to_string(pHeight) << std::endl;
-            filestream << "Fullscreen=0" << std::endl;
+            filestream << "Fullscreen=2" << std::endl;
 
             SGL_LOG_TRACE(path + " created!");
             filestream.close();

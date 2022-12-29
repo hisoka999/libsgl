@@ -230,6 +230,11 @@ namespace graphics
         Uint32 value = SDL_MapRGBA(pixelFormat, color.r, color.g, color.b, color.a);
         _pixels[(y * (pitch / 4)) + x] = value;
     }
+
+    graphics::Rect Texture::getTextureRect()
+    {
+        return {0, 0, float(width), float(height)};
+    }
     Texture::~Texture()
     {
         SDL_DestroyTexture(tex);

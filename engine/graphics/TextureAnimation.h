@@ -11,17 +11,19 @@
 #include <engine/graphics/Animation.h>
 #include <engine/graphics/texture.h>
 
-namespace graphics {
+namespace graphics
+{
 
-class TextureAnimation: public Animation<graphics::Texture> {
-public:
-    TextureAnimation(utils::Vector2 startPosition);
-    virtual ~TextureAnimation();
+    class TextureAnimation : public Animation<std::shared_ptr<graphics::Texture>>
+    {
+    public:
+        TextureAnimation(utils::Vector2 startPosition);
+        virtual ~TextureAnimation();
 
-protected:
-    virtual void renderFrame(AnimationFrame<graphics::Texture>& frame,
-            core::Renderer* renderer);
-};
+    protected:
+        virtual void renderFrame(AnimationFrame<std::shared_ptr<graphics::Texture>> &frame, const utils::Vector2 &transform,
+                                 core::Renderer *renderer);
+    };
 
 } /* namespace graphics */
 

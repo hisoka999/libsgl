@@ -26,6 +26,7 @@ namespace core
         float getY() const;
         float getWidth() const;
         float getHeight() const;
+        utils::Vector2 getPosition();
 
         const graphics::Rect &getViewPortRect() const;
 

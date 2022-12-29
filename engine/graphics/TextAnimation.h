@@ -11,21 +11,23 @@
 #include <engine/graphics/Animation.h>
 #include <engine/graphics/text.h>
 
-namespace graphics {
+namespace graphics
+{
 
-class TextAnimation : public Animation<Text> {
-public:
-    TextAnimation(utils::Vector2 startPosition, SDL_Color color, std::string text);
-    virtual ~TextAnimation();
+    class TextAnimation : public Animation<std::shared_ptr<graphics::Text>>
+    {
+    public:
+        TextAnimation(utils::Vector2 startPosition, SDL_Color color, std::string text);
+        virtual ~TextAnimation();
 
-protected:
-    virtual void renderFrame(AnimationFrame<Text>& frame,
-        core::Renderer* renderer);
+    protected:
+        virtual void renderFrame(AnimationFrame<std::shared_ptr<graphics::Text>> &frame, const utils::Vector2 &transform,
+                                 core::Renderer *renderer);
 
-private:
-    SDL_Color color;
-    std::string text;
-};
+    private:
+        SDL_Color color;
+        std::string text;
+    };
 
 } /* namespace graphics */
 

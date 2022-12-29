@@ -96,4 +96,14 @@ namespace graphics
         return texture;
     }
 
+    std::shared_ptr<ChildTexture> TextureMap::getChildTexture(size_t subTextureHash)
+    {
+        return std::make_shared<ChildTexture>(texture, subTextures[subTextureHash].rect);
+    }
+
+    std::shared_ptr<ChildTexture> TextureMap::getChildTexture(const std::string_view &subTexture)
+    {
+        return getChildTexture(hasher(subTexture));
+    }
+
 }

@@ -8,7 +8,12 @@
 #include "engine/ui/windowmanager.h"
 #include <engine/core/Music.h>
 #include <memory>
+#include "engine/core/ecs/entt.h"
 
+namespace core::ecs
+{
+    class Entity;
+}
 namespace core
 {
 
@@ -26,13 +31,33 @@ namespace core
         virtual void fixedUpdate(uint32_t delta);
         void setGameWindow(core::GameWindow *gameWindow);
 
+        core::ecs::Entity createEntity(const std::string &tagName = "");
+        void destroyEntity(core::ecs::Entity &entity);
+
+        template <typename Component>
+        std::vector<core::ecs::Entity> findEntitesByComponent()
+        {
+            std::vector<core::ecs::Entity> result;
+            for (auto handle : m_registry.view<Component>())
+            {
+                result.push_back({handle, this});
+            }
+            return result;
+        }
+
     protected:
+        void renderEntities(core::Renderer *renderer);
+        void fixedUpdateEntities(uint32_t delta);
+        bool handleEventsEntities(core::Input *input);
         core::Renderer *renderer;
         std::shared_ptr<UI::WindowManager> winMgr;
         std::shared_ptr<core::Music> music;
         core::GameWindow *m_gameWindow = nullptr;
 
     private:
+        entt::registry m_registry;
+
+        friend class core::ecs::Entity;
     };
 
 } /* namespace core */

@@ -7,24 +7,25 @@
 
 #include <engine/graphics/TextureAnimation.h>
 
-namespace graphics {
+namespace graphics
+{
 
-TextureAnimation::TextureAnimation(utils::Vector2 startPosition) :
-        Animation<graphics::Texture>(startPosition) {
-    // TODO Auto-generated constructor stub
+    TextureAnimation::TextureAnimation(utils::Vector2 startPosition) : Animation<std::shared_ptr<graphics::Texture>>(startPosition)
+    {
+        // TODO Auto-generated constructor stub
+    }
 
-}
-
-TextureAnimation::~TextureAnimation() {
-    // TODO Auto-generated destructor stub
-}
+    TextureAnimation::~TextureAnimation()
+    {
+        // TODO Auto-generated destructor stub
+    }
 
 } /* namespace graphics */
 
 void graphics::TextureAnimation::renderFrame(
-        AnimationFrame<graphics::Texture>& frame, core::Renderer* renderer) {
-
-    frame.data->render(renderer, currentPosition.getX(),
-            currentPosition.getY());
-
+    AnimationFrame<std::shared_ptr<graphics::Texture>> &frame, const utils::Vector2 &transform, core::Renderer *renderer)
+{
+    auto pos = currentPosition + transform;
+    frame.data->render(renderer, pos.getX(),
+                       pos.getY());
 }

@@ -41,6 +41,8 @@ namespace graphics
         Uint32 getPixel32(unsigned int x, unsigned int y);
         void setPixel(int x, int y, SDL_Color color);
 
+        graphics::Rect getTextureRect();
+
     protected:
     private:
         SDL_Texture *tex;

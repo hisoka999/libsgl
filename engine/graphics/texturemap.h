@@ -6,6 +6,7 @@
 #include <engine/utils/IniBase.h>
 #include <engine/core/renderer.h>
 #include <unordered_map>
+#include "ChildTexture.h"
 
 namespace graphics
 {
@@ -29,6 +30,8 @@ namespace graphics
         utils::Vector2 &getOffset(const std::string_view &subTexture);
         utils::Vector2 &getOffset(const size_t subTexture);
         const std::shared_ptr<graphics::Texture> &getTexture();
+        std::shared_ptr<ChildTexture> getChildTexture(size_t subTextureHash);
+        std::shared_ptr<ChildTexture> getChildTexture(const std::string_view &subTexture);
 
     private:
         std::string textureName;
