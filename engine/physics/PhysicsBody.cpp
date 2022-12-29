@@ -17,10 +17,10 @@ namespace physics
 
     void PhysicsBody::ComputeTorqueAndForce()
     {
-        utils::Vector2 f = (utils::Vector2){0, (!checkCollisionDirection(PositionDirection::BottomLeft) && !checkCollisionDirection(PositionDirection::BottomRight)) ? 100.0f : 0.0f};
+        utils::Vector2 f = utils::Vector2{0, (!checkCollisionDirection(PositionDirection::BottomLeft) && !checkCollisionDirection(PositionDirection::BottomRight)) ? 100.0f : 0.0f};
         force = f;
         // r is the 'arm vector' that goes from the center of mass to the point of force application
-        utils::Vector2 r = (utils::Vector2){shape->width / 2, shape->height / 2};
+        utils::Vector2 r = utils::Vector2{shape->width / 2, shape->height / 2};
         torque = r.getX() * f.getY() - r.getY() * f.getX();
     }
 
@@ -29,7 +29,7 @@ namespace physics
         if (m_bodyType == BodyType::Static)
             return;
         ComputeTorqueAndForce();
-        utils::Vector2 linearAcceleration = (utils::Vector2){force.getX() / shape->mass, force.getY() / shape->mass};
+        utils::Vector2 linearAcceleration = utils::Vector2{force.getX() / shape->mass, force.getY() / shape->mass};
         linearVelocity += linearAcceleration * dt;
         position += linearVelocity * dt;
         float angularAcceleration = torque / shape->momentOfInertia;
