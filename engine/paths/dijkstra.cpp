@@ -25,20 +25,23 @@ namespace paths
             vertexQueue.erase(vertexQueue.begin()); // Entfernt den ersten Knoten der Warteschlange
             const std::vector<paths::Neighbor> &neighbors = adjacencyList[index];
             // Diese for-Schleife durchläuft alle Nachbarn des Knoten mit index
-            for (std::vector<paths::Neighbor>::const_iterator neighborIterator = neighbors.begin(); neighborIterator != neighbors.end(); neighborIterator++)
+            if (!neighbors.empty())
             {
-                int targetIndex = neighborIterator->targetIndex;         // Index des Nachbarknotens
-                const utils::Vector2 &name = neighborIterator->position; // Name des Nachbarknotens
-                double weight = neighborIterator->weight;                // Abstand zum Nachbarknoten
-                double currentDistance = distance + weight;              // Abstand vom Startknoten zum Knoten mit index
-                if (currentDistance < minimumDistances[targetIndex])     // Wenn der Abstand zum Nachbarknoten kleiner als die Länge des bisher kürzesten Wegs ist
+                for (std::vector<paths::Neighbor>::const_iterator neighborIterator = neighbors.begin(); neighborIterator != neighbors.end(); neighborIterator++)
                 {
-                    vertexQueue.erase(std::make_pair(minimumDistances[targetIndex], targetIndex));  // Entfernt den Knoten aus der Warteschlange
-                    vertexPositions.erase(targetIndex);                                             // Entfernt den Namen des Knotens aus der Zuordnungstabelle
-                    minimumDistances[targetIndex] = currentDistance;                                // Speichert den Abstand vom Startknoten
-                    previousVertices[targetIndex] = index;                                          // Speichert den Index des Vorgängerknotens
-                    vertexQueue.insert(std::make_pair(minimumDistances[targetIndex], targetIndex)); // Fügt den Knoten der Warteschlange hinzu
-                    vertexPositions.insert(std::make_pair(targetIndex, name));                      // Fügt den Namen des Knotens der Zuordnungstabelle hinzu
+                    int targetIndex = neighborIterator->targetIndex;         // Index des Nachbarknotens
+                    const utils::Vector2 &name = neighborIterator->position; // Name des Nachbarknotens
+                    double weight = neighborIterator->weight;                // Abstand zum Nachbarknoten
+                    double currentDistance = distance + weight;              // Abstand vom Startknoten zum Knoten mit index
+                    if (currentDistance < minimumDistances[targetIndex])     // Wenn der Abstand zum Nachbarknoten kleiner als die Länge des bisher kürzesten Wegs ist
+                    {
+                        vertexQueue.erase(std::make_pair(minimumDistances[targetIndex], targetIndex));  // Entfernt den Knoten aus der Warteschlange
+                        vertexPositions.erase(targetIndex);                                             // Entfernt den Namen des Knotens aus der Zuordnungstabelle
+                        minimumDistances[targetIndex] = currentDistance;                                // Speichert den Abstand vom Startknoten
+                        previousVertices[targetIndex] = index;                                          // Speichert den Index des Vorgängerknotens
+                        vertexQueue.insert(std::make_pair(minimumDistances[targetIndex], targetIndex)); // Fügt den Knoten der Warteschlange hinzu
+                        vertexPositions.insert(std::make_pair(targetIndex, name));                      // Fügt den Namen des Knotens der Zuordnungstabelle hinzu
+                    }
                 }
             }
         }

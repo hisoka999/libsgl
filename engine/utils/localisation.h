@@ -55,6 +55,6 @@ private:
     std::map<Language, Currency> currencyMap;
 };
 
-std::string format_currency(float amount);
+std::string format_currency(double amount);
 
 #endif // LOCALISATION_H

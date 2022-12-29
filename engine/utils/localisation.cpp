@@ -37,14 +37,14 @@ Localisation::Localisation()
     currencyMap[Language::en] = {"Pound", "GBP", "£", ".", ","};
 }
 
-std::string format_currency(float amount)
+std::string format_currency(double amount)
 {
     Currency &currency = Localisation::Instance().getCurrency();
 
-    int base = amount;
-    float remainder = std::fmod(std::abs(amount), 1);
+    long base = amount;
+    double remainder = std::fmod(std::abs(amount), 1);
 
-    std::string remainderString = std::to_string(int(remainder * 100));
+    std::string remainderString = std::to_string(long(remainder * 100));
     std::string baseString = std::to_string(std::abs(base));
     std::string result = "";
     int offset = 0;

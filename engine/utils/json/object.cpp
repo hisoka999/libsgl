@@ -12,9 +12,9 @@ namespace utils
             {
                 return std::to_string(std::get<int>(data));
             }
-            else if (std::holds_alternative<float>(data))
+            else if (std::holds_alternative<double>(data))
             {
-                return std::to_string(std::get<float>(data));
+                return std::to_string(std::get<double>(data));
             }
             else if (std::holds_alternative<bool>(data))
             {
@@ -68,7 +68,12 @@ namespace utils
 
         float Object::getFloatValue(const std::string &attr) const
         {
-            return std::get<float>(attributes.at(attr));
+            return static_cast<float>(std::get<double>(attributes.at(attr)));
+        }
+
+        double Object::getDoubleValue(const std::string &attr) const
+        {
+            return std::get<double>(attributes.at(attr));
         }
 
         bool Object::getBoolValue(const std::string &attr) const
