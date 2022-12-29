@@ -7,6 +7,7 @@
 
 #include <engine/core/Music.h>
 #include <stdexcept>
+#include <engine/utils/logger.h>
 
 namespace core
 {
@@ -26,9 +27,11 @@ namespace core
 
 void core::Music::loadMusic(std::string filename)
 {
+    SGL_LOG_TRACE("load music %s", filename);
     _data = Mix_LoadMUS(filename.c_str());
     if (_data == nullptr)
     {
+        SGL_LOG_ERROR("error load music file %s: %s", filename, Mix_GetError());
         throw std::runtime_error(
             std::string("failed to load music: ") + std::string(Mix_GetError()));
     }
