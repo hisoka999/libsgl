@@ -78,7 +78,7 @@ namespace core::ecs
         }
         virtual void onCollision([[maybe_unused]] ScriptableEntity *entity) {}
         ScriptableEntity() = default;
-        ~ScriptableEntity() = default;
+        virtual ~ScriptableEntity() = default;
     };
 
     struct ScriptComponent

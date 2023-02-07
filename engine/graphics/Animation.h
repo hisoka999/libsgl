@@ -11,6 +11,7 @@
 #include <SDL2/SDL.h>
 #include <engine/core/renderer.h>
 #include <engine/utils/vector2.h>
+#include <engine/utils/logger.h>
 #include <vector>
 
 namespace graphics
@@ -51,6 +52,7 @@ namespace graphics
         {
             AnimationFrame<X> frame(pos, time, data);
             frames.push_back(frame);
+            currentFrame = 0;
         }
         void setRepeating(int repeat);
 
@@ -73,7 +75,7 @@ namespace graphics
 
 template <typename T>
 inline graphics::Animation<T>::Animation(utils::Vector2 startPosition)
-    : playing(false), currentFrame(-1), startPosition(startPosition)
+    : playing(false), currentFrame(0), startPosition(startPosition)
 {
 }
 
@@ -121,23 +123,23 @@ inline void graphics::Animation<T>::update()
 {
     if (!isPlaying())
         return;
-    auto &nextFrame = frames[currentFrame + 1];
+    auto &nextFrame = frames.at(currentFrame + 1);
     size_t time = SDL_GetTicks() - startTime;
     currentPosition = utils::lerp(frames[currentFrame].position,
                                   nextFrame.position,
                                   ((float)nextFrame.time - (float)time) / (float)nextFrame.time);
-    if (time > frames[currentFrame].time)
+    if (time > frames.at(currentFrame).time)
     {
         currentFrame++;
         startTime = SDL_GetTicks();
-        if (currentFrame >= int(frames.size()))
+        if (currentFrame >= int(frames.size() - 1))
         {
             if (repeat > 0)
                 repeat--;
             if (repeat == 0)
                 stop();
-            else
-                currentFrame = 0;
+
+            currentFrame = 0;
         }
     }
 }
@@ -147,12 +149,15 @@ inline void graphics::Animation<T>::render(core::Renderer *renderer, const utils
 {
     if (currentFrame >= 0)
         renderFrame(frames[currentFrame], transform, renderer);
+    else
+        SGL_LOG_ERROR("no frame to render");
 }
 
 template <typename T>
 inline void graphics::Animation<T>::addFrame(AnimationFrame<T> frame)
 {
     frames.push_back(frame);
+    currentFrame = 0;
 }
 
 #endif /* GRAPHICS_ANIMATION_H_ */

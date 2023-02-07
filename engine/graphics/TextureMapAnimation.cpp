@@ -1,5 +1,5 @@
 #include "TextureMapAnimation.h"
-
+#include "engine/utils/logger.h"
 namespace graphics
 {
     void TextureMapAnimation::renderFrame(AnimationFrame<std::string> &frame, const utils::Vector2 &transform,
