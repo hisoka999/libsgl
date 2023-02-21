@@ -71,6 +71,7 @@ find_package(SDL2_mixer REQUIRED)
 find_package(SDL2_gfx)
 find_package(SDL2TTF REQUIRED)
 find_package(ZLIB)
+find_package(box2d)
 #find_package(Intl)
 
 
@@ -105,7 +106,7 @@ message(${MAGIC_ENUM_SRC})
 
 # add the binary tree to the search path for include files
 # so that we will find TutorialConfig.h
-include_directories("${PROJECT_BINARY_DIR}" ${SDL2_INCLUDE_DIR} ${GETTEXT_INCLUDE_DIR} ${Intl_INCLUDE_DIR} ${MAGIC_ENUM_SRC})
+include_directories("${PROJECT_BINARY_DIR}" ${SDL2_INCLUDE_DIR} ${GETTEXT_INCLUDE_DIR} ${Intl_INCLUDE_DIR} ${MAGIC_ENUM_SRC} )
 
 
 
@@ -180,7 +181,7 @@ endif()
 target_link_libraries(${PROJECT_NAME} SDL2_ttf)
 target_link_libraries(${PROJECT_NAME} SDL2_image)
 target_link_libraries(${PROJECT_NAME} SDL2_mixer)
-
+target_link_libraries(${PROJECT_NAME} box2d)
 
 if( UNIX)
     target_link_libraries(${PROJECT_NAME} SDL2_gfx)

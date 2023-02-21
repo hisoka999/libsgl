@@ -2,6 +2,11 @@
 
 namespace graphics
 {
+    const graphics::Rect &ChildTexture::getRect()
+    {
+        return rect;
+    }
+
     void ChildTexture::render(const graphics::Rect &destRect, core::Renderer *renderer)
     {
         texture->render(renderer, rect, destRect);

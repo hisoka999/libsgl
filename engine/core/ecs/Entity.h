@@ -11,13 +11,15 @@ namespace core::ecs
     {
     private:
         entt::entity m_handle;
-        Scene *m_scene;
+        Scene *m_scene = nullptr;
 
     public:
         Entity(entt::entity id, Scene *scene);
         ~Entity();
         Entity(const Entity &other) = default;
         Entity() = default;
+        const std::string tagName() const;
+        bool compareTag(const std::string &tag) const;
 
         template <typename T, typename... Args>
         T &addComponent(Args &&...args)
@@ -34,7 +36,17 @@ namespace core::ecs
         {
             return m_scene->m_registry.get<T>(m_handle);
         }
+        template <typename T>
+        const T &findComponent() const
+        {
+            return m_scene->m_registry.get<const T>(m_handle);
+        }
+
         operator entt::entity() const { return m_handle; }
+        Scene *getScene()
+        {
+            return m_scene;
+        }
     };
 
 }

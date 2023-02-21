@@ -7,8 +7,8 @@
 #include "Entity.h"
 #include <engine/graphics/TextureMapAnimation.h>
 #include <cassert>
-#include <engine/physics/PhysicsBody.h>
-
+#include <engine/core/Camera.h>
+#include "box2d/b2_body.h"
 namespace core
 {
     class Input;
@@ -35,6 +35,7 @@ namespace core::ecs
     struct Transform : Component
     {
         utils::Vector2 position;
+        utils::Vector2 Scale = utils::Vector2(1.0f, 1.0f);
         size_t width;
         size_t height;
 
@@ -47,14 +48,75 @@ namespace core::ecs
         }
     };
 
-    struct RectangleCollider
+    struct CameraComponent : public Component
     {
-        physics::PhysicsBody body;
+        Camera *camera;
+        CameraComponent(Camera *camera) : camera(camera){};
     };
 
-    struct BoxListCollider
+    struct Rigidbody2DComponent
     {
-        std::vector<physics::PhysicsBody> bodies;
+        enum class BodyType
+        {
+            Static = 0,
+            Dynamic,
+            Kinematic
+        };
+        BodyType Type = BodyType::Static;
+        bool FixedRotation = false;
+
+        // Storage for runtime
+        void *RuntimeBody = nullptr;
+
+        void applyLinearImpuls(const utils::Vector2 &impulse, bool wake)
+        {
+            b2Body *body = (b2Body *)RuntimeBody;
+            body->ApplyLinearImpulseToCenter(b2Vec2(impulse.getX(), impulse.getY()), wake);
+        }
+
+        Rigidbody2DComponent() = default;
+        Rigidbody2DComponent(const Rigidbody2DComponent &) = default;
+    };
+
+    struct BoxCollider2DComponent
+    {
+        utils::Vector2 Offset = {0.0f, 0.0f};
+        utils::Vector2 Size = {0.5f, 0.5f};
+
+        // TODO(Yan): move into physics material in the future maybe
+        float Density = 1.0f;
+        float Friction = 0.5f;
+        float Restitution = 0.0f;
+        float RestitutionThreshold = 0.5f;
+
+        // Storage for runtime
+        void *RuntimeFixture = nullptr;
+
+        BoxCollider2DComponent() = default;
+        BoxCollider2DComponent(const BoxCollider2DComponent &) = default;
+    };
+
+    struct CircleCollider2DComponent
+    {
+        utils::Vector2 Offset = {0.0f, 0.0f};
+        float Radius = 0.5f;
+
+        // TODO(Yan): move into physics material in the future maybe
+        float Density = 1.0f;
+        float Friction = 0.5f;
+        float Restitution = 0.0f;
+        float RestitutionThreshold = 0.5f;
+
+        // Storage for runtime
+        void *RuntimeFixture = nullptr;
+
+        CircleCollider2DComponent() = default;
+        CircleCollider2DComponent(const CircleCollider2DComponent &) = default;
+    };
+
+    struct Collision
+    {
+        Entity entity;
     };
 
     class ScriptableEntity
@@ -71,12 +133,14 @@ namespace core::ecs
         {
             return entity;
         }
-        virtual void onUpdate(size_t delta) = 0;
+        virtual void onUpdate([[maybe_unused]] size_t delta){};
         virtual bool onHandleInput([[maybe_unused]] core::Input *input)
         {
             return false;
         }
         virtual void onCollision([[maybe_unused]] ScriptableEntity *entity) {}
+        virtual void beginCollision([[maybe_unused]] const Collision &collider) {}
+        virtual void endCollision([[maybe_unused]] const Collision &collider) {}
         ScriptableEntity() = default;
         virtual ~ScriptableEntity() = default;
     };

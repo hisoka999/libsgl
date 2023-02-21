@@ -12,6 +12,7 @@ namespace graphics
         graphics::Rect rect;
 
     public:
+        const graphics::Rect &getRect();
         void render(const graphics::Rect &destRect, core::Renderer *renderer);
         ChildTexture(const std::shared_ptr<graphics::Texture> &texture,
                      const graphics::Rect &rect);

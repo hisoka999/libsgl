@@ -1,14 +1,16 @@
 #ifndef CORE_SCENE_H_
 #define CORE_SCENE_H_
-
+#include <memory>
+#include <optional>
 #include "engine/core/input.h"
 #include "engine/core/renderer.h"
 #include "engine/core/gamewindow.h"
 #include "engine/graphics/texture.h"
 #include "engine/ui/windowmanager.h"
 #include <engine/core/Music.h>
-#include <memory>
+
 #include "engine/core/ecs/entt.h"
+#include "box2d/b2_world.h"
 
 namespace core::ecs
 {
@@ -16,6 +18,8 @@ namespace core::ecs
 }
 namespace core
 {
+
+    class ContactListener;
 
     class Scene
     {
@@ -32,6 +36,7 @@ namespace core
         void setGameWindow(core::GameWindow *gameWindow);
 
         core::ecs::Entity createEntity(const std::string &tagName = "");
+
         void destroyEntity(core::ecs::Entity &entity);
 
         template <typename Component>
@@ -45,17 +50,28 @@ namespace core
             return result;
         }
 
+        std::optional<core::ecs::Entity> findEntityByName(const std::string &tagName);
+        void OnPhysics2DStart();
+        void destoryEntity(const core::ecs::Entity &entity);
+
     protected:
         void renderEntities(core::Renderer *renderer);
         void fixedUpdateEntities(uint32_t delta);
         bool handleEventsEntities(core::Input *input);
+        void setPixelPerMeter(float value);
         core::Renderer *renderer;
         std::shared_ptr<UI::WindowManager> winMgr;
         std::shared_ptr<core::Music> music;
         core::GameWindow *m_gameWindow = nullptr;
 
     private:
+        void initPhysicsForEntity(entt::entity e);
         entt::registry m_registry;
+        b2World *m_PhysicsWorld = nullptr;
+        float pixelPerMeter = 50.f;
+        float metersPerPixel = 0.02f;
+        std::unique_ptr<ContactListener> contactListener;
+        std::vector<entt::entity> m_entitiesToDestroy;
 
         friend class core::ecs::Entity;
     };
