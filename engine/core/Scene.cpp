@@ -272,8 +272,11 @@ namespace core
 
                     entt::entity other = (entt::entity)edge->other->GetUserData().pointer;
                     core::ecs::Entity o = {other, this};
-                    auto &otherScript = o.findComponent<core::ecs::ScriptComponent>();
-                    script.Instance->onCollision(otherScript.Instance);
+                    if (o.HasComponent<core::ecs::ScriptComponent>())
+                    {
+                        auto &otherScript = o.findComponent<core::ecs::ScriptComponent>();
+                        script.Instance->onCollision(otherScript.Instance);
+                    }
                 }
             }
         }

@@ -12,7 +12,7 @@ namespace utils
             for (size_t pos = 0; pos < jsonData.size(); ++pos)
             {
                 long start = pos;
-                long end;
+                long end = -1;
                 lex_string(jsonData, &start, &end);
                 if (end != -1)
                 {

@@ -65,13 +65,22 @@ elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     message("unknown system: ${CMAKE_CXX_COMPILER_ID}")
 endif()
 message("SDL2 image dir: ${SDL2_IMAGE_DIR}")
+message("box2d dir: ${sgl_SOURCE_DIR}/deps/box2d")
+set(BOX2D_BUILD_DOCS OFF)
+set(BOX2D_BUILD_UNIT_TESTS OFF)
+set(BOX2D_BUILD_TESTBED  OFF)
+set(BOX2D_BUILD_DOCS  OFF)
+set(BOX2D_USER_SETTINGS  OFF)
+
+add_subdirectory(${sgl_SOURCE_DIR}/deps/box2d ${sgl_BINARY_DIR}/box2d)
+
+
 find_package(SDL2 REQUIRED)
 find_package(SDL2_image REQUIRED)
 find_package(SDL2_mixer REQUIRED)
 find_package(SDL2_gfx)
 find_package(SDL2TTF REQUIRED)
 find_package(ZLIB)
-find_package(box2d)
 #find_package(Intl)
 
 
@@ -106,7 +115,7 @@ message(${MAGIC_ENUM_SRC})
 
 # add the binary tree to the search path for include files
 # so that we will find TutorialConfig.h
-include_directories("${PROJECT_BINARY_DIR}" ${SDL2_INCLUDE_DIR} ${GETTEXT_INCLUDE_DIR} ${Intl_INCLUDE_DIR} ${MAGIC_ENUM_SRC} )
+include_directories("${PROJECT_BINARY_DIR}" ${SDL2_INCLUDE_DIR} ${GETTEXT_INCLUDE_DIR} ${Intl_INCLUDE_DIR} ${MAGIC_ENUM_SRC} ${box2d_INCLUDE_DIRS})
 
 
 
@@ -134,6 +143,7 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     # G++
     message("ADD G++ Compile commands")
     add_compile_options(-Wall -Wextra -Werror)
+
 elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     # MSVC
     set (CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
@@ -147,7 +157,7 @@ endif()
 
 message("${CMAKE_CXX_COMPILER_ID}")
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-    add_library(${PROJECT_NAME} SHARED ${SRC})
+    add_library(${PROJECT_NAME} STATIC ${SRC})
 elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
     add_library(${PROJECT_NAME} SHARED ${SRC})
 elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
