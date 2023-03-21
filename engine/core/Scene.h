@@ -10,7 +10,8 @@
 #include <engine/core/Music.h>
 
 #include "engine/core/ecs/entt.h"
-#include "box2d/b2_world.h"
+
+class b2World;
 
 namespace core::ecs
 {
@@ -63,8 +64,11 @@ namespace core
         std::shared_ptr<UI::WindowManager> winMgr;
         std::shared_ptr<core::Music> music;
         core::GameWindow *m_gameWindow = nullptr;
+        void setPhysicsDebug(bool debug);
+        bool getPhysicsDebug();
 
     private:
+        bool m_physicsDebug = false;
         void initPhysicsForEntity(entt::entity e);
         entt::registry m_registry;
         b2World *m_PhysicsWorld = nullptr;

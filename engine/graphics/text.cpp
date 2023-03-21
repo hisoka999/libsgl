@@ -160,6 +160,14 @@ namespace graphics
         }
         else
         {
+            if (textCache.size() > 1000)
+            {
+                for (auto surf : textCache)
+                {
+                    SDL_DestroyTexture(surf.second);
+                }
+                textCache.clear();
+            }
             // We need to first render to a surface as that's what TTF_RenderText
             // returns, then load that surface into a texture
             int w, h;

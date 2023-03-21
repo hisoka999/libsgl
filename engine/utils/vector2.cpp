@@ -45,16 +45,18 @@ namespace utils
         return Vector2(x - other.x, y - other.y);
     }
 
-    void Vector2::operator-=(const Vector2 &other)
+    Vector2 &Vector2::operator-=(const Vector2 &other)
     {
-        x -= other.getX();
-        y -= other.getY();
+        x -= other.x;
+        y -= other.y;
+        return *this;
     }
 
-    void Vector2::operator+=(const Vector2 &other)
+    Vector2 &Vector2::operator+=(const Vector2 &other)
     {
-        x += other.getX();
-        y += other.getY();
+        x += other.x;
+        y += other.y;
+        return *this;
     }
 
     const Vector2 Vector2::operator*(const Vector2 &other) const

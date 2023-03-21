@@ -149,10 +149,9 @@ namespace core
 
         auto cameraPosition = renderer->getMainCamera()->getPosition();
         {
-            m_registry.sort<core::ecs::Transform>([](const auto &lhs, const auto &rhs)
-                                                  { return lhs.position.getY() + lhs.height < rhs.position.getY() + rhs.height; });
-            auto group = m_registry.view<core::ecs::Transform>();
 
+            auto group = m_registry.view<core::ecs::Transform>();
+            renderer->setDrawColor(0, 0, 255, 255);
             graphics::Rect displayRect;
             for (auto &e : group)
             {
@@ -172,9 +171,62 @@ namespace core
                     auto &rendererComponent = m_registry.get<core::ecs::TextureMapAnimationRenderComponent>(e);
                     rendererComponent.animation.render(renderer, transform.position);
                 }
+                if (m_physicsDebug)
+                {
+                    transform.displayRect(displayRect);
+                    renderer->drawRect(displayRect);
+                }
+            }
+        }
+
+        // debug physics renderer
+        if (m_physicsDebug)
+        {
+            renderer->setDrawColor(255, 0, 0, 255);
+            auto view = m_registry.view<core::ecs::Rigidbody2DComponent>();
+            for (auto e : view)
+            {
+                core::ecs::Entity entity = {e, this};
+                auto &rb2d = entity.findComponent<core::ecs::Rigidbody2DComponent>();
+
+                b2Body *body = (b2Body *)rb2d.RuntimeBody;
+
+                if (!rb2d.RuntimeBody)
+                    continue;
+
+                utils::Vector2 pos = convertToPixels(pixelPerMeter, body->GetTransform().p);
+                SDL_FPoint points[5];
+                for (b2Fixture *fixture = body->GetFixtureList(); fixture != nullptr; fixture = fixture->GetNext())
+                {
+                    if (fixture->GetShape()->GetType() == b2Shape::e_polygon)
+                    {
+
+                        b2PolygonShape *poligonShape = (b2PolygonShape *)fixture->GetShape();
+
+                        for (int32 i = 0; i < poligonShape->m_count; i++)
+                        {
+
+                            utils::Vector2 p1 = convertToPixels(pixelPerMeter, poligonShape->m_vertices[i]);
+
+                            points[i].x = p1.getX() + pos.getX() - cameraPosition.getX();
+                            points[i].y = p1.getY() + pos.getY() - cameraPosition.getY();
+                        }
+
+                        utils::Vector2 p1 = convertToPixels(pixelPerMeter, poligonShape->m_vertices[0]);
+
+                        points[4].x = p1.getX() + pos.getX() - cameraPosition.getX();
+                        points[4].y = p1.getY() + pos.getY() - cameraPosition.getY();
+
+                        if (SDL_RenderDrawLinesF(renderer->getRenderer(), points, 5))
+                        {
+                            throw SDLException("SDL_RenderDrawLines");
+                        }
+                    }
+                }
             }
         }
     }
+
     void Scene::initPhysicsForEntity(entt::entity e)
     {
         core::ecs::Entity entity = {e, this};
@@ -196,7 +248,7 @@ namespace core
             auto &bc2d = entity.findComponent<core::ecs::BoxCollider2DComponent>();
 
             b2PolygonShape boxShape;
-            boxShape.SetAsBox(bc2d.Size.getX() * transform.Scale.getX(), bc2d.Size.getY() * transform.Scale.getY(), {bc2d.Offset.getX(), bc2d.Offset.getY()}, 0);
+            boxShape.SetAsBox(bc2d.Size.getX() * transform.Scale.getX() / 2.0, bc2d.Size.getY() * transform.Scale.getY() / 2.0, {bc2d.Offset.getX(), bc2d.Offset.getY()}, 0);
 
             b2FixtureDef fixtureDef;
             fixtureDef.shape = &boxShape;
@@ -260,6 +312,8 @@ namespace core
             auto &rb2d = entity.findComponent<core::ecs::Rigidbody2DComponent>();
 
             b2Body *body = (b2Body *)rb2d.RuntimeBody;
+            if (!body)
+                continue;
             transform.position = convertToPixels(pixelPerMeter, body->GetPosition());
             // transform.Rotation.z = body->GetAngle();
             if (hasScript)
@@ -267,17 +321,17 @@ namespace core
                 auto &script = m_registry.get<core::ecs::ScriptComponent>(e);
                 script.Instance->onUpdate(delta);
 
-                for (b2ContactEdge *edge = body->GetContactList(); edge; edge = edge->next)
-                {
+                // for (b2ContactEdge *edge = body->GetContactList(); edge; edge = edge->next)
+                // {
 
-                    entt::entity other = (entt::entity)edge->other->GetUserData().pointer;
-                    core::ecs::Entity o = {other, this};
-                    if (o.HasComponent<core::ecs::ScriptComponent>())
-                    {
-                        auto &otherScript = o.findComponent<core::ecs::ScriptComponent>();
-                        script.Instance->onCollision(otherScript.Instance);
-                    }
-                }
+                //     entt::entity other = (entt::entity)edge->other->GetUserData().pointer;
+                //     core::ecs::Entity o = {other, this};
+                //     if (o.HasComponent<core::ecs::ScriptComponent>())
+                //     {
+                //         auto &otherScript = o.findComponent<core::ecs::ScriptComponent>();
+                //         script.Instance->onCollision(otherScript.Instance);
+                //     }
+                // }
             }
         }
 
@@ -290,6 +344,8 @@ namespace core
                 animation.animation.update();
             }
         }
+        m_registry.sort<core::ecs::Transform>([](const auto &lhs, const auto &rhs)
+                                              { return lhs.position.getY() + lhs.height < rhs.position.getY() + rhs.height; });
     }
 
     bool Scene::handleEventsEntities(core::Input *input)
@@ -369,4 +425,14 @@ namespace core
         pixelPerMeter = value;
         metersPerPixel = 1.f / value;
     }
+    void Scene::setPhysicsDebug(bool debug)
+    {
+        m_physicsDebug = debug;
+    }
+
+    bool Scene::getPhysicsDebug()
+    {
+        return m_physicsDebug;
+    }
+
 } /* namespace character */

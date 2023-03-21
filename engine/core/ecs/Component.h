@@ -8,7 +8,6 @@
 #include <engine/graphics/TextureMapAnimation.h>
 #include <cassert>
 #include <engine/core/Camera.h>
-#include "box2d/b2_body.h"
 namespace core
 {
     class Input;
@@ -68,11 +67,8 @@ namespace core::ecs
         // Storage for runtime
         void *RuntimeBody = nullptr;
 
-        void applyLinearImpuls(const utils::Vector2 &impulse, bool wake)
-        {
-            b2Body *body = (b2Body *)RuntimeBody;
-            body->ApplyLinearImpulseToCenter(b2Vec2(impulse.getX(), impulse.getY()), wake);
-        }
+        void applyLinearImpuls(const utils::Vector2 &impulse, bool wake);
+        void SetLinearVelocity(const utils::Vector2 &vel);
 
         Rigidbody2DComponent() = default;
         Rigidbody2DComponent(const Rigidbody2DComponent &) = default;

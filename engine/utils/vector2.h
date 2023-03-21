@@ -29,8 +29,8 @@ namespace utils
         const Vector2 operator-(const Vector2 &other) const;
         const Vector2 operator*(const Vector2 &other) const;
         const Vector2 operator*(const float value) const;
-        void operator+=(const Vector2 &other);
-        void operator-=(const Vector2 &other);
+        Vector2 &operator+=(const Vector2 &other);
+        Vector2 &operator-=(const Vector2 &other);
         bool operator==(const Vector2 &other);
         bool operator!=(const Vector2 &other);
         Vector2 &operator=(const Vector2 &other);
