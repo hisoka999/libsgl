@@ -83,6 +83,10 @@ namespace utils
         JsonValue Parser::parse_value(const std::string_view &token)
         {
             auto data = token.data();
+            if (token.length() == 0)
+            {
+                return std::string("");
+            }
             char startChar = token[0];
 
             if (token == "true")
