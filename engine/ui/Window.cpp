@@ -4,6 +4,7 @@
 #include <functional>
 namespace UI
 {
+#define CLOSING_TIME 1000
 
     Window::Window()
         : Window(50, 50, 300, 400)
@@ -39,6 +40,10 @@ namespace UI
 
     bool Window::handleEvents(core::Input *pInput)
     {
+        if (m_is_closing != 0)
+        {
+            return true;
+        }
         bool eventsHandled = false;
         if (m_visible)
         {
@@ -58,6 +63,7 @@ namespace UI
         m_visible = visible;
         if (!m_visible)
         {
+            m_is_closing = CLOSING_TIME;
             this->fireFuncionCall("closed");
         }
         else
@@ -68,7 +74,7 @@ namespace UI
 
     bool Window::getVisible()
     {
-        return m_visible;
+        return m_visible || m_is_closing != 0;
     }
 
     void Window::setTitle(std::string title)
@@ -83,6 +89,14 @@ namespace UI
 
     void Window::render(core::Renderer *pRender)
     {
+        if (m_is_closing > 0)
+        {
+            m_is_closing -= pRender->getTimeDelta();
+            if (m_is_closing > CLOSING_TIME)
+            {
+                m_is_closing = 0;
+            }
+        }
         if (m_visible)
         {
             SDL_Color titleColor = getTheme()->getStyleColor(this, UI::StyleType::TitleColor);

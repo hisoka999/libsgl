@@ -45,6 +45,7 @@ namespace UI
         int m_width;
         int m_height;
         bool m_visible = false;
+        size_t m_is_closing = 0;
         virtual void buttonClick();
         std::shared_ptr<UI::Button> m_closeButton;
         std::string m_title;
