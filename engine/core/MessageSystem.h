@@ -79,13 +79,13 @@ namespace core
             return disp.reference;
         }
         template <typename Data>
-        void sendMessage(const std::shared_ptr<Message<Type, Data>> pMessage)
+        void sendMessage(const Type type, const Data data)
         {
             std::lock_guard guard(g_MessageSystemMutex);
-            MessageData<Type> data;
-            data.data = pMessage->getData();
-            data.type = pMessage->getType();
-            _messageQueue.push_back(data);
+            MessageData<Type> messageData;
+            messageData.data = data;
+            messageData.type = type;
+            _messageQueue.push_back(messageData);
         }
 
         void processMessages()

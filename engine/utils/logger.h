@@ -92,7 +92,7 @@ inline utils::Logger g_appLogger("APP", utils::LogLevel::trace);
 #define SGL_LOG_ERROR_SDL() g_sglLogger.logSDLError(__FUNCSIG__);
 
 #define APP_LOG_TRACE(msg, ...) g_appLogger.trace(__FUNCSIG__, msg VA_ARGS(__VA_ARGS__));
-#define APP_LOG_ERROR(msg) g_appLogger.error(__FUNCSIG__, msg);
+#define APP_LOG_ERROR(msg, ...) g_appLogger.error(__FUNCSIG__, msg VA_ARGS(__VA_ARGS__));
 #define APP_LOG_WARN(msg) g_appLogger.warn(__FUNCSIG__, msg);
 #define APP_LOG_INFO(msg) g_appLogger.info(__FUNCSIG__, msg);
 #define APP_LOG_ERROR_SDL() g_appLogger.logSDLError(__FUNCSIG__);
