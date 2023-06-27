@@ -21,6 +21,20 @@ namespace utils
         default:
             return "";
         }
+#elif !defined(SGL_DEBUG)
+        switch (pLevel)
+        {
+        case LogLevel::error:
+            return "error";
+        case LogLevel::info:
+            return "info";
+        case LogLevel::trace:
+            return "trace";
+        case LogLevel::warn:
+            return "warn";
+        default:
+            return "";
+        }
 #else
         switch (pLevel)
         {
@@ -42,10 +56,6 @@ namespace utils
     {
     }
 
-    Logger::Logger() : m_loggerName("default"), level(LogLevel::trace) //, out(std::cerr)
-    {
-    }
-
     void Logger::logSDLError(const std::string &msg)
     {
         log(LogLevel::error, msg, SDL_GetError());
@@ -53,7 +63,10 @@ namespace utils
 
     Logger::~Logger()
     {
+
+        std::cerr << "logger " << m_loggerName << " destroyed" << std::endl;
 #ifndef SGL_DEBUG
+        out.flush();
         out.close();
 #endif
     }
@@ -68,7 +81,12 @@ namespace utils
         std::filesystem::path filePath = outputDir / fileName;
 
 #ifndef SGL_DEBUG
-        out.open(filePath, std::ofstream::app);
+        out = {filePath, out.out};
+        if (!out.is_open())
+        {
+            std::cerr << "could not open log file " + fileName << std::endl;
+            throw std::runtime_error("could not open log file " + fileName);
+        }
 #endif
     }
 

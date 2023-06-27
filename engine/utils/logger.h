@@ -76,12 +76,12 @@ namespace utils
 	private:
 		std::string m_loggerName;
 		LogLevel level;
-		std::ofstream out;
+		std::fstream out;
 	};
 
 } // namespace utils
-static utils::Logger g_sglLogger("SGL", utils::LogLevel::trace);
-static utils::Logger g_appLogger("APP", utils::LogLevel::trace);
+inline utils::Logger g_sglLogger("SGL", utils::LogLevel::trace);
+inline utils::Logger g_appLogger("APP", utils::LogLevel::trace);
 #define VA_ARGS(...) , ##__VA_ARGS__
 
 #define SGL_LOG_TRACE(msg, ...) g_sglLogger.trace(__FUNCSIG__, msg VA_ARGS(__VA_ARGS__));
@@ -91,7 +91,7 @@ static utils::Logger g_appLogger("APP", utils::LogLevel::trace);
 #define SGL_LOG_INFO(msg) g_sglLogger.info(__FUNCSIG__, msg);
 #define SGL_LOG_ERROR_SDL() g_sglLogger.logSDLError(__FUNCSIG__);
 
-#define APP_LOG_TRACE(msg) g_appLogger.trace(__FUNCSIG__, msg);
+#define APP_LOG_TRACE(msg, ...) g_appLogger.trace(__FUNCSIG__, msg VA_ARGS(__VA_ARGS__));
 #define APP_LOG_ERROR(msg) g_appLogger.error(__FUNCSIG__, msg);
 #define APP_LOG_WARN(msg) g_appLogger.warn(__FUNCSIG__, msg);
 #define APP_LOG_INFO(msg) g_appLogger.info(__FUNCSIG__, msg);
