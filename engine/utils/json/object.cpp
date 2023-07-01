@@ -68,11 +68,19 @@ namespace utils
 
         float Object::getFloatValue(const std::string &attr) const
         {
+            if (std::holds_alternative<int>(attributes.at(attr)))
+            {
+                return static_cast<float>(std::get<int>(attributes.at(attr)));
+            }
             return static_cast<float>(std::get<double>(attributes.at(attr)));
         }
 
         double Object::getDoubleValue(const std::string &attr) const
         {
+            if (std::holds_alternative<int>(attributes.at(attr)))
+            {
+                return static_cast<double>(std::get<int>(attributes.at(attr)));
+            }
             return std::get<double>(attributes.at(attr));
         }
 
