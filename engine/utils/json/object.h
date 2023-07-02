@@ -17,6 +17,8 @@ namespace utils
         typedef std::variant<bool, int, double, std::string, std::shared_ptr<Object>> JsonValue;
         typedef std::vector<JsonValue> JsonArray;
 
+        std::string convertJsonArrayToString(JsonArray array);
+
         class Object
         {
         public:

@@ -4,7 +4,7 @@
 #include <functional>
 namespace UI
 {
-#define CLOSING_TIME 1000
+#define CLOSING_TIME 500
 
     Window::Window()
         : Window(50, 50, 300, 400)
