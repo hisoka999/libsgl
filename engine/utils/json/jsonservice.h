@@ -42,6 +42,7 @@ namespace utils
                 {
                     data.push_back(convertJsonObject2Data(std::get<std::shared_ptr<utils::JSON::Object>>(object)));
                 }
+                afterLoad();
             }
 
             const std::vector<std::shared_ptr<T>> getData() const
@@ -59,6 +60,8 @@ namespace utils
             {
                 this->data = data;
             }
+
+            virtual void afterLoad() {}
 
         private:
             utils::JSON::Parser parser;
