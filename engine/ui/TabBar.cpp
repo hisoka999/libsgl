@@ -11,8 +11,8 @@
 namespace UI
 {
 
-    TabBar::TabBar(Object *parent)
-        : UI::Object(parent), currentTab(-1), hoveredTab(-1)
+    TabBar::TabBar(Object *parent, TabDirection tabDirection)
+        : UI::Object(parent), currentTab(-1), hoveredTab(-1), tabDirection(tabDirection)
     {
         setObjectName("tabbar");
 
@@ -29,13 +29,14 @@ namespace UI
         disabledColor = getTheme()->getStyleColor(this, UI::StyleType::DisabledColor);
 
         hoverColor = getTheme()->getStyleColor(this, UI::StyleType::HoverColor);
+        backgroundColor = getTheme()->getStyleColor(this, UI::StyleType::BackgroundColor);
     }
 
     TabBar::~TabBar()
     {
         // TODO Auto-generated destructor stub
     }
-    void TabBar::render(core::Renderer *pRender)
+    void TabBar::render(core::Renderer *renderer)
     {
         // render tabbar
         graphics::Rect displayRect;
@@ -47,9 +48,6 @@ namespace UI
         SDL_Color currentColor = {198, 197, 197, 255};
         int tabX = static_cast<int>(displayRect.x) + 16;
         int taby = static_cast<int>(displayRect.y) + 16;
-        graphics::Rect tabRect;
-        graphics::Rect tabBarRect;
-        tabBarRect.x = tabX;
 
         for (auto &tab : tabs)
         {
@@ -60,14 +58,10 @@ namespace UI
             getFont()->size(title, &w, &h);
 
             graphics::Rect backgroundRect;
-            backgroundRect.x = tabX;
-            backgroundRect.y = taby;
-            backgroundRect.width = tabWidth + 25;
-            backgroundRect.height = tabHeight;
+            calulateTabRect(index, backgroundRect);
 
-            pRender->setDrawColor(12, 21, 24, 255);
-            pRender->setDrawColor(getTheme()->getStyleColor(this, UI::StyleType::BackgroundColor));
-            pRender->fillRect(backgroundRect);
+            renderer->setDrawColor(backgroundColor);
+            renderer->fillRect(backgroundRect);
 
             if (index == hoveredTab)
             {
@@ -86,35 +80,52 @@ namespace UI
             {
                 // left top corner
 
-                btnTexture->render(pRender, tabX, taby, 9, 9, 0, 0);
+                btnTexture->render(renderer, tabX, taby, 9, 9, 0, 0);
                 // left bottom corner
-                btnTexture->render(pRender, tabX, taby + tabHeight - 9, 9, 9, 0, 20);
+                btnTexture->render(renderer, tabX, taby + tabHeight - 9, 9, 9, 0, 20);
 
-                btnTexture->render(pRender, tabX + tabWidth + 25 - 9, taby, 9, 9, 174, 0);
-                btnTexture->render(pRender, tabX + tabWidth + 25 - 9, taby + tabHeight - 9, 9, 9, 174, 20);
+                btnTexture->render(renderer, tabX + tabWidth + 25 - 9, taby, 9, 9, 174, 0);
+                btnTexture->render(renderer, tabX + tabWidth + 25 - 9, taby + tabHeight - 9, 9, 9, 174, 20);
             }
             else
             {
-                pRender->setDrawColor(getTheme()->getStyleColor(this, UI::StyleType::BorderColor));
-                pRender->drawRect(backgroundRect);
+                renderer->setDrawColor(getTheme()->getStyleColor(this, UI::StyleType::BorderColor));
+                renderer->drawRect(backgroundRect);
             }
 
             // tabX += 10; // offset
             // render title
-            getFont()->render(pRender, title, currentColor, tabX + 10, taby + 5);
+            getFont()->render(renderer, title, currentColor, backgroundRect.x + 10, backgroundRect.y + 5);
             taby += tabHeight + 10;
             index++;
         }
 
-        pRender->setDrawColor(93, 103, 108, 255);
-        utils::Vector2 start(displayRect.x + 183, displayRect.y + 16);
-        utils::Vector2 end(displayRect.x + 183, displayRect.y + getHeight() - 16);
-        pRender->drawLine(start, end);
+        renderer->setDrawColor(93, 103, 108, 255);
+        if (tabDirection == TabDirection::Left)
+        {
+            utils::Vector2 start(displayRect.x + getX() + 183, displayRect.y + getY() + 16);
+            utils::Vector2 end(displayRect.x + getX() + 183, displayRect.y + getY() + getHeight() - 16);
+            renderer->drawLine(start, end);
+        }
+        else
+        {
+            utils::Vector2 start(displayRect.x + getX() + 16, displayRect.y + getY() + 60);
+            utils::Vector2 end(displayRect.x + getX() + getWidth() + getY() - 16, displayRect.y + 60);
+            renderer->drawLine(start, end);
+        }
 
         if (currentTab != -1)
         {
-            tabs[currentTab]->render(pRender);
+            tabs[currentTab]->render(renderer);
         }
+    }
+
+    void TabBar::renderLeft([[maybe_unused]] core::Renderer *renderer)
+    {
+    }
+
+    void TabBar::renderTop([[maybe_unused]] core::Renderer *renderer)
+    {
     }
 
     void TabBar::postRender(core::Renderer *renderer)
@@ -125,6 +136,31 @@ namespace UI
         }
         UI::Object::postRender(renderer);
     }
+
+    void TabBar::calulateTabRect([[maybe_unused]] size_t index, graphics::Rect &rect)
+    {
+        graphics::Rect displayRect;
+        if (getParent() != nullptr)
+        {
+            displayRect = getParent()->displayRect();
+        }
+        int tabX = static_cast<int>(displayRect.x) + 16 + getX();
+        int taby = static_cast<int>(displayRect.y) + 16 + getY();
+        if (tabDirection == TabDirection::Left)
+        {
+            rect.x = tabX;
+            rect.y = taby + ((tabHeight + 10) * index);
+        }
+        else
+        {
+            rect.x = tabX + ((tabWidth + 20) * index);
+            rect.y = taby;
+        }
+
+        rect.width = tabWidth + 20;
+        rect.height = tabHeight + 6;
+    }
+
     bool TabBar::handleEvents(core::Input *pInput)
     {
         bool eventHandled = false;
@@ -140,23 +176,15 @@ namespace UI
         {
             displayRect = getParent()->displayRect();
         }
-        int tabX = static_cast<int>(displayRect.x) + 16;
-        int taby = static_cast<int>(displayRect.y) + 16;
+
         graphics::Rect tabRect;
         int index = 0;
         for (auto &tab : tabs)
         {
             std::string title = tab->getTitle();
-            // render tab
-            int w = 0;
-            int h = 0;
-            getFont()->size(title, &w, &h);
 
             // render background
-            tabRect.x = tabX;
-            tabRect.y = taby;
-            tabRect.width = tabWidth + 20;
-            tabRect.height = tabHeight + 6;
+            calulateTabRect(index, tabRect);
 
             if (tabRect.intersects(pInput->getMousePostion()))
             {
@@ -169,8 +197,6 @@ namespace UI
                 hoveredTab = index;
             }
 
-            tabX += 10; // offset
-            taby += tabHeight + 10;
             index++;
         }
         UI::Object::handleEvents(pInput);
@@ -201,8 +227,19 @@ namespace UI
     graphics::Rect TabBar::displayRect()
     {
         graphics::Rect r;
-        r.x = getX() + 183;
-        r.y = getY() + 20;
+        graphics::Rect tabRect;
+        calulateTabRect(0, tabRect);
+
+        if (tabDirection == TabDirection::Left)
+        {
+            r.x = getX() + 183;
+            r.y = getY() + 20;
+        }
+        else
+        {
+            r.x = getX() + 16;
+            r.y = getY() + 60;
+        }
         if (getParent() != nullptr)
         {
             r.x += getParent()->displayRect().x;
@@ -214,8 +251,16 @@ namespace UI
     graphics::Rect TabBar::eventRect()
     {
         graphics::Rect r;
-        r.x = getX() + 183;
-        r.y = getY() + 20;
+        if (tabDirection == TabDirection::Left)
+        {
+            r.x = getX() + 183;
+            r.y = getY() + 20;
+        }
+        else
+        {
+            r.x = getX() + 16;
+            r.y = getY() + 60;
+        }
         if (getParent() != nullptr)
         {
             r.x += getParent()->eventRect().x;

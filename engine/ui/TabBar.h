@@ -16,26 +16,34 @@
 namespace UI
 {
 
+    enum class TabDirection
+    {
+        Top,
+        Left,
+    };
     class TabBar : public UI::Object
     {
     public:
-        TabBar(Object *parent = nullptr);
+        TabBar(Object *parent = nullptr, TabDirection tabDirection = TabDirection::Left);
         virtual ~TabBar();
 
         void addTab(std::shared_ptr<Tab> tab);
         void removeTabByIndex(int index);
         void removeTab(std::shared_ptr<Tab> tab);
 
-        virtual void render(core::Renderer *pRender);
-        virtual void postRender(core::Renderer *renderer);
-        virtual bool handleEvents(core::Input *pInput);
+        virtual void render(core::Renderer *renderer) override;
+        virtual void postRender(core::Renderer *renderer) override;
+        virtual bool handleEvents(core::Input *pInput) override;
         virtual graphics::Rect displayRect();
         virtual graphics::Rect eventRect();
         void setCurrentTab(std::shared_ptr<Tab> tab);
 
     protected:
         const int tabWidth = 120;
-        const int tabHeight = 30;
+        const int tabHeight = 20;
+        void renderTop(core::Renderer *renderer);
+        void renderLeft(core::Renderer *renderer);
+        void calulateTabRect(size_t index, graphics::Rect &rect);
 
     private:
         std::vector<std::shared_ptr<Tab>> tabs;
@@ -45,6 +53,8 @@ namespace UI
         SDL_Color hoverColor;
         SDL_Color disabledColor;
         SDL_Color color;
+        SDL_Color backgroundColor;
+        TabDirection tabDirection;
     };
 
 } /* namespace UI */
