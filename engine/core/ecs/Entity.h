@@ -29,7 +29,7 @@ namespace core::ecs
         template <typename T>
         bool HasComponent()
         {
-            return m_scene->m_registry.has<T>(m_handle);
+            return m_scene->m_registry.any_of<T>(m_handle);
         }
         template <typename T>
         T &findComponent()

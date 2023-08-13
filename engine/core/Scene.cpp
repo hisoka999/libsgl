@@ -136,6 +136,7 @@ namespace core
         auto handle = m_registry.create();
         core::ecs::Entity entity = {handle, this};
         entity.addComponent<core::ecs::TagComponent>(tagName);
+        m_has_new_entities = true;
         return entity;
     }
 
@@ -149,6 +150,7 @@ namespace core
 
         auto cameraPosition = renderer->getMainCamera()->getPosition();
         {
+            auto &cameraViewPort = renderer->getMainCamera()->getViewPortRect();
 
             auto group = m_registry.view<core::ecs::Transform>();
             renderer->setDrawColor(0, 0, 255, 255);
@@ -158,15 +160,15 @@ namespace core
 
                 auto transform = group.get<core::ecs::Transform>(e);
                 transform.displayRect(displayRect);
-                if (!displayRect.intersects(renderer->getMainCamera()->getViewPortRect()))
+                if (!displayRect.intersects(cameraViewPort))
                     continue;
                 transform.position -= cameraPosition;
-                if (m_registry.has<core::ecs::RenderComponent>(e))
+                if (m_registry.any_of<core::ecs::RenderComponent>(e))
                 {
                     auto &rendererComponent = m_registry.get<core::ecs::RenderComponent>(e);
                     rendererComponent.render(transform, renderer);
                 }
-                else if (m_registry.has<core::ecs::TextureMapAnimationRenderComponent>(e))
+                else if (m_registry.any_of<core::ecs::TextureMapAnimationRenderComponent>(e))
                 {
                     auto &rendererComponent = m_registry.get<core::ecs::TextureMapAnimationRenderComponent>(e);
                     rendererComponent.animation.render(renderer, transform.position);
@@ -297,19 +299,17 @@ namespace core
         m_PhysicsWorld->Step(delta / 1000.f, velocityIterations, positionIterations);
 
         // Retrieve transform from Box2D
-        auto view = m_registry.view<core::ecs::Rigidbody2DComponent>();
-        for (auto e : view)
+        auto view = m_registry.view<core::ecs::Rigidbody2DComponent, core::ecs::Transform>();
+        for (auto [e, rb2d, transform] : view.each())
         {
 
             core::ecs::Entity entity = {e, this};
-            bool hasScript = entity.HasComponent<core::ecs::ScriptComponent>();
+            bool hasScript = m_registry.any_of<core::ecs::ScriptComponent>(e);
             if (hasScript)
             {
                 auto &script = m_registry.get<core::ecs::ScriptComponent>(e);
                 script.Instance->onUpdate(delta);
             }
-            auto &transform = entity.findComponent<core::ecs::Transform>();
-            auto &rb2d = entity.findComponent<core::ecs::Rigidbody2DComponent>();
 
             b2Body *body = (b2Body *)rb2d.RuntimeBody;
             if (!body)
@@ -345,17 +345,29 @@ namespace core
             }
         }
         m_registry.sort<core::ecs::Transform>([](const auto &lhs, const auto &rhs)
-                                              { return lhs.position.getY() + lhs.height < rhs.position.getY() + rhs.height; });
+                                              { 
+                                                if(lhs.position.getY() + lhs.height == rhs.position.getY() + rhs.height)
+                                                    return lhs.position.getX() + lhs.width == rhs.position.getX() + rhs.width;
+                                                return lhs.position.getY() + lhs.height < rhs.position.getY() + rhs.height; });
     }
 
     bool Scene::handleEventsEntities(core::Input *input)
     {
-        auto view = m_registry.view<core::ecs::ScriptComponent>();
+        auto view = m_registry.view<core::ecs::ScriptComponent, core::ecs::Transform>();
         bool result = false;
+        graphics::Rect displayRect;
+        auto &cameraViewPort = renderer->getMainCamera()->getViewPortRect();
+
         for (auto &e : view)
         {
             if (!result)
             {
+
+                auto transform = view.get<core::ecs::Transform>(e);
+                transform.displayRect(displayRect);
+                if (!displayRect.intersects(cameraViewPort))
+                    continue;
+
                 auto &c = view.get<core::ecs::ScriptComponent>(e);
                 result = c.Instance->onHandleInput(input);
             }
@@ -379,27 +391,31 @@ namespace core
 
     void Scene::update()
     {
-        auto view = m_registry.view<core::ecs::ScriptComponent>();
-        for (auto handle : view)
+        if (m_has_new_entities)
         {
-            auto &script = view.get<core::ecs::ScriptComponent>(handle);
-            if (script.Instance == nullptr)
+            auto view = m_registry.view<core::ecs::ScriptComponent>();
+            for (auto handle : view)
             {
-                core::ecs::Entity entity = {handle, this};
-                script.Instance = script.InstantiateScript();
-                script.Instance->setEntity(entity);
-            }
+                auto &script = view.get<core::ecs::ScriptComponent>(handle);
+                if (script.Instance == nullptr)
+                {
+                    core::ecs::Entity entity = {handle, this};
+                    script.Instance = script.InstantiateScript();
+                    script.Instance->setEntity(entity);
+                }
 
-            if (m_registry.has<core::ecs::Rigidbody2DComponent>(handle))
-            {
-                if (m_registry.get<core::ecs::Rigidbody2DComponent>(handle).RuntimeBody == nullptr)
-                    initPhysicsForEntity(handle);
+                if (m_registry.any_of<core::ecs::Rigidbody2DComponent>(handle))
+                {
+                    if (m_registry.get<core::ecs::Rigidbody2DComponent>(handle).RuntimeBody == nullptr)
+                        initPhysicsForEntity(handle);
+                }
             }
+            m_has_new_entities = false;
         }
 
         for (auto &e : m_entitiesToDestroy)
         {
-            if (m_registry.has<core::ecs::Rigidbody2DComponent>(e))
+            if (m_registry.any_of<core::ecs::Rigidbody2DComponent>(e))
             {
                 auto &rb2d = m_registry.get<core::ecs::Rigidbody2DComponent>(e);
                 m_PhysicsWorld->DestroyBody((b2Body *)rb2d.RuntimeBody);
