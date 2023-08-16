@@ -275,4 +275,8 @@ namespace UI
         currentTab = std::distance(tabs.begin(), it);
     }
 
+    void TabBar::setTabWidth(int width)
+    {
+        tabWidth = width;
+    }
 } /* namespace UI */

@@ -37,9 +37,10 @@ namespace UI
         virtual graphics::Rect displayRect();
         virtual graphics::Rect eventRect();
         void setCurrentTab(std::shared_ptr<Tab> tab);
+        void setTabWidth(int width);
 
     protected:
-        const int tabWidth = 120;
+        int tabWidth = 120;
         const int tabHeight = 20;
         void renderTop(core::Renderer *renderer);
         void renderLeft(core::Renderer *renderer);
