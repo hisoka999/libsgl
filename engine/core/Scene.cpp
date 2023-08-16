@@ -347,7 +347,7 @@ namespace core
         m_registry.sort<core::ecs::Transform>([](const auto &lhs, const auto &rhs)
                                               { 
                                                 if(lhs.position.getY() + lhs.height == rhs.position.getY() + rhs.height)
-                                                    return lhs.position.getX() + lhs.width == rhs.position.getX() + rhs.width;
+                                                    return lhs.position.getX() + lhs.width < rhs.position.getX() + rhs.width;
                                                 return lhs.position.getY() + lhs.height < rhs.position.getY() + rhs.height; });
     }
 
