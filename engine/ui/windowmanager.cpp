@@ -38,16 +38,23 @@ namespace UI
             c->render(ren);
             c->postRender(ren);
         }
+
+        if (dragActive)
+        {
+            // render drag preview element
+            
+        }
     }
 
-    bool WindowManager::handleInput(core::Input *inp)
+    bool WindowManager::handleInput(core::Input *input)
     {
         bool eventHandled = false;
+        dragActive = input->isDragActive();
         for (auto c : containers)
         {
             Window *win = dynamic_cast<Window *>(c);
             if (win == nullptr)
-                eventHandled = c->handleEvents(inp);
+                eventHandled = c->handleEvents(input);
 
             if (eventHandled)
                 break;
@@ -57,7 +64,7 @@ namespace UI
             auto win = lastActiveWindow();
             if (win != nullptr)
             {
-                eventHandled = win->handleEvents(inp);
+                eventHandled = win->handleEvents(input);
             }
         }
         return eventHandled;

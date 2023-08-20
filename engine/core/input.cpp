@@ -1,4 +1,5 @@
 #include "engine/core/input.h"
+#include "engine/ui/Object.h"
 
 namespace core
 {
@@ -30,6 +31,20 @@ namespace core
             if (isMouseMoving())
             {
                 mousePosition = utils::Vector2(float(getEvent().motion.x), float(getEvent().motion.y));
+            }
+
+            if (isDragActive() && isMouseButtonUp(SDL_BUTTON_LEFT))
+            {
+                dragContext.active = false;
+                if (dragContext.dragCallBack)
+                {
+                    dragContext.dragCallBack(dragContext.startObject, dragContext.target, dragContext.data, dragContext.dropFailed);
+                    dragContext.checkDropCallback = nullptr;
+                    dragContext.data = "";
+                    dragContext.startObject = nullptr;
+                    dragContext.dragCallBack = nullptr;
+                    dragContext.dropFailed = false;
+                }
             }
         }
         return retval;
@@ -156,6 +171,37 @@ namespace core
     KeyMap Input::getKeyMap()
     {
         return keyMap;
+    }
+
+    bool Input::isDragActive()
+    {
+        return dragContext.active;
+    }
+
+    bool Input::canDropOnTarget(UI::Object *target)
+    {
+        if (!target || !target->eventRect().intersects(getMousePostion()) || target == dragContext.startObject)
+        {
+            return false;
+        }
+        if (!dragContext.checkDropCallback)
+            dragContext.dropFailed = true;
+        else
+            dragContext.dropFailed = !dragContext.checkDropCallback(target);
+
+        dragContext.target = target;
+
+        return !dragContext.dropFailed;
+    }
+
+    void Input::beginDrag(const std::string &data, UI::Object *source, DragCallBack dragCallBack, CheckDropCallBack checkDropCallback)
+    {
+        dragContext.active = true;
+        dragContext.data = data;
+        dragContext.target = nullptr;
+        dragContext.startObject = source;
+        dragContext.dragCallBack = dragCallBack;
+        dragContext.checkDropCallback = checkDropCallback;
     }
 
 } // namespace core

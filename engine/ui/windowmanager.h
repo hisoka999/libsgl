@@ -48,6 +48,8 @@ namespace UI
         std::vector<Container *> containers;
 
         UI::dialogs::MessageDialog messageDialog;
+
+        bool dragActive = false;
     };
 
 } // namespace UI

@@ -6,9 +6,28 @@
 #include <map>
 #include <string>
 #include "engine/graphics/rect.h"
+#include <functional>
+
+namespace UI
+{
+    class Object;
+}
 
 namespace core
 {
+    typedef std::function<void(UI::Object *, UI::Object *, const std::string &, bool)> DragCallBack;
+    typedef std::function<bool(UI::Object *)> CheckDropCallBack;
+    struct DragContext
+    {
+        bool active = false;
+        bool dropFailed = false;
+        UI::Object *startObject = nullptr;
+        UI::Object *target = nullptr;
+        std::string data;
+        DragCallBack dragCallBack = nullptr;
+        CheckDropCallBack checkDropCallback = nullptr;
+    };
+
     typedef std::multimap<std::string, SDL_Keycode> KeyMap;
 
     class Input
@@ -45,10 +64,14 @@ namespace core
         void stopTextInput();
         bool isTextInputActive();
         KeyMap getKeyMap();
+        void beginDrag(const std::string &data, UI::Object *source, DragCallBack dragCallBack = nullptr, CheckDropCallBack checkDropCallback = nullptr);
+        bool canDropOnTarget(UI::Object *target);
+        bool isDragActive();
 
     protected:
     private:
         SDL_Event event;
+        DragContext dragContext;
 
         std::map<SDL_Keycode, bool> pressedKeys;
         utils::Vector2 mousePosition;
