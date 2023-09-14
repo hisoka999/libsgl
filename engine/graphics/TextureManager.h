@@ -68,7 +68,7 @@ namespace graphics
             return fonts[cache];
         }
 
-        std::shared_ptr<graphics::TextureMap> loadTextureMap(std::string filename)
+        std::shared_ptr<graphics::TextureMap> &loadTextureMap(const std::string &filename)
         {
             if (renderer == nullptr)
             {
@@ -77,9 +77,8 @@ namespace graphics
             if (textureMaps.count(filename) > 0)
                 return textureMaps[filename];
 
-            auto textureMap = std::make_shared<graphics::TextureMap>();
-            textureMap->loadFromFile(filename);
-            textureMaps[filename] = textureMap;
+            textureMaps[filename] = std::make_shared<graphics::TextureMap>();
+            textureMaps[filename]->loadFromFile(filename);
             return textureMaps[filename];
         }
 

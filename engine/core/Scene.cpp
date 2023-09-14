@@ -136,7 +136,7 @@ namespace core
         auto handle = m_registry.create();
         core::ecs::Entity entity = {handle, this};
         entity.addComponent<core::ecs::TagComponent>(tagName);
-        m_has_new_entities = true;
+        m_entitiesAdded.push_back(handle);
         return entity;
     }
 
@@ -171,7 +171,8 @@ namespace core
                 else if (m_registry.any_of<core::ecs::TextureMapAnimationRenderComponent>(e))
                 {
                     auto &rendererComponent = m_registry.get<core::ecs::TextureMapAnimationRenderComponent>(e);
-                    rendererComponent.animation.render(renderer, transform.position);
+                    graphics::Rect r{transform.position.getX(), transform.position.getY(), float(transform.width), float(transform.height)};
+                    rendererComponent.animation.render(renderer, r);
                 }
                 if (m_physicsDebug)
                 {
@@ -391,26 +392,25 @@ namespace core
 
     void Scene::update()
     {
-        if (m_has_new_entities)
+
+        for (auto &handle : m_entitiesAdded)
         {
-            auto view = m_registry.view<core::ecs::ScriptComponent>();
-            for (auto handle : view)
+            if (m_registry.any_of<core::ecs::ScriptComponent>(handle))
             {
-                auto &script = view.get<core::ecs::ScriptComponent>(handle);
+                auto &script = m_registry.get<core::ecs::ScriptComponent>(handle);
                 if (script.Instance == nullptr)
                 {
                     core::ecs::Entity entity = {handle, this};
                     script.Instance = script.InstantiateScript();
                     script.Instance->setEntity(entity);
                 }
-
-                if (m_registry.any_of<core::ecs::Rigidbody2DComponent>(handle))
-                {
-                    if (m_registry.get<core::ecs::Rigidbody2DComponent>(handle).RuntimeBody == nullptr)
-                        initPhysicsForEntity(handle);
-                }
             }
-            m_has_new_entities = false;
+
+            if (m_registry.any_of<core::ecs::Rigidbody2DComponent>(handle))
+            {
+                if (m_registry.get<core::ecs::Rigidbody2DComponent>(handle).RuntimeBody == nullptr)
+                    initPhysicsForEntity(handle);
+            }
         }
 
         for (auto &e : m_entitiesToDestroy)
@@ -422,7 +422,10 @@ namespace core
             }
             m_registry.destroy(e);
         }
-        m_entitiesToDestroy.clear();
+        if (!m_entitiesToDestroy.empty())
+            m_entitiesToDestroy.clear();
+        if (!m_entitiesAdded.empty())
+            m_entitiesAdded.clear();
     }
     std::optional<core::ecs::Entity> Scene::findEntityByName(const std::string &tagName)
     {

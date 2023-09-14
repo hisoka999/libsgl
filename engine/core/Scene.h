@@ -71,12 +71,12 @@ namespace core
         bool m_physicsDebug = false;
         void initPhysicsForEntity(entt::entity e);
         entt::registry m_registry;
-        bool m_has_new_entities = false;
         b2World *m_PhysicsWorld = nullptr;
         float pixelPerMeter = 50.f;
         float metersPerPixel = 0.02f;
         std::unique_ptr<ContactListener> contactListener;
         std::vector<entt::entity> m_entitiesToDestroy;
+        std::vector<entt::entity> m_entitiesAdded;
 
         friend class core::ecs::Entity;
     };

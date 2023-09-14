@@ -11,7 +11,7 @@ namespace graphics
         std::shared_ptr<TextureMap> m_textureMap;
 
     protected:
-        void renderFrame(AnimationFrame<std::string> &frame, const utils::Vector2 &transform,
+        void renderFrame(AnimationFrame<std::string> &frame, const graphics::Rect &displayRect,
                          core::Renderer *renderer) override;
 
     public:

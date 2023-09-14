@@ -45,7 +45,7 @@ namespace graphics
         void pause();
 
         void update();
-        void render(core::Renderer *renderer, const utils::Vector2 &transform);
+        void render(core::Renderer *renderer, const graphics::Rect &displayRect);
         void addFrame(AnimationFrame<T> frame);
         template <typename X>
         void createFrame(utils::Vector2 &pos, size_t time, X data)
@@ -57,7 +57,7 @@ namespace graphics
         void setRepeating(int repeat);
 
     protected:
-        virtual void renderFrame(AnimationFrame<T> &frame, const utils::Vector2 &transform,
+        virtual void renderFrame(AnimationFrame<T> &frame, const graphics::Rect &displayRect,
                                  core::Renderer *renderer) = 0;
         utils::Vector2 currentPosition;
 
@@ -145,10 +145,10 @@ inline void graphics::Animation<T>::update()
 }
 
 template <typename T>
-inline void graphics::Animation<T>::render(core::Renderer *renderer, const utils::Vector2 &transform)
+inline void graphics::Animation<T>::render(core::Renderer *renderer, const graphics::Rect &displayRect)
 {
     if (currentFrame >= 0)
-        renderFrame(frames[currentFrame], transform, renderer);
+        renderFrame(frames[currentFrame], displayRect, renderer);
     else
         SGL_LOG_ERROR("no frame to render");
 }

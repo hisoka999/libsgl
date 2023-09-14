@@ -2,15 +2,18 @@
 #include "engine/utils/logger.h"
 namespace graphics
 {
-    void TextureMapAnimation::renderFrame(AnimationFrame<std::string> &frame, const utils::Vector2 &transform,
+    void TextureMapAnimation::renderFrame(AnimationFrame<std::string> &frame, const graphics::Rect &displayRect,
                                           core::Renderer *renderer)
     {
 
         graphics::Rect destRect;
-        auto pos = currentPosition + transform;
-        m_textureMap->getSourceRect(frame.data, &destRect);
+        auto pos = currentPosition + utils::Vector2{displayRect.x, displayRect.y};
+
         destRect.x = pos.getX();
         destRect.y = pos.getY();
+        destRect.width = displayRect.width;
+        destRect.height = displayRect.height;
+
         m_textureMap->render(frame.data, destRect, renderer);
     }
 

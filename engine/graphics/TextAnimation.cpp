@@ -15,10 +15,10 @@ namespace graphics
     {
         // TODO Auto-generated constructor stub
     }
-    void TextAnimation::renderFrame(AnimationFrame<std::shared_ptr<graphics::Text>> &frame, const utils::Vector2 &transform,
+    void TextAnimation::renderFrame(AnimationFrame<std::shared_ptr<graphics::Text>> &frame, const graphics::Rect &displayRect,
                                     core::Renderer *renderer)
     {
-        auto pos = currentPosition + transform;
+        auto pos = currentPosition + utils::Vector2{displayRect.x, displayRect.y};
         frame.data->render(renderer, text, color, pos.getX(), pos.getY());
     }
     TextAnimation::~TextAnimation()

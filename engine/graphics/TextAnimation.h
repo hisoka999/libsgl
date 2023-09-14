@@ -21,8 +21,8 @@ namespace graphics
         virtual ~TextAnimation();
 
     protected:
-        virtual void renderFrame(AnimationFrame<std::shared_ptr<graphics::Text>> &frame, const utils::Vector2 &transform,
-                                 core::Renderer *renderer);
+        virtual void renderFrame(AnimationFrame<std::shared_ptr<graphics::Text>> &frame, const graphics::Rect &displayRect,
+                                 core::Renderer *renderer) override;
 
     private:
         SDL_Color color;
