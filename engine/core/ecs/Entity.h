@@ -47,6 +47,8 @@ namespace core::ecs
         {
             return m_scene;
         }
+
+        operator bool() const { return m_scene != nullptr; };
     };
 
 }
