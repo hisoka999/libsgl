@@ -27,18 +27,24 @@ namespace core
         {
             core::ecs::Entity entityA = {(entt::entity)contact->GetFixtureA()->GetBody()->GetUserData().pointer, scene};
             core::ecs::Entity entityB = {(entt::entity)contact->GetFixtureB()->GetBody()->GetUserData().pointer, scene};
-            bool existsScriptA = entityA.HasComponent<core::ecs::ScriptComponent>();
-            bool existsScriptB = entityB.HasComponent<core::ecs::ScriptComponent>();
+            bool existsScriptA = entityA.HasComponent<core::ecs::ScriptComponentList>();
+            bool existsScriptB = entityB.HasComponent<core::ecs::ScriptComponentList>();
 
             if (existsScriptA)
             {
-                auto &scriptA = entityA.findComponent<core::ecs::ScriptComponent>();
-                scriptA.Instance->beginCollision(core::ecs::Collision{entityB});
+                auto &scriptList = entityA.findComponent<core::ecs::ScriptComponentList>();
+                for (auto &script : scriptList.components)
+                {
+                    script.Instance->beginCollision(core::ecs::Collision{entityB});
+                }
             }
             if (existsScriptB)
             {
-                auto &scriptB = entityB.findComponent<core::ecs::ScriptComponent>();
-                scriptB.Instance->beginCollision(core::ecs::Collision{entityA});
+                auto &scriptList = entityB.findComponent<core::ecs::ScriptComponentList>();
+                for (auto &script : scriptList.components)
+                {
+                    script.Instance->beginCollision(core::ecs::Collision{entityA});
+                }
             }
         }
 
@@ -47,18 +53,24 @@ namespace core
         {
             core::ecs::Entity entityA = {(entt::entity)contact->GetFixtureA()->GetBody()->GetUserData().pointer, scene};
             core::ecs::Entity entityB = {(entt::entity)contact->GetFixtureB()->GetBody()->GetUserData().pointer, scene};
-            bool existsScriptA = entityA.HasComponent<core::ecs::ScriptComponent>();
-            bool existsScriptB = entityB.HasComponent<core::ecs::ScriptComponent>();
+            bool existsScriptA = entityA.HasComponent<core::ecs::ScriptComponentList>();
+            bool existsScriptB = entityB.HasComponent<core::ecs::ScriptComponentList>();
 
             if (existsScriptA)
             {
-                auto &scriptA = entityA.findComponent<core::ecs::ScriptComponent>();
-                scriptA.Instance->endCollision(core::ecs::Collision{entityB});
+                auto &scriptList = entityA.findComponent<core::ecs::ScriptComponentList>();
+                for (auto &script : scriptList.components)
+                {
+                    script.Instance->endCollision(core::ecs::Collision{entityB});
+                }
             }
             if (existsScriptB)
             {
-                auto &scriptB = entityB.findComponent<core::ecs::ScriptComponent>();
-                scriptB.Instance->endCollision(core::ecs::Collision{entityA});
+                auto &scriptList = entityB.findComponent<core::ecs::ScriptComponentList>();
+                for (auto &script : scriptList.components)
+                {
+                    script.Instance->endCollision(core::ecs::Collision{entityA});
+                }
             }
         }
     };
@@ -305,34 +317,19 @@ namespace core
         {
 
             core::ecs::Entity entity = {e, this};
-            bool hasScript = m_registry.any_of<core::ecs::ScriptComponent>(e);
-            if (hasScript)
-            {
-                auto &script = m_registry.get<core::ecs::ScriptComponent>(e);
-                script.Instance->onUpdate(delta);
-            }
 
             b2Body *body = (b2Body *)rb2d.RuntimeBody;
             if (!body)
                 continue;
             transform.position = convertToPixels(pixelPerMeter, body->GetPosition());
             // transform.Rotation.z = body->GetAngle();
-            if (hasScript)
+            if (m_registry.any_of<core::ecs::ScriptComponentList>(e))
             {
-                auto &script = m_registry.get<core::ecs::ScriptComponent>(e);
-                script.Instance->onUpdate(delta);
-
-                // for (b2ContactEdge *edge = body->GetContactList(); edge; edge = edge->next)
-                // {
-
-                //     entt::entity other = (entt::entity)edge->other->GetUserData().pointer;
-                //     core::ecs::Entity o = {other, this};
-                //     if (o.HasComponent<core::ecs::ScriptComponent>())
-                //     {
-                //         auto &otherScript = o.findComponent<core::ecs::ScriptComponent>();
-                //         script.Instance->onCollision(otherScript.Instance);
-                //     }
-                // }
+                auto &scriptList = m_registry.get<core::ecs::ScriptComponentList>(e);
+                for (auto &script : scriptList.components)
+                {
+                    script.Instance->onUpdate(delta);
+                }
             }
         }
 
@@ -354,7 +351,7 @@ namespace core
 
     bool Scene::handleEventsEntities(core::Input *input)
     {
-        auto view = m_registry.view<core::ecs::ScriptComponent, core::ecs::Transform>();
+        auto view = m_registry.view<core::ecs::ScriptComponentList, core::ecs::Transform>();
         bool result = false;
         graphics::Rect displayRect;
         auto &cameraViewPort = renderer->getMainCamera()->getViewPortRect();
@@ -369,8 +366,11 @@ namespace core
                 if (!displayRect.intersects(cameraViewPort))
                     continue;
 
-                auto &c = view.get<core::ecs::ScriptComponent>(e);
-                result = c.Instance->onHandleInput(input);
+                auto &scriptList = view.get<core::ecs::ScriptComponentList>(e);
+                for (auto &script : scriptList.components)
+                {
+                    result = script.Instance->onHandleInput(input);
+                }
             }
         }
         return result;

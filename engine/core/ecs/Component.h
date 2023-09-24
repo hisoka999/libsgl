@@ -3,11 +3,12 @@
 #include <engine/core/renderer.h>
 #include <engine/graphics/texture.h>
 #include <functional>
-#include <memory>
-#include "Entity.h"
 #include <engine/graphics/TextureMapAnimation.h>
 #include <cassert>
 #include <engine/core/Camera.h>
+#include <typeinfo>
+#include "Entity.h"
+
 namespace core
 {
     class Input;
@@ -15,6 +16,8 @@ namespace core
 
 namespace core::ecs
 {
+
+    class Entity;
 
     struct Component
     {
@@ -144,6 +147,7 @@ namespace core::ecs
     struct ScriptComponent
     {
         ScriptableEntity *Instance = nullptr;
+        size_t typeinfo = 0;
 
         ScriptableEntity *(*InstantiateScript)();
         void (*DestroyScript)(ScriptComponent *);
@@ -151,12 +155,26 @@ namespace core::ecs
         template <typename T>
         void Bind()
         {
+            typeinfo = typeid(T).hash_code();
             using namespace std::placeholders;
             InstantiateScript = []()
             { return static_cast<ScriptableEntity *>(new T()); };
             DestroyScript = [](ScriptComponent *nsc)
             { delete nsc->Instance; nsc->Instance = nullptr; };
         }
+
+        template <typename T>
+        T *bindAndCreate()
+        {
+            Bind<T>();
+            Instance = InstantiateScript();
+            return (T *)Instance;
+        }
+    };
+
+    struct ScriptComponentList
+    {
+        std::vector<ScriptComponent> components;
     };
 
     struct RenderComponent;
