@@ -89,4 +89,18 @@ namespace UI
         m_backgroundColor = getTheme()->getStyleColor(this, UI::StyleType::BackgroundColor);
         m_progressColor = getTheme()->getStyleColor(this, UI::StyleType::ForgroundColor);
     }
+    void ProgressBar::setBackgroundColor(SDL_Color color)
+    {
+        m_backgroundColor = color;
+    }
+
+    void ProgressBar::setBorderColor(SDL_Color color)
+    {
+        m_borderColor = color;
+    }
+
+    void ProgressBar::setProgressColor(SDL_Color color)
+    {
+        m_progressColor = color;
+    }
 }

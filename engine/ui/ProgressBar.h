@@ -18,6 +18,9 @@ namespace UI
         void setMaxValue(int maxValue);
         void setCurrentValue(int currentValue);
         int getCurrentValue();
+        void setBorderColor(SDL_Color color);
+        void setBackgroundColor(SDL_Color color);
+        void setProgressColor(SDL_Color color);
 
     private:
         void init();
