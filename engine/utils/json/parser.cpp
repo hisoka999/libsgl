@@ -72,7 +72,7 @@ namespace utils
 
             // if(isRoot && tokens[0] == "{")
             size_t start = 0;
-            if (tokens[start] == "[")
+            if (tokens[start].data == "[")
             {
                 start++;
                 return parse_array(tokens, &start);
@@ -80,55 +80,65 @@ namespace utils
             return vector;
         }
 
-        JsonValue Parser::parse_value(const std::string_view &token)
+        JsonValue Parser::parse_value(const Token &token)
         {
-            auto data = token.data();
-            if (token.length() == 0)
-            {
-                return std::string("");
-            }
-            char startChar = token[0];
+            auto data = token.data.data();
+            char startChar = token.data[0];
 
-            if (token == "true")
+            switch (token.type)
             {
-                return JsonValue(true);
-            }
-            else if (token == "false")
-            {
-                return JsonValue(false);
-            }
-            else if (token == "null")
-            {
-                return JsonValue(0);
-            }
-            else if ((startChar >= '0' && startChar <= '9') || startChar == '-')
-            {
-                if (token.find_first_of(".") < token.size())
+            case TokenType::BOOL:
+                if (token.data == "true")
                 {
-                    return float(std::atof(data));
+                    return JsonValue(true);
+                }
+                else if (token.data == "false")
+                {
+                    return JsonValue(false);
+                }
+                break;
+            case TokenType::STRING:
+                if (token.data.length() == 0)
+                {
+                    return std::string("");
                 }
                 else
                 {
-                    auto value = std::atoi(data);
-                    if (token.size() > 64)
-                    {
-                        return std::string(token);
-                    }
-                    return value;
+                    return std::string(token.data);
                 }
+                break;
+            case TokenType::NUMBER:
+                if ((startChar >= '0' && startChar <= '9') || startChar == '-')
+                {
+                    if (token.data.find_first_of(".") < token.data.size())
+                    {
+                        return float(std::atof(data));
+                    }
+                    else
+                    {
+                        auto value = std::atoi(data);
+                        if (token.data.size() > 64)
+                        {
+                            return std::string(token.data);
+                        }
+                        return value;
+                    }
+                }
+                break;
+            case TokenType::NULLTOKEN:
+                return JsonValue(0);
+            default:
+                break;
             }
-            else
-            {
-                return std::string(token);
-            }
+            return std::string(token.data);
         }
 
-        JsonArray Parser::parse_array(std::vector<std::string_view> &tokens, size_t *start)
+        JsonArray Parser::parse_array(std::vector<Token> &tokens, size_t *start)
         {
             JsonArray array;
             auto token = tokens[*start];
 
-            if (token == "]")
+            if (token.data == "]")
             {
                 *start = *start + 1;
                 return array;
@@ -137,7 +147,7 @@ namespace utils
             while (true)
             {
                 token = tokens[*start];
-                if (token == "{")
+                if (token.data == "{")
                 {
                     *start = *start + 1;
                     array.push_back(parse_object(tokens, start));
@@ -149,10 +159,10 @@ namespace utils
                     *start = *start + 1;
                 }
                 token = tokens[*start];
-                if (token == ",")
+                if (token.data == ",")
                     *start = *start + 1;
                 token = tokens[*start];
-                if (token == "]")
+                if (token.data == "]")
                 {
                     *start = *start + 1;
                     return array;
@@ -161,12 +171,12 @@ namespace utils
             return array;
         }
 
-        const std::shared_ptr<Object> Parser::parse_object(std::vector<std::string_view> &tokens, size_t *start)
+        const std::shared_ptr<Object> Parser::parse_object(std::vector<Token> &tokens, size_t *start)
         {
             auto token = tokens[*start];
 
             std::shared_ptr<Object> jsonObject = std::make_shared<Object>();
-            if (token == "}")
+            if (token.data == "}")
             {
                 *start = *start + 1;
                 return jsonObject;
@@ -175,25 +185,25 @@ namespace utils
             while (true)
             {
 
-                auto jsonKey = std::string(tokens[*start]);
+                auto jsonKey = std::string(tokens[*start].data);
 
                 *start = *start + 1; // erease key
 
-                if (tokens[*start] != ":")
+                if (tokens[*start].data != ":")
                 {
-                    throw std::runtime_error(std::string("expected  colon but got other token: ") + std::string(tokens[*start]) + "for key: " + jsonKey);
+                    throw std::runtime_error(std::string("expected  colon but got other token: ") + std::string(tokens[*start].data) + "for key: " + jsonKey);
                 }
 
                 *start = *start + 1; // erease colon
 
                 auto valueStart = tokens[*start];
 
-                if (valueStart == "{")
+                if (valueStart.data == "{")
                 {
                     *start = *start + 1;
                     jsonObject->setAttribute(jsonKey, parse_object(tokens, start));
                 }
-                else if (valueStart == "[")
+                else if (valueStart.data == "[")
                 {
                     *start = *start + 1;
                     auto arrayValue = parse_array(tokens, start);
@@ -208,14 +218,14 @@ namespace utils
 
                 auto token = tokens[*start];
 
-                if (token == "}")
+                if (token.data == "}")
                 {
                     *start = *start + 1;
                     return jsonObject;
                 }
-                else if (token != ",")
+                else if (token.data != ",")
                 {
-                    throw std::runtime_error(std::string("expected  comma but got other token: ") + std::string(tokens[*start]) + " for key: " + jsonKey + " for Value(" + std::string(valueStart) + ")");
+                    throw std::runtime_error(std::string("expected  comma but got other token: ") + std::string(tokens[*start].data) + " for key: " + jsonKey + " for Value(" + std::string(valueStart.data) + ")");
                 }
 
                 *start = *start + 1;
@@ -240,7 +250,7 @@ namespace utils
 
             size_t startPos = 0;
 
-            if (tokens[startPos] == "{")
+            if (tokens[startPos].data == "{")
             {
                 startPos++;
                 auto result = parse_object(tokens, &startPos);

@@ -4,17 +4,19 @@
 #include <list>
 #include <vector>
 #include <string>
+#include "Token.h"
 
 namespace utils
 {
     namespace JSON
     {
+
         class Lexer
         {
         public:
             Lexer();
 
-            std::vector<std::string_view> lex(std::string_view jsonData);
+            std::vector<Token> lex(std::string_view jsonData);
 
         private:
             void lex_string(std::string_view jsonData, long *start, long *end);

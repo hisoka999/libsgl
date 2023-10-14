@@ -7,6 +7,7 @@
 #include <string>
 #include <vector>
 #include <list>
+#include "Token.h"
 namespace utils
 {
 
@@ -20,7 +21,7 @@ namespace utils
 
             void parseString(const std::string &jsonData);
             JsonArray parseArray(const std::string_view &jsonData);
-            //std::shared_ptr<Object> parseObject(const std::string &jsonData);
+            // std::shared_ptr<Object> parseObject(const std::string &jsonData);
 
             std::shared_ptr<Object> parseObject(const std::string &jsonData);
 
@@ -28,9 +29,9 @@ namespace utils
             void parseAttribute(const std::string &jsonData);
             size_t findPositionInString(const std::string_view &data, char starChar, char endChar, const size_t startPosition);
 
-            const std::shared_ptr<Object> parse_object(std::vector<std::string_view> &tokens, size_t *start);
-            JsonArray parse_array(std::vector<std::string_view> &tokens, size_t *start);
-            JsonValue parse_value(const std::string_view &token);
+            const std::shared_ptr<Object> parse_object(std::vector<Token> &tokens, size_t *start);
+            JsonArray parse_array(std::vector<Token> &tokens, size_t *start);
+            JsonValue parse_value(const Token &token);
         };
     }
 }

@@ -4,9 +4,9 @@ namespace utils
 {
     namespace JSON
     {
-        std::vector<std::string_view> Lexer::lex(std::string_view jsonData)
+        std::vector<Token> Lexer::lex(std::string_view jsonData)
         {
-            std::vector<std::string_view> tokens;
+            std::vector<Token> tokens;
             tokens.reserve(jsonData.size() / 3);
 
             for (size_t pos = 0; pos < jsonData.size(); ++pos)
@@ -17,7 +17,7 @@ namespace utils
                 if (end != -1)
                 {
                     auto token = jsonData.substr(start + 1, end - start - 1);
-                    tokens.push_back(token);
+                    tokens.push_back(Token{TokenType::STRING, token});
                     pos = end;
                     continue;
                 }
@@ -26,7 +26,7 @@ namespace utils
                 if (end != -1)
                 {
                     auto token = jsonData.substr(start, end - start);
-                    tokens.push_back(token);
+                    tokens.push_back(Token{TokenType::BOOL, token});
                     pos = end - 1;
                     continue;
                 }
@@ -34,7 +34,7 @@ namespace utils
                 if (end != -1)
                 {
                     auto token = jsonData.substr(start, end - start);
-                    tokens.push_back(token);
+                    tokens.push_back(Token{TokenType::NULLTOKEN, token});
                     pos = end - 1;
                     continue;
                 }
@@ -42,7 +42,7 @@ namespace utils
                 if (end != -1 && end - (start - 1) > 0)
                 {
                     auto token = jsonData.substr(start, end - (start - 1));
-                    tokens.push_back(token);
+                    tokens.push_back(Token{TokenType::NUMBER, token});
                     pos = end;
                     continue;
                 }
@@ -60,7 +60,8 @@ namespace utils
                 case ']':
                 case '{':
                 case '}':
-                    tokens.push_back(jsonData.substr(pos, 1));
+                    tokens.push_back(Token{TokenType::OTHER, jsonData.substr(pos, 1)});
+
                     break;
                 }
 
