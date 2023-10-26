@@ -291,6 +291,15 @@ namespace core
             body->CreateFixture(&fixtureDef);
         }
     }
+
+    void Scene::addStaticBlockCollider(std::vector<graphics::Rect> collider)
+    {
+        for (auto &c : collider)
+        {
+            m_staticBlockCollider.push_back(StaticCollisionBlock{.rect = c});
+        }
+    }
+
     void Scene::OnPhysics2DStart()
     {
         m_PhysicsWorld = new b2World({0.0f, 0.0f});
@@ -302,6 +311,35 @@ namespace core
         {
             initPhysicsForEntity(e);
         }
+
+        for (auto &c : m_staticBlockCollider)
+        {
+            initPhysicsForStaticCollider(c);
+        }
+    }
+
+    void Scene::initPhysicsForStaticCollider(StaticCollisionBlock &collider)
+    {
+        b2PolygonShape boxShape;
+        boxShape.SetAsBox(0.5, 0.5, {0.5, 0.5}, 0);
+
+        b2BodyDef bodyDef;
+        bodyDef.type = b2_staticBody;
+        bodyDef.position = b2Vec2(collider.rect.x, collider.rect.y);
+        bodyDef.angle = 0;
+
+        b2Body *body = m_PhysicsWorld->CreateBody(&bodyDef);
+        body->SetFixedRotation(false);
+
+        collider.physicsBody = body;
+
+        b2FixtureDef fixtureDef;
+        fixtureDef.shape = &boxShape;
+        fixtureDef.density = 1;
+        fixtureDef.friction = 0;
+        fixtureDef.restitution = 0;
+        fixtureDef.restitutionThreshold = 0;
+        body->CreateFixture(&fixtureDef);
     }
 
     void Scene::fixedUpdateEntities(uint32_t delta)

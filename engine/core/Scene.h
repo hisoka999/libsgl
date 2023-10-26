@@ -19,7 +19,11 @@ namespace core::ecs
 }
 namespace core
 {
-
+    struct StaticCollisionBlock
+    {
+        graphics::Rect rect;
+        void *physicsBody = nullptr;
+    };
     class ContactListener;
 
     class Scene
@@ -54,6 +58,7 @@ namespace core
         std::optional<core::ecs::Entity> findEntityByName(const std::string &tagName);
         void OnPhysics2DStart();
         void destoryEntity(const core::ecs::Entity &entity);
+        void addStaticBlockCollider(std::vector<graphics::Rect> collider);
 
     protected:
         void renderEntities(core::Renderer *renderer);
@@ -70,6 +75,7 @@ namespace core
     private:
         bool m_physicsDebug = false;
         void initPhysicsForEntity(entt::entity e);
+        void initPhysicsForStaticCollider(StaticCollisionBlock &collider);
         entt::registry m_registry;
         b2World *m_PhysicsWorld = nullptr;
         float pixelPerMeter = 50.f;
@@ -77,6 +83,7 @@ namespace core
         std::unique_ptr<ContactListener> contactListener;
         std::vector<entt::entity> m_entitiesToDestroy;
         std::vector<entt::entity> m_entitiesAdded;
+        std::vector<StaticCollisionBlock> m_staticBlockCollider;
 
         friend class core::ecs::Entity;
     };
