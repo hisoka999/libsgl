@@ -39,6 +39,20 @@ namespace UI
             return font;
         }
 
+        template <typename C>
+        C *findContainer()
+        {
+            for (auto container : containers)
+            {
+                auto c = dynamic_cast<C *>(container);
+                if (c != nullptr)
+                {
+                    return c;
+                }
+            }
+            return nullptr;
+        }
+
     protected:
         Window *lastActiveWindow();
 

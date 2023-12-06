@@ -44,7 +44,10 @@ namespace UI
             x += rect.x;
             y += rect.y;
         }
+        auto oldStyle = getFont()->getStyle();
+        getFont()->setStyle(m_fontStyle);
         getFont()->render(pRender, text, color, x, y);
+        getFont()->setStyle(oldStyle);
     }
 
     std::string Label::getText()
@@ -72,6 +75,11 @@ namespace UI
     Label::~Label()
     {
         // TODO Auto-generated destructor stub
+    }
+
+    void Label::setStyle(graphics::FontStyle fontStyle)
+    {
+        m_fontStyle = fontStyle;
     }
 
 } /* namespace UI */

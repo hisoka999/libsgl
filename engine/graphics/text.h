@@ -31,6 +31,7 @@ namespace graphics
         void renderWrapped(core::Renderer *ren, const std::string &message,
                            SDL_Color color, int x, int y, size_t lineLength);
         void setStyle(FontStyle style);
+        FontStyle getStyle();
 
     protected:
     private:

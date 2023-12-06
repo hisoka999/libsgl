@@ -30,8 +30,8 @@ namespace UI
         m_closeButton->setFont(iconFontName, iconFontSize);
         m_closeButton->setLabel("\uf00d");
         m_closeButton->setBorderless(true);
-        SDL_Color buttonColor = getTheme()->getStyleColor(this, UI::StyleType::TitleColor); //{195, 129, 42, 255};
-        m_closeButton->setColor(buttonColor);
+        m_closeButton->setColor(getTheme()->getStyleColor(this, UI::StyleType::TitleColorActive));
+        m_closeButton->setDisabledColor(getTheme()->getStyleColor(this, UI::StyleType::TitleColor));
 
         m_closeButton->connect("buttonClick", [&]()
                                { buttonClick(); });
@@ -58,6 +58,27 @@ namespace UI
         return eventsHandled;
     }
 
+    bool Window::handleWindowEvents(core::Input *pInput)
+    {
+        if (!m_visible || m_withoutTitle)
+        {
+            return false;
+        }
+        graphics::Rect titleRect(getX(), getY(), m_width, 31);
+
+        bool eventsHandled = UI::Container::handleEvents(pInput);
+        if (!eventsHandled)
+            eventsHandled = m_closeButton->handleEvents(pInput);
+
+        if (!eventsHandled && titleRect.intersects(pInput->getMousePostion()) && pInput->isMouseButtonPressed(SDL_BUTTON_LEFT))
+        {
+            makeActive();
+            eventsHandled = true;
+        }
+
+        return eventsHandled;
+    }
+
     void Window::setVisible(bool visible)
     {
         m_visible = visible;
@@ -69,6 +90,7 @@ namespace UI
         else
         {
             onOpen();
+            setActive(true);
         }
     }
 
@@ -100,6 +122,8 @@ namespace UI
         if (m_visible)
         {
             SDL_Color titleColor = getTheme()->getStyleColor(this, UI::StyleType::TitleColor);
+            if (m_active)
+                titleColor = getTheme()->getStyleColor(this, UI::StyleType::TitleColorActive);
 
             // draw top
             graphics::Rect topRect;
@@ -186,4 +210,36 @@ namespace UI
         rect.height = m_height - 70;
     }
 
+    int Window::getWidth()
+    {
+        return m_width;
+    }
+
+    int Window::getHeight()
+    {
+        return m_height;
+    }
+
+    void Window::setActive(bool value)
+    {
+        if (m_active == value)
+            return;
+        m_active = value;
+        fireFuncionCall("windowActiveChanged", this);
+    }
+
+    void Window::makeActive()
+    {
+        setActive(true);
+    }
+
+    void Window::makeInactive()
+    {
+        setActive(false);
+    }
+
+    bool Window::isActive()
+    {
+        return m_active;
+    }
 } // namespace UI

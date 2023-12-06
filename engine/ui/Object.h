@@ -56,11 +56,11 @@ namespace UI
         {
             return y;
         }
-        int getWidth()
+        virtual int getWidth()
         {
             return width;
         }
-        int getHeight()
+        virtual int getHeight()
         {
             return height;
         }

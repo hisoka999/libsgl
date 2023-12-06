@@ -145,6 +145,11 @@ namespace graphics
         TTF_SetFontStyle(font, int(style));
     }
 
+    FontStyle Text::getStyle()
+    {
+        return static_cast<FontStyle>(TTF_GetFontStyle(font));
+    }
+
     void Text::render(core::Renderer *ren, const std::string &message,
                       SDL_Color color, int x, int y)
     {

@@ -16,6 +16,7 @@ namespace UI
         BackgroundImage,
         BorderColor,
         TitleColor,
+        TitleColorActive,
         Color,
         HoverColor,
         DisabledColor,

@@ -10,6 +10,7 @@
 
 #include <engine/ui/Object.h>
 #include <engine/utils/string.h>
+#include <engine/graphics/text.h>
 namespace UI
 {
 
@@ -30,10 +31,12 @@ namespace UI
         }
 
         void setColor(SDL_Color color);
+        void setStyle(graphics::FontStyle fontStyle);
 
     private:
         std::string text;
         SDL_Color color;
+        graphics::FontStyle m_fontStyle = graphics::FontStyle::NORMAL;
     };
 
 } /* namespace UI */

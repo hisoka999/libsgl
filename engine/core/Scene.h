@@ -59,6 +59,7 @@ namespace core
         void OnPhysics2DStart();
         void destoryEntity(const core::ecs::Entity &entity);
         void addStaticBlockCollider(std::vector<graphics::Rect> collider);
+        std::shared_ptr<UI::WindowManager> &getWindowManager();
 
     protected:
         void renderEntities(core::Renderer *renderer);

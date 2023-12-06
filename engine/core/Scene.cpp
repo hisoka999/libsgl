@@ -492,4 +492,9 @@ namespace core
         return m_physicsDebug;
     }
 
+    std::shared_ptr<UI::WindowManager> &Scene::getWindowManager()
+    {
+        return winMgr;
+    }
+
 } /* namespace character */

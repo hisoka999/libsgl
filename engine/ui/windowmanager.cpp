@@ -28,6 +28,19 @@ namespace UI
     void WindowManager::addWindow(Window *win)
     {
         win->setFont(font.get());
+        win->connect("windowActiveChanged", [this](Window *changedWin)
+                     {
+            if(!changedWin->isActive())
+                return;
+            for(auto& container : containers) {
+                Window *_win = dynamic_cast<Window *>(container);
+                if (_win == nullptr)
+                    continue;
+
+                if(_win != changedWin) {
+                    _win->makeInactive();
+                }
+            } });
         containers.push_back(win);
     }
 
@@ -42,7 +55,6 @@ namespace UI
         if (dragActive)
         {
             // render drag preview element
-            
         }
     }
 
@@ -55,6 +67,8 @@ namespace UI
             Window *win = dynamic_cast<Window *>(c);
             if (win == nullptr)
                 eventHandled = c->handleEvents(input);
+            else
+                eventHandled = win->handleWindowEvents(input);
 
             if (eventHandled)
                 break;
@@ -91,7 +105,7 @@ namespace UI
             Window *win = dynamic_cast<Window *>(container);
             if (win == nullptr)
                 continue;
-            if (win->getVisible())
+            if (win->getVisible() && win->isActive())
                 result = win;
         }
         return result;

@@ -22,6 +22,7 @@ namespace UI
         virtual void render(core::Renderer *pRender);
         virtual void postRender(core::Renderer *renderer);
         virtual bool handleEvents(core::Input *pInput);
+        bool handleWindowEvents(core::Input *pInput);
         void setVisible(bool visible);
         bool getVisible();
 
@@ -32,6 +33,11 @@ namespace UI
 
         void setSize(int width, int height);
         virtual void clear();
+        int getWidth() override;
+        int getHeight() override;
+        void makeActive();
+        void makeInactive();
+        bool isActive();
 
     protected:
         virtual void onOpen()
@@ -40,6 +46,7 @@ namespace UI
         };
         void setWithoutTitle(bool withoutTitle);
         virtual void boundsRect(graphics::Rect &rect) override;
+        void setActive(bool value);
 
     private:
         int m_width;
@@ -50,6 +57,7 @@ namespace UI
         std::shared_ptr<UI::Button> m_closeButton;
         std::string m_title;
         bool m_withoutTitle = false;
+        bool m_active = false;
     };
 
 } // namespace UI
