@@ -10,9 +10,8 @@
 namespace core
 {
 
-    Timer::Timer(const unsigned int time, const unsigned int repeat) : _time(time), _repeat(repeat), _execs(0)
+    Timer::Timer(const unsigned int time, const unsigned int repeat) : m_startTime(0), m_time(time), m_repeat(repeat), m_execs(0), m_paused(false)
     {
-        _startTime = 0;
     }
 
     Timer::~Timer()
@@ -22,32 +21,33 @@ namespace core
 
     void Timer::start()
     {
-        _startTime = SDL_GetTicks();
-        _execs = 0;
+        m_startTime = SDL_GetTicks();
+        m_execs = 0;
     }
     void Timer::stop()
     {
-        _startTime = 0;
+        m_startTime = 0;
     }
     void Timer::pause()
     {
+        m_paused = true;
     }
 
     void Timer::update()
     {
-        if (_startTime == 0)
+        if (m_startTime == 0)
             return;
 
         Uint32 currentTime = SDL_GetTicks();
-        if (_startTime + _time <= currentTime)
+        if (m_startTime + m_time <= currentTime)
         {
-            call(_callback);
+            m_callback(m_execs);
 
-            _startTime = currentTime;
-            if (_repeat > 0)
+            m_startTime = currentTime;
+            if (m_repeat > 0)
             {
-                _execs++;
-                if (_execs > _repeat)
+                m_execs++;
+                if (m_execs > m_repeat)
                 {
                     stop();
                 }

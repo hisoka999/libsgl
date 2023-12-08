@@ -458,6 +458,15 @@ namespace core
                 auto &rb2d = m_registry.get<core::ecs::Rigidbody2DComponent>(e);
                 m_PhysicsWorld->DestroyBody((b2Body *)rb2d.RuntimeBody);
             }
+            if (m_registry.any_of<core::ecs::ScriptComponentList>(e))
+            {
+                auto compList = m_registry.get<core::ecs::ScriptComponentList>(e);
+                for (auto &c : compList.components)
+                {
+                    c.DestroyScript(&c);
+                }
+                compList.components.clear();
+            }
             m_registry.destroy(e);
         }
         if (!m_entitiesToDestroy.empty())

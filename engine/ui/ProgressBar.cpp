@@ -30,7 +30,7 @@ namespace UI
         graphics::Rect progressRect = displayRect();
         progressRect.x++;
         progressRect.y++;
-        progressRect.width = std::max(float((float(m_currentValue) / (m_maxValue - m_minValue)) * progressRect.width) - 2, 0.0f);
+        progressRect.width = std::max(float((float(m_currentValue - m_minValue) / (m_maxValue - m_minValue)) * progressRect.width) - 2, 0.0f);
         progressRect.height -= 2;
 
         renderer->setDrawColor(m_progressColor);

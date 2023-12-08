@@ -9,39 +9,36 @@
 #define CORE_TIMER_H_
 
 #include <SDL2/SDL.h>
-#include "dispatcher.h"
+#include <functional>
 
-namespace core {
+namespace core
+{
 
-class Timer {
-public:
-	Timer(const unsigned int time, const unsigned int repeat);
-	virtual ~Timer();
-	template<typename F>
-	void setCallback(F&& f) {
-		_callback = core::make_dispatcher(std::forward<F>(f));
-	}
+	class Timer
+	{
+	public:
+		Timer(const uint32_t time, const uint32_t repeat);
+		virtual ~Timer();
 
-	void start();
-	void stop();
-	void pause();
-	void update();
+		void setCallback(std::function<void(uint32_t)> f)
+		{
+			m_callback = f;
+		}
+		void reset(const uint32_t time, const uint32_t repeat);
 
-private:
-	template<typename F, typename ... Args>
-	void call(F const& f, Args const&... args) {
-        std::vector<std::any> v { args... };
-		f(v);
-	}
+		void start();
+		void stop();
+		void pause();
+		void update();
 
-
-	unsigned int _startTime;
-	unsigned int _time;
-	unsigned int _repeat;
-	unsigned int _execs;
-
-	core::dispatcher_type _callback;
-};
+	private:
+		uint32_t m_startTime;
+		uint32_t m_time;
+		uint32_t m_repeat;
+		uint32_t m_execs;
+		bool m_paused;
+		std::function<void(uint32_t)> m_callback = nullptr;
+	};
 
 } /* namespace core */
 

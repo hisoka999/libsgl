@@ -21,7 +21,7 @@ namespace core::ecs
     }
 
     template <typename T>
-    ScriptComponent &findScriptComponent(Entity &entity)
+    T *findScriptComponent(Entity &entity)
     {
         size_t id = typeid(T).hash_code();
         auto &list = entity.findComponent<ScriptComponentList>();
@@ -29,22 +29,10 @@ namespace core::ecs
         {
             if (script.typeinfo == id)
             {
-                return script;
+                return (T *)script.Instance;
             }
         }
+        return nullptr;
     }
 
-    template <typename T>
-    const ScriptComponent &findScriptComponent(Entity &entity)
-    {
-        size_t id = typeid(T).hash_code();
-        auto &list = entity.findComponent<ScriptComponentList>();
-        for (auto &script : list.components)
-        {
-            if (script.typeinfo == id)
-            {
-                return script;
-            }
-        }
-    }
 } // namespace core::ecs
