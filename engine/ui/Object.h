@@ -26,6 +26,8 @@ namespace UI
     {
     };
 
+    typedef std::function<bool(UI::Object *, std::string &)> CheckDropCallBack;
+
     class Object : public BaseObject
     {
 
@@ -128,6 +130,8 @@ namespace UI
 
         const std::shared_ptr<Theme> getTheme();
         void setTheme(const std::shared_ptr<Theme> &theme);
+        void setCheckDropCallBack(CheckDropCallBack callback);
+        CheckDropCallBack getCheckDropCallBack();
 
     protected:
         void setObjectName(const std::string &objectName);
@@ -166,6 +170,7 @@ namespace UI
         std::string styleClass;
         std::string objectName;
         std::shared_ptr<Theme> theme = nullptr;
+        CheckDropCallBack dragCallback = nullptr;
     };
 
 } // namespace UI

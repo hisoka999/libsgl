@@ -163,4 +163,14 @@ namespace UI
     {
         return showHint;
     }
+
+    void Object::setCheckDropCallBack(CheckDropCallBack callback)
+    {
+        dragCallback = callback;
+    }
+
+    CheckDropCallBack Object::getCheckDropCallBack()
+    {
+        return dragCallback;
+    }
 } // namespace UI

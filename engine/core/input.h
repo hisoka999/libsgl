@@ -16,7 +16,7 @@ namespace UI
 namespace core
 {
     typedef std::function<void(UI::Object *, UI::Object *, const std::string &, bool)> DragCallBack;
-    typedef std::function<bool(UI::Object *)> CheckDropCallBack;
+    typedef std::function<bool(UI::Object *, std::string &)> CheckDropCallBack;
     struct DragContext
     {
         bool active = false;
@@ -25,7 +25,6 @@ namespace core
         UI::Object *target = nullptr;
         std::string data;
         DragCallBack dragCallBack = nullptr;
-        CheckDropCallBack checkDropCallback = nullptr;
     };
 
     typedef std::multimap<std::string, SDL_Keycode> KeyMap;
@@ -64,7 +63,7 @@ namespace core
         void stopTextInput();
         bool isTextInputActive();
         KeyMap getKeyMap();
-        void beginDrag(const std::string &data, UI::Object *source, DragCallBack dragCallBack = nullptr, CheckDropCallBack checkDropCallback = nullptr);
+        void beginDrag(const std::string &data, UI::Object *source, DragCallBack dragCallBack = nullptr);
         bool canDropOnTarget(UI::Object *target);
         bool isDragActive();
 

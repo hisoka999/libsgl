@@ -36,10 +36,10 @@ namespace core
             if (isDragActive() && isMouseButtonUp(SDL_BUTTON_LEFT))
             {
                 dragContext.active = false;
+                canDropOnTarget(dragContext.target);
                 if (dragContext.dragCallBack)
                 {
                     dragContext.dragCallBack(dragContext.startObject, dragContext.target, dragContext.data, dragContext.dropFailed);
-                    dragContext.checkDropCallback = nullptr;
                     dragContext.data = "";
                     dragContext.startObject = nullptr;
                     dragContext.dragCallBack = nullptr;
@@ -184,24 +184,23 @@ namespace core
         {
             return false;
         }
-        if (!dragContext.checkDropCallback)
+        if (!target->getCheckDropCallBack())
             dragContext.dropFailed = true;
         else
-            dragContext.dropFailed = !dragContext.checkDropCallback(target);
+            dragContext.dropFailed = !target->getCheckDropCallBack()(target, dragContext.data);
 
         dragContext.target = target;
 
         return !dragContext.dropFailed;
     }
 
-    void Input::beginDrag(const std::string &data, UI::Object *source, DragCallBack dragCallBack, CheckDropCallBack checkDropCallback)
+    void Input::beginDrag(const std::string &data, UI::Object *source, DragCallBack dragCallBack)
     {
         dragContext.active = true;
         dragContext.data = data;
         dragContext.target = nullptr;
         dragContext.startObject = source;
         dragContext.dragCallBack = dragCallBack;
-        dragContext.checkDropCallback = checkDropCallback;
     }
 
 } // namespace core
