@@ -26,7 +26,9 @@ namespace utils
         }
         float distance(const Vector2 &v2);
         const Vector2 operator+(const Vector2 &other) const;
+        const Vector2 operator+(const float value) const;
         const Vector2 operator-(const Vector2 &other) const;
+        const Vector2 operator-(const float other) const;
         const Vector2 operator*(const Vector2 &other) const;
         const Vector2 operator*(const float value) const;
         Vector2 &operator+=(const Vector2 &other);

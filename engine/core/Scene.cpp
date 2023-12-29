@@ -11,9 +11,20 @@
 #include <algorithm>
 #include <execution>
 #include "box2d/box2d.h"
+#include "RayCastResult.h"
 
 namespace core
 {
+
+    inline b2Vec2 convert2Meters(const float factor, const utils::Vector2 &input)
+    {
+        return b2Vec2(factor * input.getX(), factor * input.getY());
+    }
+
+    inline utils::Vector2 convertToPixels(const float factor, const b2Vec2 &input)
+    {
+        return utils::Vector2(factor * input.x, factor * input.y);
+    }
 
     class ContactListener : public b2ContactListener
     {
@@ -75,15 +86,39 @@ namespace core
         }
     };
 
-    inline b2Vec2 convert2Meters(const float factor, const utils::Vector2 &input)
+    class RayCastCallback : public b2RayCastCallback
     {
-        return b2Vec2(factor * input.getX(), factor * input.getY());
-    }
+        Scene *scene;
+        std::vector<RayCastHit> results;
 
-    inline utils::Vector2 convertToPixels(const float factor, const b2Vec2 &input)
-    {
-        return utils::Vector2(factor * input.x, factor * input.y);
-    }
+    public:
+        RayCastCallback(Scene *scene) : scene(scene) {}
+        float ReportFixture(b2Fixture *fixture,
+                            [[maybe_unused]] const b2Vec2 &point,
+                            [[maybe_unused]] const b2Vec2 &normal,
+                            [[maybe_unused]] float fraction)
+        {
+            uintptr_t userData = fixture->GetBody()->GetUserData().pointer;
+            if (fixture->GetFilterData().categoryBits == FC_ENTITY)
+            {
+                core::ecs::Entity entity = {(entt::entity)userData, scene};
+                results.push_back(RayCastHit(entity, std::nullopt, convertToPixels(scene->pixelPerMeter, point)));
+                return 1;
+            }
+            else if (fixture->GetFilterData().categoryBits == FC_STATIC_COLLIDER && userData)
+            {
+                size_t blockPosition = static_cast<size_t>(userData - 1);
+
+                results.push_back(RayCastHit(std::nullopt, scene->m_staticBlockCollider.at(blockPosition), convertToPixels(scene->pixelPerMeter, point)));
+            }
+            return 1;
+        }
+
+        std::vector<RayCastHit> &getResults()
+        {
+            return results;
+        }
+    };
 
     inline b2BodyType Rigidbody2DTypeToBox2DBody(core::ecs::Rigidbody2DComponent::BodyType bodyType)
     {
@@ -256,6 +291,7 @@ namespace core
         b2Body *body = m_PhysicsWorld->CreateBody(&bodyDef);
         body->SetFixedRotation(rb2d.FixedRotation);
         body->GetUserData().pointer = (uintptr_t)e;
+
         rb2d.RuntimeBody = body;
 
         if (entity.HasComponent<core::ecs::BoxCollider2DComponent>())
@@ -271,6 +307,7 @@ namespace core
             fixtureDef.friction = bc2d.Friction;
             fixtureDef.restitution = bc2d.Restitution;
             fixtureDef.restitutionThreshold = bc2d.RestitutionThreshold;
+            fixtureDef.filter.categoryBits = FC_ENTITY;
             body->CreateFixture(&fixtureDef);
         }
 
@@ -288,6 +325,7 @@ namespace core
             fixtureDef.friction = cc2d.Friction;
             fixtureDef.restitution = cc2d.Restitution;
             fixtureDef.restitutionThreshold = cc2d.RestitutionThreshold;
+            fixtureDef.filter.categoryBits = FC_ENTITY;
             body->CreateFixture(&fixtureDef);
         }
     }
@@ -297,6 +335,13 @@ namespace core
         for (auto &c : collider)
         {
             m_staticBlockCollider.push_back(StaticCollisionBlock{.rect = c});
+        }
+    }
+    void Scene::addStaticBlockCollider(std::vector<StaticCollisionBlock> collider)
+    {
+        for (auto &c : collider)
+        {
+            m_staticBlockCollider.push_back(c);
         }
     }
 
@@ -312,13 +357,13 @@ namespace core
             initPhysicsForEntity(e);
         }
 
-        for (auto &c : m_staticBlockCollider)
+        for (size_t i = 0; i < m_staticBlockCollider.size(); ++i)
         {
-            initPhysicsForStaticCollider(c);
+            initPhysicsForStaticCollider(m_staticBlockCollider[i], i + 1);
         }
     }
 
-    void Scene::initPhysicsForStaticCollider(StaticCollisionBlock &collider)
+    void Scene::initPhysicsForStaticCollider(StaticCollisionBlock &collider, size_t blockIndex)
     {
         b2PolygonShape boxShape;
         boxShape.SetAsBox(0.5, 0.5, {0.5, 0.5}, 0);
@@ -330,6 +375,7 @@ namespace core
 
         b2Body *body = m_PhysicsWorld->CreateBody(&bodyDef);
         body->SetFixedRotation(false);
+        body->GetUserData().pointer = blockIndex;
 
         collider.physicsBody = body;
 
@@ -339,6 +385,7 @@ namespace core
         fixtureDef.friction = 0;
         fixtureDef.restitution = 0;
         fixtureDef.restitutionThreshold = 0;
+        fixtureDef.filter.categoryBits = FC_STATIC_COLLIDER;
         body->CreateFixture(&fixtureDef);
     }
 
@@ -504,6 +551,17 @@ namespace core
     std::shared_ptr<UI::WindowManager> &Scene::getWindowManager()
     {
         return winMgr;
+    }
+
+    core::RayCastResult Scene::raycast(const utils::Vector2 &startPosition, const utils::Vector2 &endPosition)
+    {
+        b2Vec2 startPoint = convert2Meters(metersPerPixel, startPosition);
+        b2Vec2 endPoint = convert2Meters(metersPerPixel, endPosition);
+        auto raycastCallback = std::make_unique<RayCastCallback>(this);
+
+        m_PhysicsWorld->RayCast(raycastCallback.get(), startPoint, endPoint);
+
+        return core::RayCastResult{.hits = raycastCallback->getResults()};
     }
 
 } /* namespace character */
