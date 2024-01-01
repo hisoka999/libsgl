@@ -9,6 +9,7 @@ namespace core
     {
         graphics::Rect rect;
         void *physicsBody = nullptr;
+        size_t blockId = 0;
         std::string blockData = "";
     };
 } // namespace core

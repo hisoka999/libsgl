@@ -107,9 +107,15 @@ namespace core
             }
             else if (fixture->GetFilterData().categoryBits == FC_STATIC_COLLIDER && userData)
             {
-                size_t blockPosition = static_cast<size_t>(userData - 1);
-
-                results.push_back(RayCastHit(std::nullopt, scene->m_staticBlockCollider.at(blockPosition), convertToPixels(scene->pixelPerMeter, point)));
+                size_t blockPosition = static_cast<size_t>(userData);
+                for (auto &block : scene->m_staticBlockCollider)
+                {
+                    if (block.blockId == blockPosition)
+                    {
+                        results.push_back(RayCastHit(std::nullopt, block, convertToPixels(scene->pixelPerMeter, point)));
+                        break;
+                    }
+                }
             }
             return 1;
         }
@@ -233,16 +239,10 @@ namespace core
         if (m_physicsDebug)
         {
             renderer->setDrawColor(255, 0, 0, 255);
-            auto view = m_registry.view<core::ecs::Rigidbody2DComponent>();
-            for (auto e : view)
+            auto body = m_PhysicsWorld->GetBodyList();
+
+            while (body != nullptr)
             {
-                core::ecs::Entity entity = {e, this};
-                auto &rb2d = entity.findComponent<core::ecs::Rigidbody2DComponent>();
-
-                b2Body *body = (b2Body *)rb2d.RuntimeBody;
-
-                if (!rb2d.RuntimeBody)
-                    continue;
 
                 utils::Vector2 pos = convertToPixels(pixelPerMeter, body->GetTransform().p);
                 SDL_FPoint points[5];
@@ -273,6 +273,7 @@ namespace core
                         }
                     }
                 }
+                body = body->GetNext();
             }
         }
     }
@@ -334,15 +335,23 @@ namespace core
     {
         for (auto &c : collider)
         {
-            m_staticBlockCollider.push_back(StaticCollisionBlock{.rect = c});
+            auto block = lastBlockId++;
+            m_staticBlockCollider.push_back(StaticCollisionBlock{.rect = c, .blockId = block});
         }
     }
     void Scene::addStaticBlockCollider(std::vector<StaticCollisionBlock> collider)
     {
         for (auto &c : collider)
         {
+            auto block = lastBlockId++;
+            c.blockId = block;
             m_staticBlockCollider.push_back(c);
         }
+    }
+
+    void Scene::removeStaticBlockCollider(const std::string &blockData)
+    {
+        m_staticBlockColliderToDestroy.push_back(blockData);
     }
 
     void Scene::OnPhysics2DStart()
@@ -359,7 +368,8 @@ namespace core
 
         for (size_t i = 0; i < m_staticBlockCollider.size(); ++i)
         {
-            initPhysicsForStaticCollider(m_staticBlockCollider[i], i + 1);
+            auto &collider = m_staticBlockCollider[i];
+            initPhysicsForStaticCollider(collider, collider.blockId);
         }
     }
 
@@ -516,10 +526,29 @@ namespace core
             }
             m_registry.destroy(e);
         }
+
+        for (auto &blockData : m_staticBlockColliderToDestroy)
+        {
+            for (auto it = m_staticBlockCollider.begin(); it != m_staticBlockCollider.end(); ++it)
+            {
+                if (it->blockData == blockData)
+                {
+
+                    if (it->physicsBody != nullptr)
+                        m_PhysicsWorld->DestroyBody((b2Body *)it->physicsBody);
+                    it->physicsBody = nullptr;
+                    m_staticBlockCollider.erase(it);
+                    break;
+                }
+            }
+        }
+
         if (!m_entitiesToDestroy.empty())
             m_entitiesToDestroy.clear();
         if (!m_entitiesAdded.empty())
             m_entitiesAdded.clear();
+        if (!m_staticBlockColliderToDestroy.empty())
+            m_staticBlockColliderToDestroy.clear();
     }
     std::optional<core::ecs::Entity> Scene::findEntityByName(const std::string &tagName)
     {

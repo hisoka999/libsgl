@@ -67,6 +67,7 @@ namespace core
         void destoryEntity(const core::ecs::Entity &entity);
         void addStaticBlockCollider(std::vector<graphics::Rect> collider);
         void addStaticBlockCollider(std::vector<StaticCollisionBlock> collider);
+        void removeStaticBlockCollider(const std::string &blockData);
         std::shared_ptr<UI::WindowManager> &getWindowManager();
         RayCastResult raycast(const utils::Vector2 &startPosition, const utils::Vector2 &endPosition);
 
@@ -95,6 +96,8 @@ namespace core
         std::vector<entt::entity> m_entitiesToDestroy;
         std::vector<entt::entity> m_entitiesAdded;
         std::vector<StaticCollisionBlock> m_staticBlockCollider;
+        std::vector<std::string> m_staticBlockColliderToDestroy;
+        size_t lastBlockId = 0;
 
         friend class core::ecs::Entity;
         friend class RayCastCallback;
