@@ -22,10 +22,10 @@ namespace graphics
 
 } /* namespace graphics */
 
-void graphics::TextureAnimation::renderFrame(
-    AnimationFrame<std::shared_ptr<graphics::Texture>> &frame, const utils::Vector2 &transform, core::Renderer *renderer)
+void graphics::TextureAnimation::renderFrame(AnimationFrame<std::shared_ptr<graphics::Texture>> &frame, const graphics::Rect &displayRect,
+                                             core::Renderer *renderer)
 {
-    auto pos = currentPosition + transform;
+    auto pos = currentPosition + utils::Vector2{displayRect.x, displayRect.y};
     frame.data->render(renderer, pos.getX(),
                        pos.getY());
 }

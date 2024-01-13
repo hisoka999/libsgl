@@ -63,7 +63,7 @@ std::string format_currency(double amount)
         {
             if (pos % 3 == 0)
             {
-                baseString.substr(i, 3);
+                // TODO baseString = baseString.substr(i, 3);
                 if (i - 1 > 0)
                 {
                     result = currency.thousandsSeparator + baseString.substr(i - 1, 3) + result;

@@ -21,8 +21,8 @@ namespace graphics
         virtual ~TextureAnimation();
 
     protected:
-        virtual void renderFrame(AnimationFrame<std::shared_ptr<graphics::Texture>> &frame, const utils::Vector2 &transform,
-                                 core::Renderer *renderer);
+        void renderFrame(AnimationFrame<std::shared_ptr<graphics::Texture>> &frame, const graphics::Rect &displayRect,
+                         core::Renderer *renderer) override;
     };
 
 } /* namespace graphics */
