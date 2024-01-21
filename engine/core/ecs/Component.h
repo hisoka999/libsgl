@@ -140,6 +140,7 @@ namespace core::ecs
         virtual void onCollision([[maybe_unused]] ScriptableEntity *entity) {}
         virtual void beginCollision([[maybe_unused]] const Collision &collider) {}
         virtual void endCollision([[maybe_unused]] const Collision &collider) {}
+        virtual void onClick([[maybe_unused]] int button) {}
         ScriptableEntity() = default;
         virtual ~ScriptableEntity() = default;
     };
