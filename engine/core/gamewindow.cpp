@@ -51,7 +51,7 @@ namespace core
         SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
 
 #endif
-        SDL_SetHint(SDL_HINT_MOUSE_AUTO_CAPTURE, "0");
+        SDL_SetHint("SDL_MOUSE_AUTO_CAPTURE", "0");
         win = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height,
                                SDL_WINDOW_SHOWN);
         if (win == nullptr)
