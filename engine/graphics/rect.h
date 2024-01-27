@@ -28,7 +28,7 @@ namespace graphics
             height = pHeight;
         }
 
-        utils::Vector2 toVecto2()
+        utils::Vector2 toVector2()
         {
             return utils::Vector2(x, y);
         }

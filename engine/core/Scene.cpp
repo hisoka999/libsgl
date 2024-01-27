@@ -473,6 +473,34 @@ namespace core
 
     Scene::~Scene()
     {
+        auto view = m_registry.view<core::ecs::ScriptComponentList, core::ecs::Transform>();
+
+        for (auto &e : view)
+        {
+            if (m_registry.any_of<core::ecs::Rigidbody2DComponent>(e))
+            {
+                auto &rb2d = m_registry.get<core::ecs::Rigidbody2DComponent>(e);
+                m_PhysicsWorld->DestroyBody((b2Body *)rb2d.RuntimeBody);
+            }
+            if (m_registry.any_of<core::ecs::ScriptComponentList>(e))
+            {
+                auto compList = m_registry.get<core::ecs::ScriptComponentList>(e);
+                for (auto &c : compList.components)
+                {
+                    c.DestroyScript(&c);
+                }
+                compList.components.clear();
+            }
+            m_registry.destroy(e);
+        }
+        for (auto it = m_staticBlockCollider.begin(); it != m_staticBlockCollider.end(); ++it)
+        {
+
+            if (it->physicsBody != nullptr)
+                m_PhysicsWorld->DestroyBody((b2Body *)it->physicsBody);
+            it->physicsBody = nullptr;
+        }
+
         winMgr = nullptr;
         music = nullptr;
 
