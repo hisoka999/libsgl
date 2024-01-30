@@ -1,19 +1,17 @@
 #include "engine/ui/Window.h"
-#include "engine/ui/Theme.h"
 #include <engine/graphics/TextureManager.h>
 #include <functional>
+#include "engine/ui/Theme.h"
 namespace UI
 {
 #define CLOSING_TIME 500
 
-    Window::Window()
-        : Window(50, 50, 300, 400)
+    Window::Window() : Window(50, 50, 300, 400)
     {
         // addObject()
     }
 
-    Window::Window(int x, int y, int width, int height)
-        : m_width(width), m_height(height)
+    Window::Window(int x, int y, int width, int height) : m_width(width), m_height(height)
     {
         setObjectName("window");
         setTheme(graphics::TextureManager::Instance().getDefaultTheme());
@@ -33,8 +31,7 @@ namespace UI
         m_closeButton->setColor(getTheme()->getStyleColor(this, UI::StyleType::TitleColorActive));
         m_closeButton->setDisabledColor(getTheme()->getStyleColor(this, UI::StyleType::TitleColor));
 
-        m_closeButton->connect("buttonClick", [&]()
-                               { buttonClick(); });
+        m_closeButton->connect("buttonClick", [&]() { buttonClick(); });
         m_title = "Demo";
     }
 
@@ -70,7 +67,8 @@ namespace UI
         if (!eventsHandled)
             eventsHandled = m_closeButton->handleEvents(pInput);
 
-        if (!eventsHandled && titleRect.intersects(pInput->getMousePostion()) && pInput->isMouseButtonPressed(SDL_BUTTON_LEFT))
+        if (!eventsHandled && titleRect.intersects(pInput->getMousePostion()) &&
+            pInput->isMouseButtonPressed(SDL_BUTTON_LEFT))
         {
             makeActive();
             eventsHandled = true;
@@ -94,20 +92,11 @@ namespace UI
         }
     }
 
-    bool Window::getVisible()
-    {
-        return m_visible || m_is_closing != 0;
-    }
+    bool Window::getVisible() { return m_visible || m_is_closing != 0; }
 
-    void Window::setTitle(std::string title)
-    {
-        m_title = title;
-    }
+    void Window::setTitle(std::string title) { m_title = title; }
 
-    void Window::buttonClick()
-    {
-        this->setVisible(false);
-    }
+    void Window::buttonClick() { this->setVisible(false); }
 
     void Window::render(core::Renderer *pRender)
     {
@@ -181,10 +170,7 @@ namespace UI
         return r;
     }
 
-    graphics::Rect Window::eventRect()
-    {
-        return displayRect();
-    }
+    graphics::Rect Window::eventRect() { return displayRect(); }
 
     void Window::setSize(int width, int height)
     {
@@ -192,15 +178,9 @@ namespace UI
         m_height = height;
     }
 
-    void Window::clear()
-    {
-        UI::Container::clear();
-    }
+    void Window::clear() { UI::Container::clear(); }
 
-    void Window::setWithoutTitle(bool withoutTitle)
-    {
-        m_withoutTitle = withoutTitle;
-    }
+    void Window::setWithoutTitle(bool withoutTitle) { m_withoutTitle = withoutTitle; }
 
     void Window::boundsRect(graphics::Rect &rect)
     {
@@ -210,15 +190,9 @@ namespace UI
         rect.height = m_height - 70;
     }
 
-    int Window::getWidth()
-    {
-        return m_width;
-    }
+    int Window::getWidth() { return m_width; }
 
-    int Window::getHeight()
-    {
-        return m_height;
-    }
+    int Window::getHeight() { return m_height; }
 
     void Window::setActive(bool value)
     {
@@ -228,18 +202,9 @@ namespace UI
         fireFuncionCall("windowActiveChanged", this);
     }
 
-    void Window::makeActive()
-    {
-        setActive(true);
-    }
+    void Window::makeActive() { setActive(true); }
 
-    void Window::makeInactive()
-    {
-        setActive(false);
-    }
+    void Window::makeInactive() { setActive(false); }
 
-    bool Window::isActive()
-    {
-        return m_active;
-    }
+    bool Window::isActive() const { return m_active; }
 } // namespace UI

@@ -24,7 +24,7 @@ namespace graphics
         virtual ~Text();
         Text(const Text &org);
 
-        void openFont(const std::string fontFile, int fontSize);
+        void openFont(const std::string& fontFile, int fontSize);
         void render(core::Renderer *ren, const std::string &message, SDL_Color color,
                     int x, int y);
         int size(const std::string &message, int *w, int *h);

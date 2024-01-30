@@ -7,11 +7,9 @@
 namespace UI
 {
 
-    ScrollArea::ScrollArea(const unsigned int pWidth, const unsigned pHeight,
-                           Object *parent = 0)
-        : Object(parent), scrollWidth(0), scrollHeight(0), scrollX(0), scrollY(0), scrollPosX(
-                                                                                       0),
-          scrollPosY(0), buttonPressed(false)
+    ScrollArea::ScrollArea(const unsigned int pWidth, const unsigned pHeight, Object *parent = 0) :
+        Object(parent), scrollWidth(0), scrollHeight(0), scrollX(0), scrollY(0), scrollPosX(0), scrollPosY(0),
+        buttonPressed(false)
     {
         setObjectName("scrollarea");
         renderRect.x = 0;
@@ -54,13 +52,13 @@ namespace UI
 
         // render scroolbar
         // 82 354
-        int lastScrollWidth = scrollWidth;
-        int lastScrollHeight = scrollHeight;
+        const float lastScrollWidth = scrollWidth;
+        const float lastScrollHeight = scrollHeight;
         scrollWidth = 0;
         scrollX = 0;
-        for (auto o : objects)
+        for (const auto &object: objects)
         {
-            graphics::Rect r = o->displayRect();
+            const graphics::Rect r = object->displayRect();
             if (scrollWidth < r.x + r.width)
             {
                 scrollWidth = r.x + r.width;
@@ -95,7 +93,7 @@ namespace UI
             pRender->setDrawColor(backgroundColor);
             pRender->clear();
 
-            for (auto &o : objects)
+            for (auto &o: objects)
             {
                 o->render(pRender);
             }
@@ -153,7 +151,8 @@ namespace UI
             pRender->drawRect(scrollbarRect);
 
             SDL_Color uiColor = foregroundColor;
-            uiText->render(pRender, "\uf0d7", uiColor, scrollbarRect.x + 2, scrollbarRect.y + scrollbarRect.height - 14);
+            uiText->render(pRender, "\uf0d7", uiColor, scrollbarRect.x + 2,
+                           scrollbarRect.y + scrollbarRect.height - 14);
 
             uiText->render(pRender, "\uf0d8", uiColor, scrollbarRect.x + 2, scrollbarRect.y + 2);
 
@@ -166,15 +165,9 @@ namespace UI
         }
     }
 
-    void ScrollArea::postRender(core::Renderer *renderer)
-    {
-        Container::postRender(renderer);
-    }
+    void ScrollArea::postRender(core::Renderer *renderer) { Container::postRender(renderer); }
 
-    graphics::Rect ScrollArea::displayRect()
-    {
-        return renderRect;
-    }
+    graphics::Rect ScrollArea::displayRect() { return renderRect; }
 
     graphics::Rect ScrollArea::eventRect()
     {
@@ -203,7 +196,7 @@ namespace UI
 
         if (pInput->isMouseButtonPressed(SDL_BUTTON_LEFT))
         {
-            for (std::shared_ptr<Object> o : objects)
+            for (std::shared_ptr<Object> o: objects)
             {
                 graphics::Rect r = o->displayRect();
                 r.x -= scrollPosX;
@@ -263,8 +256,7 @@ namespace UI
             {
                 if (scrollPosY > 0)
                 {
-                    scrollPosY -= std::round(
-                        (scrollHeight - renderRect.height - 14) / 100);
+                    scrollPosY -= std::round((scrollHeight - renderRect.height - 14) / 100);
                     if (scrollPosY < 0)
                         scrollPosY = 0;
 
@@ -277,8 +269,7 @@ namespace UI
             if (destRect.intersects(pInput->getMousePostion()))
             {
                 if (scrollPosY < scrollHeight - renderRect.height - 14)
-                    scrollPosY += std::round(
-                        (scrollHeight - renderRect.height - 14) / 100);
+                    scrollPosY += std::round((scrollHeight - renderRect.height - 14) / 100);
                 eventHandled = true;
             }
             // render bar
@@ -308,7 +299,8 @@ namespace UI
             utils::Vector2 pos = pInput->getMouseWheelPosition();
             if (scrollWidth - renderRect.width > 0)
             {
-                if ((scrollPosX + (pos.getY() * -5) >= 0 && pos.getY() == 1) || (pos.getY() == -1 && scrollPosX < scrollWidth - renderRect.width - 14))
+                if ((scrollPosX + (pos.getY() * -5) >= 0 && pos.getY() == 1) ||
+                    (pos.getY() == -1 && scrollPosX < scrollWidth - renderRect.width - 14))
                 {
                     scrollPosX += pos.getY() * -5;
                     eventHandled = true;
@@ -316,7 +308,8 @@ namespace UI
             }
             else
             {
-                if ((scrollPosY + (pos.getY() * -5) >= 0 && pos.getY() == 1) || (pos.getY() == -1 && scrollPosY < scrollHeight - renderRect.height - 14))
+                if ((scrollPosY + (pos.getY() * -5) >= 0 && pos.getY() == 1) ||
+                    (pos.getY() == -1 && scrollPosY < scrollHeight - renderRect.height - 14))
                 {
                     scrollPosY += pos.getY() * -5;
                     eventHandled = true;

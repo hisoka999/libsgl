@@ -37,6 +37,7 @@ namespace graphics
     {
     public:
         Animation(utils::Vector2 startPosition);
+        Animation();
         virtual ~Animation();
 
         bool isPlaying();
@@ -55,6 +56,7 @@ namespace graphics
             currentFrame = 0;
         }
         void setRepeating(int repeat);
+        void setStartPosition(const utils::Vector2 &startPosition);
 
     protected:
         virtual void renderFrame(AnimationFrame<T> &frame, const graphics::Rect &displayRect,
@@ -76,6 +78,12 @@ namespace graphics
 template <typename T>
 inline graphics::Animation<T>::Animation(utils::Vector2 startPosition)
     : playing(false), currentFrame(0), startPosition(startPosition)
+{
+}
+
+template <typename T>
+inline graphics::Animation<T>::Animation()
+    : playing(false), currentFrame(0), startPosition(0.f, 0.f)
 {
 }
 
@@ -159,5 +167,9 @@ inline void graphics::Animation<T>::addFrame(AnimationFrame<T> frame)
     frames.push_back(frame);
     currentFrame = 0;
 }
-
+template <typename T>
+inline void graphics::Animation<T>::setStartPosition(const utils::Vector2 &pos)
+{
+    startPosition = pos;
+}
 #endif /* GRAPHICS_ANIMATION_H_ */

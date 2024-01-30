@@ -20,13 +20,13 @@ namespace utils
 
         const std::string path_separator();
 
-        template <class T>
+        template<class T>
         std::string combine(T t)
         {
             return t;
         }
 
-        template <class T, typename... Args>
+        template<class T, typename... Args>
         std::string combine(T t, Args... args)
         {
             return t + path_separator() + combine(args...);
@@ -43,10 +43,10 @@ namespace utils
 
         bool is_file(const std::string &path);
 
-        void create_dir(const std::string path);
+        void create_dir(const std::string &path);
 
         void SetThreadName(std::thread *thread, const char *threadName);
-    }
-}
+    } // namespace os
+} // namespace utils
 
 #endif /* UTILS_OS_H_ */

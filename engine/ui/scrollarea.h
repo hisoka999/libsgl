@@ -14,20 +14,20 @@ namespace UI
         ScrollArea(const unsigned int pWidth, const unsigned pHeight,
                    Object *parent);
         /** Default destructor */
-        virtual ~ScrollArea();
-        virtual void render(core::Renderer *pRender);
-        virtual void postRender(core::Renderer *renderer);
-        virtual graphics::Rect displayRect();
-        virtual graphics::Rect eventRect();
-        virtual bool handleEvents(core::Input *pInput);
+        ~ScrollArea() override;
+        void render(core::Renderer *pRender) override;
+        void postRender(core::Renderer *renderer) override;
+        graphics::Rect displayRect() override;
+        graphics::Rect eventRect() override;
+        bool handleEvents(core::Input *pInput) override;
         void reset(bool noscrollreset = true);
 
     protected:
     private:
         graphics::Rect renderRect;
-        int scrollWidth, scrollHeight;
-        int scrollX, scrollY;
-        int scrollPosX, scrollPosY;
+        float scrollWidth, scrollHeight;
+        float scrollX, scrollY;
+        float scrollPosX, scrollPosY;
         graphics::Texture *renderArea;
         bool buttonPressed;
         std::shared_ptr<graphics::Text> uiText;

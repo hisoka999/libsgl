@@ -18,16 +18,13 @@ namespace utils
             return color;
         }
 
-        constexpr uint32_t color2hex(const SDL_Color &color)
-        {
-            return (color.r << 16) + (color.g << 8) + color.b;
-        }
+        constexpr uint32_t color2hex(const SDL_Color &color) { return (color.r << 16) + (color.g << 8) + color.b; }
 
-        const SDL_Color RED = {255, 0, 0, 255};
-        const SDL_Color GREEN = {0, 255, 0, 255};
-        const SDL_Color BLUE = {0, 0, 255, 255};
-        const SDL_Color WHITE = {255, 255, 255, 255};
-        const SDL_Color BLACK = {0, 0, 0, 255};
+        constexpr SDL_Color RED = {255, 0, 0, 255};
+        constexpr SDL_Color GREEN = {0, 255, 0, 255};
+        constexpr SDL_Color BLUE = {0, 0, 255, 255};
+        constexpr SDL_Color WHITE = {255, 255, 255, 255};
+        constexpr SDL_Color BLACK = {0, 0, 0, 255};
 
     } // namespace color
 

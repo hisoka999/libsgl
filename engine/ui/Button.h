@@ -20,21 +20,18 @@ namespace UI
         virtual ~Button();
 
         void setLabel(const std::string &label);
-        void setFont(const std::string &fontname, unsigned int font_size);
+        void setFont(const std::string &fontname, int font_size);
         void setStaticWidth(const int pWidth);
         void setColor(SDL_Color color);
         void enable();
         void disable();
-        bool isEnabled();
+        bool isEnabled() const;
         virtual void render(core::Renderer *pRender);
         virtual bool handleEvents(core::Input *pInput);
         virtual graphics::Rect displayRect();
         virtual graphics::Rect eventRect();
 
-        static std::string buttonClickCallback()
-        {
-            return "buttonClick";
-        }
+        static std::string buttonClickCallback() { return "buttonClick"; }
 
         bool getBorderless() const;
         void setBorderless(bool value);
@@ -47,8 +44,8 @@ namespace UI
         SDL_Color getDisabledColor() const;
         void setDisabledColor(const SDL_Color &value);
 
-        bool isToggleAllowed();
-        bool isToggled();
+        bool isToggleAllowed() const;
+        bool isToggled() const;
 
         void setToggleAllowed(bool toggleAllowed);
         void toggle();
@@ -57,7 +54,7 @@ namespace UI
     protected:
         void renderBackground(core::Renderer *pRenderer);
         std::string label;
-        SDL_Color color;
+        SDL_Color color{};
 
     private:
         int static_width;
@@ -65,8 +62,8 @@ namespace UI
         bool enabled;
         bool borderless;
         std::shared_ptr<graphics::Texture> texture;
-        SDL_Color hoverColor;
-        SDL_Color disabledColor;
+        SDL_Color hoverColor{};
+        SDL_Color disabledColor{};
         bool toggleAllowed = false;
         bool toggled = false;
     };

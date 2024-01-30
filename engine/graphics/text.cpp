@@ -6,8 +6,7 @@
 namespace graphics
 {
 
-    Text::Text()
-    {
+    Text::Text(): dst(), src() {
         // ctor
         font = nullptr;
     }
@@ -29,13 +28,13 @@ namespace graphics
         }
     }
 
-    Text::Text([[maybe_unused]] const Text &org)
+    Text::Text([[maybe_unused]] const Text &org): dst(), src()
     {
         font = nullptr;
         this->fontFile = "";
     }
 
-    void Text::openFont(const std::string fontFile, int fontSize)
+    void Text::openFont(const std::string& fontFile, int fontSize)
     {
         this->fontFile = fontFile + std::string(":" + std::to_string(fontSize));
         // Open the font
@@ -44,7 +43,7 @@ namespace graphics
         if (font == nullptr)
         {
             SGL_LOG_ERROR_SDL();
-            throw new SDLException("TTF_OpenFont");
+            throw SDLException("TTF_OpenFont");
         }
     }
 
@@ -52,15 +51,14 @@ namespace graphics
     {
         if (font != nullptr)
             return TTF_SizeUTF8(font, message.c_str(), w, h);
-        else
-            return -1;
+        return -1;
     }
 
     size_t Text::genTextHash(const std::string &message, SDL_Color color)
     {
 
         unsigned long hash = 5381;
-        int c;
+        int c = 0;
 
         for (size_t pos = 0; pos < message.length(); ++pos)
         {
@@ -74,14 +72,14 @@ namespace graphics
     void Text::renderWrapped(core::Renderer *ren, const std::string &message,
                              SDL_Color color, int x, int y, size_t lineLength)
     {
-        if (message.size() == 0)
+        if (message.empty())
             return;
 
-        auto hash = genTextHash(message, color);
+        const auto hash = genTextHash(message, color);
 
         SDL_Surface *surf = nullptr;
         SDL_Texture *texture = nullptr;
-        if (textCache.count(hash) > 0)
+        if (textCache.contains(hash))
         {
             texture = textCache[hash];
         }
@@ -92,7 +90,7 @@ namespace graphics
             int w, h;
             if (size(message, &w, &h) == -1)
             {
-                throw new SDLException("TTF_SizeText");
+                throw SDLException("TTF_SizeText");
             }
             if (w == 0)
             {
@@ -108,13 +106,13 @@ namespace graphics
                 SGL_LOG_ERROR_SDL();
                 TTF_CloseFont(font);
                 font = nullptr;
-                throw new SDLException("TTF_RenderText_Blended");
+                throw SDLException("TTF_RenderText_Blended");
             }
             texture = SDL_CreateTextureFromSurface(ren->getRenderer(), surf);
             if (texture == nullptr)
             {
                 SGL_LOG_ERROR_SDL();
-                throw new SDLException("SDL_CreateTextureFromSurface");
+                throw SDLException("SDL_CreateTextureFromSurface");
             }
             textCache[hash] = texture;
         }
@@ -153,13 +151,13 @@ namespace graphics
     void Text::render(core::Renderer *ren, const std::string &message,
                       SDL_Color color, int x, int y)
     {
-        if (message.size() == 0)
+        if (message.empty())
             return;
 
         auto hash = genTextHash(message, color);
         SDL_Surface *surf = nullptr;
         SDL_Texture *texture = nullptr;
-        if (textCache.count(hash) > 0)
+        if (textCache.contains(hash))
         {
             texture = textCache[hash];
         }

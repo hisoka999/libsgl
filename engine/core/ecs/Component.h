@@ -4,6 +4,7 @@
 #include <engine/graphics/texture.h>
 #include <functional>
 #include <engine/graphics/TextureMapAnimation.h>
+#include <engine/graphics/Animator.h>
 #include <cassert>
 #include <engine/core/Camera.h>
 #include <typeinfo>
@@ -238,9 +239,9 @@ namespace core::ecs
     struct TextureMapAnimationRenderComponent : Component
     {
 
-        graphics::TextureMapAnimation animation;
+        graphics::TextureMapAnimator animator;
 
-        TextureMapAnimationRenderComponent(graphics::TextureMapAnimation &animation) : animation(animation) {}
+        TextureMapAnimationRenderComponent(graphics::TextureMapAnimator &animator) : animator(animator) {}
         virtual ~TextureMapAnimationRenderComponent() = default;
     };
 

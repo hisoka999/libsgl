@@ -1,12 +1,12 @@
 #ifndef CORE_INPUT_H
 #define CORE_INPUT_H
 
-#include "engine/utils/vector2.h"
 #include <SDL2/SDL.h>
+#include <functional>
 #include <map>
 #include <string>
 #include "engine/graphics/rect.h"
-#include <functional>
+#include "engine/utils/vector2.h"
 
 namespace UI
 {
@@ -29,14 +29,14 @@ namespace core
 
     typedef std::multimap<std::string, SDL_Keycode> KeyMap;
 
-    class Input
+    class Input final
     {
     public:
         /** Default constructor */
         Input();
-        Input(const KeyMap &keyMap);
+        explicit Input(const KeyMap &keyMap);
         /** Default destructor */
-        virtual ~Input();
+        ~Input();
         bool isKeyDown(SDL_Keycode key);
         bool isKeyUp(SDL_Keycode key);
         bool isKeyDown(const std::string &key);
@@ -50,10 +50,7 @@ namespace core
         utils::Vector2 &getMousePostion();
         bool poll();
         // void clearEvents();
-        SDL_Event &getEvent()
-        {
-            return event;
-        }
+        SDL_Event &getEvent() { return event; }
         utils::Vector2 getMouseWheelPosition();
         bool isScrollWheel();
         std::string getTextInput();

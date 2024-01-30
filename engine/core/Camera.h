@@ -16,19 +16,19 @@ namespace core
     class Camera
     {
     public:
-        Camera(graphics::Rect &viewPort);
+        explicit Camera(graphics::Rect &viewPort);
         virtual ~Camera();
 
         void move(float pX, float pY);
         void reset();
 
-        float getX() const;
-        float getY() const;
-        float getWidth() const;
-        float getHeight() const;
-        utils::Vector2 getPosition();
+        [[nodiscard]] float getX() const;
+        [[nodiscard]] float getY() const;
+        [[nodiscard]] float getWidth() const;
+        [[nodiscard]] float getHeight() const;
+        utils::Vector2 getPosition() const;
 
-        const graphics::Rect &getViewPortRect() const;
+        [[nodiscard]] graphics::Rect &getViewPortRect();
 
     private:
         graphics::Rect viewPort;

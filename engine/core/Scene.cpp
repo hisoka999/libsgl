@@ -6,19 +6,17 @@
  */
 
 #include "engine/core/Scene.h"
-#include "engine/core/ecs/Entity.h"
-#include "engine/core/ecs/Component.h"
-#include <algorithm>
-#include <execution>
-#include "box2d/box2d.h"
 #include "RayCastResult.h"
+#include "box2d/box2d.h"
+#include "engine/core/ecs/Component.h"
+#include "engine/core/ecs/Entity.h"
 
 namespace core
 {
 
     inline b2Vec2 convert2Meters(const float factor, const utils::Vector2 &input)
     {
-        return b2Vec2(factor * input.getX(), factor * input.getY());
+        return {factor * input.getX(), factor * input.getY()};
     }
 
     inline utils::Vector2 convertToPixels(const float factor, const b2Vec2 &input)
@@ -31,28 +29,30 @@ namespace core
         Scene *scene;
 
     public:
-        ContactListener(Scene *scene) : scene(scene) {}
+        explicit ContactListener(Scene *scene) : scene(scene) {}
 
         /// Called when two fixtures begin to touch.
-        virtual void BeginContact(b2Contact *contact) override
+        void BeginContact(b2Contact *contact) override
         {
-            core::ecs::Entity entityA = {(entt::entity)contact->GetFixtureA()->GetBody()->GetUserData().pointer, scene};
-            core::ecs::Entity entityB = {(entt::entity)contact->GetFixtureB()->GetBody()->GetUserData().pointer, scene};
-            bool existsScriptA = entityA.HasComponent<core::ecs::ScriptComponentList>();
-            bool existsScriptB = entityB.HasComponent<core::ecs::ScriptComponentList>();
+            core::ecs::Entity entityA = {
+                    static_cast<entt::entity>(contact->GetFixtureA()->GetBody()->GetUserData().pointer), scene};
+            core::ecs::Entity entityB = {
+                    static_cast<entt::entity>(contact->GetFixtureB()->GetBody()->GetUserData().pointer), scene};
+            const bool existsScriptA = entityA.HasComponent<core::ecs::ScriptComponentList>();
+            const bool existsScriptB = entityB.HasComponent<core::ecs::ScriptComponentList>();
 
             if (existsScriptA)
             {
-                auto &scriptList = entityA.findComponent<core::ecs::ScriptComponentList>();
-                for (auto &script : scriptList.components)
+                const auto &scriptList = entityA.findComponent<core::ecs::ScriptComponentList>();
+                for (const auto &script: scriptList.components)
                 {
                     script.Instance->beginCollision(core::ecs::Collision{entityB});
                 }
             }
             if (existsScriptB)
             {
-                auto &scriptList = entityB.findComponent<core::ecs::ScriptComponentList>();
-                for (auto &script : scriptList.components)
+                const auto &scriptList = entityB.findComponent<core::ecs::ScriptComponentList>();
+                for (const auto &script: scriptList.components)
                 {
                     script.Instance->beginCollision(core::ecs::Collision{entityA});
                 }
@@ -60,25 +60,27 @@ namespace core
         }
 
         /// Called when two fixtures cease to touch.
-        virtual void EndContact(b2Contact *contact) override
+        void EndContact(b2Contact *contact) override
         {
-            core::ecs::Entity entityA = {(entt::entity)contact->GetFixtureA()->GetBody()->GetUserData().pointer, scene};
-            core::ecs::Entity entityB = {(entt::entity)contact->GetFixtureB()->GetBody()->GetUserData().pointer, scene};
-            bool existsScriptA = entityA.HasComponent<core::ecs::ScriptComponentList>();
-            bool existsScriptB = entityB.HasComponent<core::ecs::ScriptComponentList>();
+            core::ecs::Entity entityA = {
+                    static_cast<entt::entity>(contact->GetFixtureA()->GetBody()->GetUserData().pointer), scene};
+            core::ecs::Entity entityB = {
+                    static_cast<entt::entity>(contact->GetFixtureB()->GetBody()->GetUserData().pointer), scene};
+            const bool existsScriptA = entityA.HasComponent<core::ecs::ScriptComponentList>();
+            const bool existsScriptB = entityB.HasComponent<core::ecs::ScriptComponentList>();
 
             if (existsScriptA)
             {
-                auto &scriptList = entityA.findComponent<core::ecs::ScriptComponentList>();
-                for (auto &script : scriptList.components)
+                const auto &scriptList = entityA.findComponent<core::ecs::ScriptComponentList>();
+                for (const auto &script: scriptList.components)
                 {
                     script.Instance->endCollision(core::ecs::Collision{entityB});
                 }
             }
             if (existsScriptB)
             {
-                auto &scriptList = entityB.findComponent<core::ecs::ScriptComponentList>();
-                for (auto &script : scriptList.components)
+                const auto &scriptList = entityB.findComponent<core::ecs::ScriptComponentList>();
+                for (const auto &script: scriptList.components)
                 {
                     script.Instance->endCollision(core::ecs::Collision{entityA});
                 }
@@ -92,27 +94,25 @@ namespace core
         std::vector<RayCastHit> results;
 
     public:
-        RayCastCallback(Scene *scene) : scene(scene) {}
-        float ReportFixture(b2Fixture *fixture,
-                            [[maybe_unused]] const b2Vec2 &point,
-                            [[maybe_unused]] const b2Vec2 &normal,
-                            [[maybe_unused]] float fraction)
+        explicit RayCastCallback(Scene *scene) : scene(scene) {}
+        float ReportFixture(b2Fixture *fixture, [[maybe_unused]] const b2Vec2 &point,
+                            [[maybe_unused]] const b2Vec2 &normal, [[maybe_unused]] float fraction) override
         {
             uintptr_t userData = fixture->GetBody()->GetUserData().pointer;
             if (fixture->GetFilterData().categoryBits == FC_ENTITY)
             {
                 core::ecs::Entity entity = {(entt::entity)userData, scene};
-                results.push_back(RayCastHit(entity, std::nullopt, convertToPixels(scene->pixelPerMeter, point)));
+                results.emplace_back(entity, std::nullopt, convertToPixels(scene->pixelPerMeter, point));
                 return 1;
             }
             else if (fixture->GetFilterData().categoryBits == FC_STATIC_COLLIDER && userData)
             {
-                size_t blockPosition = static_cast<size_t>(userData);
-                for (auto &block : scene->m_staticBlockCollider)
+                const auto blockPosition = static_cast<size_t>(userData);
+                for (auto &block: scene->m_staticBlockCollider)
                 {
                     if (block.blockId == blockPosition)
                     {
-                        results.push_back(RayCastHit(std::nullopt, block, convertToPixels(scene->pixelPerMeter, point)));
+                        results.emplace_back(std::nullopt, block, convertToPixels(scene->pixelPerMeter, point));
                         break;
                     }
                 }
@@ -120,22 +120,19 @@ namespace core
             return 1;
         }
 
-        std::vector<RayCastHit> &getResults()
-        {
-            return results;
-        }
+        std::vector<RayCastHit> &getResults() { return results; }
     };
 
     inline b2BodyType Rigidbody2DTypeToBox2DBody(core::ecs::Rigidbody2DComponent::BodyType bodyType)
     {
         switch (bodyType)
         {
-        case core::ecs::Rigidbody2DComponent::BodyType::Static:
-            return b2_staticBody;
-        case core::ecs::Rigidbody2DComponent::BodyType::Dynamic:
-            return b2_dynamicBody;
-        case core::ecs::Rigidbody2DComponent::BodyType::Kinematic:
-            return b2_kinematicBody;
+            case core::ecs::Rigidbody2DComponent::BodyType::Static:
+                return b2_staticBody;
+            case core::ecs::Rigidbody2DComponent::BodyType::Dynamic:
+                return b2_dynamicBody;
+            case core::ecs::Rigidbody2DComponent::BodyType::Kinematic:
+                return b2_kinematicBody;
         }
 
         return b2_staticBody;
@@ -145,19 +142,18 @@ namespace core
     {
         switch (bodyType)
         {
-        case b2_staticBody:
-            return core::ecs::Rigidbody2DComponent::BodyType::Static;
-        case b2_dynamicBody:
-            return core::ecs::Rigidbody2DComponent::BodyType::Dynamic;
-        case b2_kinematicBody:
-            return core::ecs::Rigidbody2DComponent::BodyType::Kinematic;
+            case b2_staticBody:
+                return core::ecs::Rigidbody2DComponent::BodyType::Static;
+            case b2_dynamicBody:
+                return core::ecs::Rigidbody2DComponent::BodyType::Dynamic;
+            case b2_kinematicBody:
+                return core::ecs::Rigidbody2DComponent::BodyType::Kinematic;
         }
 
         return core::ecs::Rigidbody2DComponent::BodyType::Static;
     }
 
-    Scene::Scene(core::Renderer *pRenderer)
-        : renderer(pRenderer)
+    Scene::Scene(core::Renderer *pRenderer) : renderer(pRenderer)
     {
         winMgr = std::make_shared<UI::WindowManager>();
         music = std::make_shared<core::Music>();
@@ -171,18 +167,11 @@ namespace core
         }
     }
 
-    void Scene::load()
-    {
-    }
+    void Scene::load() {}
 
-    void Scene::fixedUpdate([[maybe_unused]] uint32_t delta)
-    {
-    }
+    void Scene::fixedUpdate([[maybe_unused]] uint32_t delta) {}
 
-    void Scene::setGameWindow(core::GameWindow *gameWindow)
-    {
-        m_gameWindow = gameWindow;
-    }
+    void Scene::setGameWindow(core::GameWindow *gameWindow) { m_gameWindow = gameWindow; }
 
     core::ecs::Entity Scene::createEntity(const std::string &tagName)
     {
@@ -193,22 +182,19 @@ namespace core
         return entity;
     }
 
-    void Scene::destroyEntity(core::ecs::Entity &entity)
-    {
-        m_registry.destroy(entity);
-    }
+    void Scene::destroyEntity(core::ecs::Entity &entity) { m_registry.destroy(entity); }
 
     void Scene::renderEntities(core::Renderer *renderer)
     {
 
-        auto cameraPosition = renderer->getMainCamera()->getPosition();
+        const auto cameraPosition = renderer->getMainCamera()->getPosition();
         {
-            auto &cameraViewPort = renderer->getMainCamera()->getViewPortRect();
+            const auto &cameraViewPort = renderer->getMainCamera()->getViewPortRect();
 
-            auto group = m_registry.view<core::ecs::Transform>();
+            const auto group = m_registry.view<core::ecs::Transform>();
             renderer->setDrawColor(0, 0, 255, 255);
             graphics::Rect displayRect;
-            for (auto &e : group)
+            for (auto &e: group)
             {
 
                 auto transform = group.get<core::ecs::Transform>(e);
@@ -224,8 +210,9 @@ namespace core
                 else if (m_registry.any_of<core::ecs::TextureMapAnimationRenderComponent>(e))
                 {
                     auto &rendererComponent = m_registry.get<core::ecs::TextureMapAnimationRenderComponent>(e);
-                    graphics::Rect r{transform.position.getX(), transform.position.getY(), float(transform.width), float(transform.height)};
-                    rendererComponent.animation.render(renderer, r);
+                    graphics::Rect r{transform.position.getX(), transform.position.getY(),
+                                     static_cast<float>(transform.width), static_cast<float>(transform.height)};
+                    rendererComponent.animator.render(renderer, r);
                 }
                 if (m_physicsDebug)
                 {
@@ -251,7 +238,7 @@ namespace core
                     if (fixture->GetShape()->GetType() == b2Shape::e_polygon)
                     {
 
-                        b2PolygonShape *poligonShape = (b2PolygonShape *)fixture->GetShape();
+                        const auto poligonShape = dynamic_cast<b2PolygonShape *>(fixture->GetShape());
 
                         for (int32 i = 0; i < poligonShape->m_count; i++)
                         {
@@ -281,7 +268,7 @@ namespace core
     void Scene::initPhysicsForEntity(entt::entity e)
     {
         core::ecs::Entity entity = {e, this};
-        auto &transform = entity.findComponent<core::ecs::Transform>();
+        const auto &transform = entity.findComponent<core::ecs::Transform>();
         auto &rb2d = entity.findComponent<core::ecs::Rigidbody2DComponent>();
 
         b2BodyDef bodyDef;
@@ -291,16 +278,18 @@ namespace core
 
         b2Body *body = m_PhysicsWorld->CreateBody(&bodyDef);
         body->SetFixedRotation(rb2d.FixedRotation);
-        body->GetUserData().pointer = (uintptr_t)e;
+        body->GetUserData().pointer = static_cast<uintptr_t>(e);
 
         rb2d.RuntimeBody = body;
 
         if (entity.HasComponent<core::ecs::BoxCollider2DComponent>())
         {
-            auto &bc2d = entity.findComponent<core::ecs::BoxCollider2DComponent>();
+            const auto &bc2d = entity.findComponent<core::ecs::BoxCollider2DComponent>();
 
             b2PolygonShape boxShape;
-            boxShape.SetAsBox(bc2d.Size.getX() * transform.Scale.getX() / 2.0, bc2d.Size.getY() * transform.Scale.getY() / 2.0, {bc2d.Offset.getX(), bc2d.Offset.getY()}, 0);
+            boxShape.SetAsBox(bc2d.Size.getX() * transform.Scale.getX() / 2.0,
+                              bc2d.Size.getY() * transform.Scale.getY() / 2.0, {bc2d.Offset.getX(), bc2d.Offset.getY()},
+                              0);
 
             b2FixtureDef fixtureDef;
             fixtureDef.shape = &boxShape;
@@ -314,7 +303,7 @@ namespace core
 
         if (entity.HasComponent<core::ecs::CircleCollider2DComponent>())
         {
-            auto &cc2d = entity.findComponent<core::ecs::CircleCollider2DComponent>();
+            const auto &cc2d = entity.findComponent<core::ecs::CircleCollider2DComponent>();
 
             b2CircleShape circleShape;
             circleShape.m_p.Set(cc2d.Offset.getX(), cc2d.Offset.getY());
@@ -333,15 +322,15 @@ namespace core
 
     void Scene::addStaticBlockCollider(std::vector<graphics::Rect> collider)
     {
-        for (auto &c : collider)
+        for (const auto &c: collider)
         {
-            auto block = lastBlockId++;
+            const auto block = lastBlockId++;
             m_staticBlockCollider.push_back(StaticCollisionBlock{.rect = c, .blockId = block});
         }
     }
     void Scene::addStaticBlockCollider(std::vector<StaticCollisionBlock> collider)
     {
-        for (auto &c : collider)
+        for (auto &c: collider)
         {
             auto block = lastBlockId++;
             c.blockId = block;
@@ -360,8 +349,7 @@ namespace core
         contactListener = std::make_unique<core::ContactListener>(this);
         m_PhysicsWorld->SetContactListener(contactListener.get());
 
-        auto view = m_registry.view<core::ecs::Rigidbody2DComponent>();
-        for (auto e : view)
+        for (const auto view = m_registry.view<core::ecs::Rigidbody2DComponent>(); auto e: view)
         {
             initPhysicsForEntity(e);
         }
@@ -402,28 +390,34 @@ namespace core
     void Scene::fixedUpdateEntities(uint32_t delta)
     {
 
-        const int32_t velocityIterations = 6;
-        const int32_t positionIterations = 2;
+        constexpr int32_t velocityIterations = 6;
+        constexpr int32_t positionIterations = 2;
         m_PhysicsWorld->Step(delta / 1000.f, velocityIterations, positionIterations);
 
         // Retrieve transform from Box2D
-        auto view = m_registry.view<core::ecs::Rigidbody2DComponent, core::ecs::Transform>();
-        for (auto [e, rb2d, transform] : view.each())
+        bool reSort = false;
         {
-
-            core::ecs::Entity entity = {e, this};
-
-            b2Body *body = (b2Body *)rb2d.RuntimeBody;
-            if (!body)
-                continue;
-            transform.position = convertToPixels(pixelPerMeter, body->GetPosition());
-            // transform.Rotation.z = body->GetAngle();
-            if (m_registry.any_of<core::ecs::ScriptComponentList>(e))
+            const auto view = m_registry.view<core::ecs::Rigidbody2DComponent, core::ecs::Transform>();
+            for (auto [e, rb2d, transform]: view.each())
             {
-                auto &scriptList = m_registry.get<core::ecs::ScriptComponentList>(e);
-                for (auto &script : scriptList.components)
+
+                core::ecs::Entity entity = {e, this};
+
+                const auto body = static_cast<b2Body *>(rb2d.RuntimeBody);
+                if (!body)
+                    continue;
+                const auto oldPosition = transform.position;
+                transform.position = convertToPixels(pixelPerMeter, body->GetPosition());
+                if (oldPosition != transform.position)
+                    reSort = true;
+                // transform.Rotation.z = body->GetAngle();
+                if (m_registry.any_of<core::ecs::ScriptComponentList>(e))
                 {
-                    script.Instance->onUpdate(delta);
+                    auto &scriptList = m_registry.get<core::ecs::ScriptComponentList>(e);
+                    for (const auto &script: scriptList.components)
+                    {
+                        script.Instance->onUpdate(delta);
+                    }
                 }
             }
         }
@@ -431,27 +425,30 @@ namespace core
         {
             auto view = m_registry.view<core::ecs::TextureMapAnimationRenderComponent>();
 
-            for (auto &e : view)
+            for (auto &e: view)
             {
                 auto &animation = view.get<core::ecs::TextureMapAnimationRenderComponent>(e);
-                animation.animation.update();
+                animation.animator.update();
             }
         }
-        m_registry.sort<core::ecs::Transform>([](const auto &lhs, const auto &rhs)
-                                              { 
-                                                if(lhs.position.getY() + lhs.height == rhs.position.getY() + rhs.height)
-                                                    return lhs.position.getX() + lhs.width < rhs.position.getX() + rhs.width;
-                                                return lhs.position.getY() + lhs.height < rhs.position.getY() + rhs.height; });
+        if (reSort)
+            m_registry.sort<core::ecs::Transform>(
+                    [](const auto &lhs, const auto &rhs)
+                    {
+                        if (lhs.position.getY() + lhs.height == rhs.position.getY() + rhs.height)
+                            return lhs.position.getX() + lhs.width < rhs.position.getX() + rhs.width;
+                        return lhs.position.getY() + lhs.height < rhs.position.getY() + rhs.height;
+                    });
     }
 
     bool Scene::handleEventsEntities(core::Input *input)
     {
-        auto view = m_registry.view<core::ecs::ScriptComponentList, core::ecs::Transform>();
+        const auto view = m_registry.view<core::ecs::ScriptComponentList, core::ecs::Transform>();
         bool result = false;
         graphics::Rect displayRect;
-        auto &cameraViewPort = renderer->getMainCamera()->getViewPortRect();
+        const auto &cameraViewPort = renderer->getMainCamera()->getViewPortRect();
 
-        for (auto &e : view)
+        for (auto &e: view)
         {
             if (!result)
             {
@@ -462,7 +459,7 @@ namespace core
                     continue;
 
                 auto &scriptList = view.get<core::ecs::ScriptComponentList>(e);
-                for (auto &script : scriptList.components)
+                for (const auto &script: scriptList.components)
                 {
                     result = script.Instance->onHandleInput(input);
                 }
@@ -475,17 +472,17 @@ namespace core
     {
         auto view = m_registry.view<core::ecs::ScriptComponentList, core::ecs::Transform>();
 
-        for (auto &e : view)
+        for (auto &e: view)
         {
             if (m_registry.any_of<core::ecs::Rigidbody2DComponent>(e))
             {
                 auto &rb2d = m_registry.get<core::ecs::Rigidbody2DComponent>(e);
-                m_PhysicsWorld->DestroyBody((b2Body *)rb2d.RuntimeBody);
+                m_PhysicsWorld->DestroyBody(static_cast<b2Body *>(rb2d.RuntimeBody));
             }
             if (m_registry.any_of<core::ecs::ScriptComponentList>(e))
             {
                 auto compList = m_registry.get<core::ecs::ScriptComponentList>(e);
-                for (auto &c : compList.components)
+                for (auto &c: compList.components)
                 {
                     c.DestroyScript(&c);
                 }
@@ -497,7 +494,7 @@ namespace core
         {
 
             if (it->physicsBody != nullptr)
-                m_PhysicsWorld->DestroyBody((b2Body *)it->physicsBody);
+                m_PhysicsWorld->DestroyBody(static_cast<b2Body *>(it->physicsBody));
             it->physicsBody = nullptr;
         }
 
@@ -508,22 +505,19 @@ namespace core
         m_PhysicsWorld = nullptr;
     }
 
-    void Scene::destoryEntity(const core::ecs::Entity &entity)
-    {
-        m_entitiesToDestroy.push_back(entity);
-    }
+    void Scene::destoryEntity(const core::ecs::Entity &entity) { m_entitiesToDestroy.push_back(entity); }
 
     void Scene::update()
     {
 
-        for (auto &handle : m_entitiesAdded)
+        for (const auto &handle: m_entitiesAdded)
         {
             if (m_registry.any_of<core::ecs::ScriptComponent>(handle))
             {
                 auto &script = m_registry.get<core::ecs::ScriptComponent>(handle);
                 if (script.Instance == nullptr)
                 {
-                    core::ecs::Entity entity = {handle, this};
+                    const core::ecs::Entity entity = {handle, this};
                     script.Instance = script.InstantiateScript();
                     script.Instance->setEntity(entity);
                 }
@@ -536,17 +530,17 @@ namespace core
             }
         }
 
-        for (auto &e : m_entitiesToDestroy)
+        for (auto &e: m_entitiesToDestroy)
         {
             if (m_registry.any_of<core::ecs::Rigidbody2DComponent>(e))
             {
-                auto &rb2d = m_registry.get<core::ecs::Rigidbody2DComponent>(e);
-                m_PhysicsWorld->DestroyBody((b2Body *)rb2d.RuntimeBody);
+                const auto &rb2d = m_registry.get<core::ecs::Rigidbody2DComponent>(e);
+                m_PhysicsWorld->DestroyBody(static_cast<b2Body *>(rb2d.RuntimeBody));
             }
             if (m_registry.any_of<core::ecs::ScriptComponentList>(e))
             {
                 auto compList = m_registry.get<core::ecs::ScriptComponentList>(e);
-                for (auto &c : compList.components)
+                for (auto &c: compList.components)
                 {
                     c.DestroyScript(&c);
                 }
@@ -555,7 +549,7 @@ namespace core
             m_registry.destroy(e);
         }
 
-        for (auto &blockData : m_staticBlockColliderToDestroy)
+        for (auto &blockData: m_staticBlockColliderToDestroy)
         {
             for (auto it = m_staticBlockCollider.begin(); it != m_staticBlockCollider.end(); ++it)
             {
@@ -563,7 +557,7 @@ namespace core
                 {
 
                     if (it->physicsBody != nullptr)
-                        m_PhysicsWorld->DestroyBody((b2Body *)it->physicsBody);
+                        m_PhysicsWorld->DestroyBody(static_cast<b2Body *>(it->physicsBody));
                     it->physicsBody = nullptr;
                     m_staticBlockCollider.erase(it);
                     break;
@@ -580,8 +574,8 @@ namespace core
     }
     std::optional<core::ecs::Entity> Scene::findEntityByName(const std::string &tagName)
     {
-        auto view = m_registry.view<core::ecs::TagComponent>();
-        for (auto handle : view)
+        const auto view = m_registry.view<core::ecs::TagComponent>();
+        for (const auto handle: view)
         {
             auto &tagComponent = view.get<core::ecs::TagComponent>(handle);
             if (tagComponent.TagName == tagName)
@@ -595,30 +589,21 @@ namespace core
         pixelPerMeter = value;
         metersPerPixel = 1.f / value;
     }
-    void Scene::setPhysicsDebug(bool debug)
-    {
-        m_physicsDebug = debug;
-    }
+    void Scene::setPhysicsDebug(bool debug) { m_physicsDebug = debug; }
 
-    bool Scene::getPhysicsDebug()
-    {
-        return m_physicsDebug;
-    }
+    bool Scene::getPhysicsDebug() const { return m_physicsDebug; }
 
-    std::shared_ptr<UI::WindowManager> &Scene::getWindowManager()
-    {
-        return winMgr;
-    }
+    std::shared_ptr<UI::WindowManager> &Scene::getWindowManager() { return winMgr; }
 
     core::RayCastResult Scene::raycast(const utils::Vector2 &startPosition, const utils::Vector2 &endPosition)
     {
-        b2Vec2 startPoint = convert2Meters(metersPerPixel, startPosition);
-        b2Vec2 endPoint = convert2Meters(metersPerPixel, endPosition);
-        auto raycastCallback = std::make_unique<RayCastCallback>(this);
+        const b2Vec2 startPoint = convert2Meters(metersPerPixel, startPosition);
+        const b2Vec2 endPoint = convert2Meters(metersPerPixel, endPosition);
+        const auto raycastCallback = std::make_unique<RayCastCallback>(this);
 
         m_PhysicsWorld->RayCast(raycastCallback.get(), startPoint, endPoint);
 
         return core::RayCastResult{.hits = raycastCallback->getResults()};
     }
 
-} /* namespace character */
+} // namespace core

@@ -1,14 +1,14 @@
 #include "localisation.h"
 #include <algorithm>
+#include <cmath>
 #include <cstdlib>
 #include <engine/utils/exceptions.h>
 #include <engine/utils/string.h>
+#include <exception>
 #include <fstream>
 #include <magic_enum.hpp>
 #include <sstream>
-#include <exception>
 #include "engine/utils/logger.h"
-#include <cmath>
 
 #ifdef _WIN32
 #include <stdio.h>
@@ -41,14 +41,12 @@ std::string format_currency(double amount)
 {
     Currency &currency = Localisation::Instance().getCurrency();
 
-    long base = amount;
+    const long base = amount;
     double remainder = std::fmod(std::abs(amount), 1);
 
-    std::string remainderString = std::to_string(long(remainder * 100));
-    std::string baseString = std::to_string(std::abs(base));
-    std::string result = "";
-    int offset = 0;
-    int pos = 1;
+    std::string remainderString = std::to_string(static_cast<long>(remainder * 100));
+    const std::string baseString = std::to_string(std::abs(base));
+    std::string result;
 
     std::stringstream stream;
 
@@ -59,6 +57,8 @@ std::string format_currency(double amount)
 
     if (std::abs(base) > 999)
     {
+        int pos = 1;
+        int offset = 0;
         for (int i = baseString.size(); i >= 0; --i)
         {
             if (pos % 3 == 0)
@@ -92,43 +92,34 @@ std::string format_currency(double amount)
     return stream.str();
 }
 
-Language Localisation::getLang() const
-{
-    return lang;
-}
+Language Localisation::getLang() const { return lang; }
 
-Currency &Localisation::getCurrency()
-{
-    return currencyMap.at(lang);
-}
+Currency &Localisation::getCurrency() { return currencyMap.at(lang); }
 
-std::string Localisation::getLanguage() const
-{
-    return language;
-}
+std::string Localisation::getLanguage() const { return language; }
 
 std::locale Localisation::getLocale()
 {
 #ifdef __linux
     switch (lang)
     {
-    case Language::de:
-        return std::locale("de_DE.utf8");
-    case Language::en:
-        return std::locale("en_US.utf8");
-    default:
-        return std::locale("en_US.utf8");
+        case Language::de:
+            return std::locale("de_DE.utf8");
+        case Language::en:
+            return std::locale("en_US.utf8");
+        default:
+            return std::locale("en_US.utf8");
     }
 #elif _WIN32
     // TODO fix later
     switch (lang)
     {
-    case Language::de:
-        return std::locale("de-DE.utf8");
-    case Language::en:
-        return std::locale("en-US.utf8");
-    default:
-        return std::locale("en-US.utf8");
+        case Language::de:
+            return std::locale("de-DE.utf8");
+        case Language::en:
+            return std::locale("en-US.utf8");
+        default:
+            return std::locale("en-US.utf8");
     }
 #else
     throw std::runtime_error("unsupported operating system");
@@ -189,7 +180,7 @@ std::string Localisation::translate(const std::string &msgid) const
     return msgid;
 }
 
-void Localisation::loadLocalisation(std::string filename)
+void Localisation::loadLocalisation(const std::string &filename)
 {
     std::fstream file;
     std::istringstream is;
@@ -202,8 +193,8 @@ void Localisation::loadLocalisation(std::string filename)
     {
         throw IOException(filename, "file does not exists");
     }
-    std::string msgid = "";
-    std::string msgstr = "";
+    std::string msgid;
+    std::string msgstr;
     while (getline(file, s))
     {
 

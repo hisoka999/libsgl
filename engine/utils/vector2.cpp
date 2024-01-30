@@ -5,25 +5,15 @@
 namespace utils
 {
 
-    bool areSame(const float a, const float b)
-    {
-        return std::fabs(a - b) < std::numeric_limits<float>::epsilon();
-    }
+    bool areSame(const float a, const float b) { return std::fabs(a - b) < std::numeric_limits<float>::epsilon(); }
 
-    Vector2::Vector2(const float x, const float y)
-        : x(x), y(y)
+    Vector2::Vector2(const float x, const float y) : x(x), y(y)
     {
         // ctor
     }
-    Vector2::Vector2(const Vector2 &pOriginal)
-        : x(pOriginal.x), y(pOriginal.y)
-    {
-    }
+    Vector2::Vector2(const Vector2 &pOriginal) : x(pOriginal.x), y(pOriginal.y) {}
 
-    Vector2::Vector2()
-        : x(0), y(0)
-    {
-    }
+    Vector2::Vector2() : x(0), y(0) {}
 
     Vector2::~Vector2()
     {
@@ -32,28 +22,15 @@ namespace utils
 
     float Vector2::distance(const Vector2 &v2)
     {
-        return std::sqrt(
-            std::pow(v2.getX() - getX(), 2.f) + std::pow(v2.getY() - getY(), 2.f));
+        return std::sqrt(std::pow(v2.getX() - getX(), 2.f) + std::pow(v2.getY() - getY(), 2.f));
     }
-    const Vector2 Vector2::operator+(const Vector2 &other) const
-    {
-        return Vector2(x + other.x, y + other.y);
-    }
+    const Vector2 Vector2::operator+(const Vector2 &other) const { return Vector2(x + other.x, y + other.y); }
 
-    const Vector2 Vector2::operator+(const float value) const
-    {
-        return Vector2(x + value, y + value);
-    }
+    const Vector2 Vector2::operator+(const float value) const { return Vector2(x + value, y + value); }
 
-    const Vector2 Vector2::operator-(const float value) const
-    {
-        return Vector2(x - value, y - value);
-    }
+    const Vector2 Vector2::operator-(const float value) const { return Vector2(x - value, y - value); }
 
-    const Vector2 Vector2::operator-(const Vector2 &other) const
-    {
-        return Vector2(x - other.x, y - other.y);
-    }
+    const Vector2 Vector2::operator-(const Vector2 &other) const { return Vector2(x - other.x, y - other.y); }
 
     Vector2 &Vector2::operator-=(const Vector2 &other)
     {
@@ -69,20 +46,11 @@ namespace utils
         return *this;
     }
 
-    const Vector2 Vector2::operator*(const Vector2 &other) const
-    {
-        return Vector2(x * other.x, y * other.y);
-    }
+    const Vector2 Vector2::operator*(const Vector2 &other) const { return Vector2(x * other.x, y * other.y); }
 
-    const Vector2 Vector2::operator*(const float value) const
-    {
-        return Vector2(x * value, y * value);
-    }
+    const Vector2 Vector2::operator*(const float value) const { return Vector2(x * value, y * value); }
 
-    bool Vector2::operator!=(const Vector2 &other)
-    {
-        return !areSame(x, other.x) || !areSame(y, other.y);
-    }
+    bool Vector2::operator!=(const Vector2 &other) const { return !areSame(x, other.x) || !areSame(y, other.y); }
 
     Vector2 &Vector2::operator=(const Vector2 &other)
     {
@@ -102,14 +70,8 @@ namespace utils
         return Vector2(x / value, y / value);
     }
 
-    const Vector2 Vector2::floor()
-    {
-        return Vector2(std::floor(x), std::floor(y));
-    }
-    bool Vector2::operator==(const Vector2 &other)
-    {
-        return areSame(x, other.x) && areSame(y, other.y);
-    }
+    const Vector2 Vector2::floor() { return Vector2(std::floor(x), std::floor(y)); }
+    bool Vector2::operator==(const Vector2 &other) { return areSame(x, other.x) && areSame(y, other.y); }
 
     // Vector2 utils::operator +(const Vector2& orig, const Vector2& other) {
     //	return Vector2(orig.getX() + other.getX(), orig.getY() + other.getY());

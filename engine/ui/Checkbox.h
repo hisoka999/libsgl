@@ -13,15 +13,15 @@ namespace UI
     {
     public:
         /** Default constructor */
-        Checkbox(Object *parent);
+        explicit Checkbox(Object *parent);
         /** Default destructor */
-        virtual ~Checkbox();
-        bool isChecked() { return checked; }
+        ~Checkbox() override;
+        [[nodiscard]] bool isChecked() const { return checked; }
         void setChecked(bool check);
         void toggleChecked();
-        void setText(std::string text) { this->text = text; }
-        virtual void render(core::Renderer *pRender);
-        virtual bool handleEvents(core::Input *pInput);
+        void setText(const std::string &text) { this->text = text; }
+        void render(core::Renderer *pRender) override;
+        bool handleEvents(core::Input *pInput) override;
 
     protected:
     private:

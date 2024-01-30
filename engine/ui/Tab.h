@@ -8,8 +8,8 @@
 #ifndef UI_TAB_H_
 #define UI_TAB_H_
 
-#include "engine/ui/Container.h"
 #include <string>
+#include "engine/ui/Container.h"
 
 namespace UI
 {
@@ -21,9 +21,9 @@ namespace UI
         virtual ~Tab();
         const std::string &getTitle() const;
         void setTitle(const std::string &title);
-        virtual void render(core::Renderer *pRender);
-        virtual bool handleEvents(core::Input *pInput);
-        virtual void postRender(core::Renderer *renderer);
+        void render(core::Renderer *pRender) override;
+        bool handleEvents(core::Input *pInput) override;
+        void postRender(core::Renderer *renderer) override;
 
     private:
         std::string title;

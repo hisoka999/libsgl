@@ -82,8 +82,7 @@ namespace utils
 #elif __WIN32__
             DWORD dwAttrib = GetFileAttributes(path.c_str());
 
-            return (dwAttrib != INVALID_FILE_ATTRIBUTES &&
-                    (dwAttrib & FILE_ATTRIBUTE_DIRECTORY));
+            return (dwAttrib != INVALID_FILE_ATTRIBUTES && (dwAttrib & FILE_ATTRIBUTE_DIRECTORY));
 #endif
         }
 
@@ -99,7 +98,7 @@ namespace utils
 #endif
         }
 
-        void create_dir(const std::string path)
+        void create_dir(const std::string &path)
         {
 #ifdef __linux
             mkdir(path.c_str(), 0755);
@@ -115,10 +114,10 @@ namespace utils
 #pragma pack(push, 8)
         typedef struct tagTHREADNAME_INFO
         {
-            DWORD dwType;     // Must be 0x1000.
-            LPCSTR szName;    // Pointer to name (in user addr space).
+            DWORD dwType; // Must be 0x1000.
+            LPCSTR szName; // Pointer to name (in user addr space).
             DWORD dwThreadID; // Thread ID (-1=caller thread).
-            DWORD dwFlags;    // Reserved for future use, must be zero.
+            DWORD dwFlags; // Reserved for future use, must be zero.
         } THREADNAME_INFO;
 #pragma pack(pop)
 
@@ -141,10 +140,7 @@ namespace utils
             {
             }
         }
-        void SetThreadName(const char *threadName)
-        {
-            SetThreadName(GetCurrentThreadId(), threadName);
-        }
+        void SetThreadName(const char *threadName) { SetThreadName(GetCurrentThreadId(), threadName); }
 
         void SetThreadName(std::thread *thread, const char *threadName)
         {
@@ -154,16 +150,13 @@ namespace utils
 
 #elif __linux
 #include <sys/prctl.h>
-        void SetThreadName(const char *threadName)
-        {
-            prctl(PR_SET_NAME, threadName, 0, 0, 0);
-        }
+        void SetThreadName(const char *threadName) { prctl(PR_SET_NAME, threadName, 0, 0, 0); }
 
         void SetThreadName(std::thread *thread, const char *threadName)
         {
-            auto handle = thread->native_handle();
+            const auto handle = thread->native_handle();
             pthread_setname_np(handle, threadName);
         }
 #endif
-    }
-}
+    } // namespace os
+} // namespace utils

@@ -43,7 +43,7 @@ public:
     Currency &getCurrency();
 
 private:
-    void loadLocalisation(std::string filename);
+    void loadLocalisation(const std::string &filename);
     Localisation();
     ~Localisation() = default;
     Localisation(const Localisation &) = delete;

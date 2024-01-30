@@ -20,7 +20,7 @@ namespace graphics
             width = 0;
             height = 0;
         }
-        Rect(float pX, float pY, float pWidth, float pHeight)
+        Rect(const float pX, const float pY,const  float pWidth,const  float pHeight)
         {
             x = pX;
             y = pY;
@@ -28,12 +28,12 @@ namespace graphics
             height = pHeight;
         }
 
-        utils::Vector2 toVector2()
+        [[nodiscard]] utils::Vector2 toVector2() const
         {
             return utils::Vector2(x, y);
         }
 
-        bool intersectsNoLine(const Rect &target) const
+        [[nodiscard]] bool intersectsNoLine(const Rect &target) const
         {
             if (
                 (x + width > target.x) &&
@@ -44,7 +44,7 @@ namespace graphics
             else
                 return false;
         }
-        bool intersects(const Rect &target) const
+        [[nodiscard]] bool intersects(const Rect &target) const
         {
             if (
                 (x + width >= target.x) &&
@@ -55,15 +55,14 @@ namespace graphics
             else
                 return false;
         }
-        bool intersects(const utils::Vector2 &v) const
+        [[nodiscard]] bool intersects(const utils::Vector2 &v) const
         {
             if (x <= v.getX() && y <= v.getY() && x + width >= v.getX() && y + height >= v.getY())
                 return true;
             return false;
         }
 
-        const SDL_Rect sdlRect() const
-        {
+        [[nodiscard]] SDL_Rect sdlRect() const {
             SDL_Rect r;
             r.h = int(height);
             r.w = int(width);
@@ -72,7 +71,7 @@ namespace graphics
             return r;
         }
 
-        const SDL_FRect sdlFRect() const
+        [[nodiscard]] SDL_FRect sdlFRect() const
         {
             SDL_FRect r;
             r.h = height;

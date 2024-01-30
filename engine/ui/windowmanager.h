@@ -23,10 +23,10 @@ namespace UI
         void render(core::Renderer *ren);
         bool handleInput(core::Input *inp);
 
-        bool isWindowOpen();
+        bool isWindowOpen() const;
 
-        UI::dialogs::MessageDialog *showMessageDialog(const std::string &message,
-                                                      const std::string &ok, const std::string &cancel)
+        UI::dialogs::MessageDialog *showMessageDialog(const std::string &message, const std::string &ok,
+                                                      const std::string &cancel)
         {
             messageDialog.setMessage(message);
             messageDialog.setButtonText(ok, cancel);
@@ -34,15 +34,12 @@ namespace UI
             messageDialog.setVisible(true);
             return &messageDialog;
         }
-        std::shared_ptr<graphics::Text> getFont()
-        {
-            return font;
-        }
+        std::shared_ptr<graphics::Text> getFont() { return font; }
 
-        template <typename C>
+        template<typename C>
         C *findContainer()
         {
-            for (auto container : containers)
+            for (auto container: containers)
             {
                 auto c = dynamic_cast<C *>(container);
                 if (c != nullptr)
@@ -54,7 +51,7 @@ namespace UI
         }
 
     protected:
-        Window *lastActiveWindow();
+        Window *lastActiveWindow() const;
 
     private:
         std::shared_ptr<graphics::Text> font;

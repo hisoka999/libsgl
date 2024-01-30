@@ -16,14 +16,8 @@ namespace utils
         Vector2(const Vector2 &pOriginal);
         /** Default destructor */
         virtual ~Vector2();
-        float getX() const
-        {
-            return x;
-        }
-        float getY() const
-        {
-            return y;
-        }
+        float getX() const { return x; }
+        float getY() const { return y; }
         float distance(const Vector2 &v2);
         const Vector2 operator+(const Vector2 &other) const;
         const Vector2 operator+(const float value) const;
@@ -34,7 +28,7 @@ namespace utils
         Vector2 &operator+=(const Vector2 &other);
         Vector2 &operator-=(const Vector2 &other);
         bool operator==(const Vector2 &other);
-        bool operator!=(const Vector2 &other);
+        bool operator!=(const Vector2 &other) const;
         Vector2 &operator=(const Vector2 &other);
 
         const Vector2 normalize();

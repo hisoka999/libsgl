@@ -9,6 +9,7 @@
 #include <iostream>
 #include <map>
 
+#include <memory>
 #include "engine/core/dispatcher.h"
 #include "engine/core/input.h"
 #include "engine/core/renderer.h"
@@ -16,7 +17,6 @@
 #include "engine/graphics/text.h"
 #include "engine/graphics/texture.h"
 #include "engine/ui/Hint.h"
-#include <memory>
 
 namespace UI
 {
@@ -33,68 +33,33 @@ namespace UI
 
     public:
         /** Default constructor */
-        Object(Object *parent = nullptr);
+        explicit Object(Object *parent = nullptr);
         Object(Object *parent, int pWidth, int pHeight);
         /** Default destructor */
         virtual ~Object();
-        void setX(int x)
-        {
-            this->x = x;
-        }
-        void setY(int y)
-        {
-            this->y = y;
-        }
-        void setPos(int x, int y)
-        {
-            this->x = x;
-            this->y = y;
-        }
-        int getX()
-        {
-            return x;
-        }
-        int getY()
-        {
-            return y;
-        }
-        virtual int getWidth()
-        {
-            return width;
-        }
-        virtual int getHeight()
-        {
-            return height;
-        }
-        void setWidth(int pWidth)
-        {
-            width = pWidth;
-        }
-        void setHeight(int pHeight)
-        {
-            height = pHeight;
-        }
+        void setX(int x);
+        void setY(int y);
+        void setPos(int x, int y);
+        [[nodiscard]] int getX() const;
+        [[nodiscard]] int getY() const;
+        virtual int getWidth() { return width; }
+        virtual int getHeight() { return height; }
+        void setWidth(int pWidth) { width = pWidth; }
+        void setHeight(int pHeight) { height = pHeight; }
 
         virtual void render(core::Renderer *renderer);
         virtual void postRender(core::Renderer *renderer);
         virtual bool handleEvents(core::Input *pInput);
-        Object *getParent() const
-        {
-            return parent;
-        }
-        void connect(std::string const &event, core::dispatcher_type callback)
-        {
-            _callbacks.emplace(event, callback);
-        }
+        [[nodiscard]] Object *getParent() const { return parent; }
+        void connect(std::string const &event, core::dispatcher_type callback) { _callbacks.emplace(event, callback); }
 
-        template <typename F>
+        template<typename F>
         void connect(std::string const &event, F &&f)
         {
-            _callbacks.emplace(event,
-                               core::make_dispatcher(std::forward<F>(f)));
+            _callbacks.emplace(event, core::make_dispatcher(std::forward<F>(f)));
         }
 
-        template <typename F>
+        template<typename F>
         void disconnect(std::string const &event, F &&f)
         {
             auto rng = _callbacks.equal_range(event);
@@ -115,27 +80,27 @@ namespace UI
             }
         }
 
-        graphics::Text *getFont();
+        graphics::Text *getFont() const;
         void setFont(graphics::Text *pFont);
         void setFont(const std::string &fontname, unsigned int font_size);
 
         virtual graphics::Rect displayRect();
         virtual graphics::Rect eventRect();
-        int getRenderOrder();
+        int getRenderOrder() const;
         void setHint(const std::shared_ptr<UI::Hint> &hint);
         const std::shared_ptr<UI::Hint> &getHint();
         std::string &getStyleClass();
         void setStyleClass(const std::string &value);
         std::string &getObjectName();
 
-        const std::shared_ptr<Theme> getTheme();
+        std::shared_ptr<Theme> getTheme();
         void setTheme(const std::shared_ptr<Theme> &theme);
-        void setCheckDropCallBack(CheckDropCallBack callback);
+        void setCheckDropCallBack(const CheckDropCallBack &callback);
         CheckDropCallBack getCheckDropCallBack();
 
     protected:
         void setObjectName(const std::string &objectName);
-        template <typename... Args>
+        template<typename... Args>
         bool fireFuncionCall(std::string const &event, Args const &...args)
         {
             bool functionCalled = false;
@@ -148,14 +113,14 @@ namespace UI
             return functionCalled;
         }
         int renderOrder;
-        bool isShowHint();
+        bool isShowHint() const;
 
     private:
         std::shared_ptr<UI::Hint> hint;
         bool showHint;
 
-        template <typename F, typename... Args>
-        void call(F const &f, Args const &...args)
+        template<typename F, typename... Args>
+        static void call(F const &f, Args const &...args)
         {
             std::vector<std::any> v{args...};
             f(v);

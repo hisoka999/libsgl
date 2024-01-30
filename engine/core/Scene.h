@@ -1,16 +1,16 @@
 #ifndef CORE_SCENE_H_
 #define CORE_SCENE_H_
+#include <engine/core/Music.h>
 #include <memory>
 #include <optional>
+#include "engine/core/gamewindow.h"
 #include "engine/core/input.h"
 #include "engine/core/renderer.h"
-#include "engine/core/gamewindow.h"
 #include "engine/graphics/texture.h"
 #include "engine/ui/windowmanager.h"
-#include <engine/core/Music.h>
 
-#include "engine/core/ecs/entt.h"
 #include "StaticCollisionBlock.h"
+#include "engine/core/ecs/entt.h"
 
 class b2World;
 class b2ContactFilter;
@@ -36,7 +36,7 @@ namespace core
     class Scene
     {
     public:
-        Scene(core::Renderer *pRenderer);
+        explicit Scene(core::Renderer *pRenderer);
         virtual ~Scene();
 
         virtual void render() = 0;
@@ -51,11 +51,11 @@ namespace core
 
         void destroyEntity(core::ecs::Entity &entity);
 
-        template <typename Component>
+        template<typename Component>
         std::vector<core::ecs::Entity> findEntitesByComponent()
         {
             std::vector<core::ecs::Entity> result;
-            for (auto handle : m_registry.view<Component>())
+            for (auto handle: m_registry.view<Component>())
             {
                 result.push_back({handle, this});
             }
@@ -81,7 +81,7 @@ namespace core
         std::shared_ptr<core::Music> music;
         core::GameWindow *m_gameWindow = nullptr;
         void setPhysicsDebug(bool debug);
-        bool getPhysicsDebug();
+        bool getPhysicsDebug() const;
         float pixelPerMeter = 50.f;
         float metersPerPixel = 0.02f;
 

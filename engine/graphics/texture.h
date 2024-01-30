@@ -19,7 +19,7 @@ namespace graphics
         Texture(core::Renderer *pRenderer, const int pWidth, const int pHeight, SDL_TextureAccess targetAccess);
         /** Default destructor */
         virtual ~Texture();
-        void loadTexture(core::Renderer *ren, std::string filename);
+        void loadTexture(core::Renderer *ren, const std::string&filename);
         void render(core::Renderer *ren, int x, int y);
         void render(core::Renderer *ren, int x, int y, int pWidth, int pHeight, int pSrcX, int pSrcY);
         void render(core::Renderer *ren, const Rect &pSrc, const Rect &pDest);
@@ -29,19 +29,19 @@ namespace graphics
         void setBlendMode(SDL_BlendMode blendMode);
         void setAlphaColor(core::Renderer *ren, uint8_t r, uint8_t g, uint8_t b);
         void setAlphaMod(uint8_t alpha);
-        int getWidth();
-        int getHeight();
-        SDL_Texture *getSDLTexture();
+        [[nodiscard]] int getWidth() const;
+        [[nodiscard]] int getHeight() const;
+        SDL_Texture *getSDLTexture() const;
         // Pixel manipulators
         bool lockTexture();
         bool unlockTexture();
-        void *getPixels();
-        void copyPixels(void *pixels);
-        int getPitch();
+        [[nodiscard]] void *getPixels() const;
+        void copyPixels(const void *pixels);
+        [[nodiscard]] int getPitch() const;
         Uint32 getPixel32(unsigned int x, unsigned int y);
         void setPixel(int x, int y, SDL_Color color);
 
-        graphics::Rect getTextureRect();
+        [[nodiscard]] Rect getTextureRect() const;
 
     protected:
     private:

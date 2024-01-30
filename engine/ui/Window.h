@@ -17,33 +17,30 @@ namespace UI
         Window();
         Window(int x, int y, int width, int height);
         /** Default destructor */
-        virtual ~Window();
+        ~Window() override;
 
-        virtual void render(core::Renderer *pRender);
-        virtual void postRender(core::Renderer *renderer);
-        virtual bool handleEvents(core::Input *pInput);
+        void render(core::Renderer *pRender) override;
+        void postRender(core::Renderer *renderer) override;
+        bool handleEvents(core::Input *pInput) override;
         bool handleWindowEvents(core::Input *pInput);
         void setVisible(bool visible);
         bool getVisible();
 
         void setTitle(std::string title);
 
-        virtual graphics::Rect displayRect();
-        virtual graphics::Rect eventRect();
+        graphics::Rect displayRect() override;
+        graphics::Rect eventRect() override;
 
         void setSize(int width, int height);
-        virtual void clear();
+        void clear() override;
         int getWidth() override;
         int getHeight() override;
         void makeActive();
         void makeInactive();
-        bool isActive();
+        bool isActive() const;
 
     protected:
-        virtual void onOpen()
-        {
-            needsRefresh();
-        };
+        virtual void onOpen() { needsRefresh(); };
         void setWithoutTitle(bool withoutTitle);
         virtual void boundsRect(graphics::Rect &rect) override;
         void setActive(bool value);

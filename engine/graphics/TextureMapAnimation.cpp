@@ -22,7 +22,17 @@ namespace graphics
     {
     }
 
+    TextureMapAnimation::TextureMapAnimation()
+        : Animation<std::string>()
+    {
+    }
+
     TextureMapAnimation::~TextureMapAnimation()
     {
+    }
+
+    void TextureMapAnimation::setTextureMap(const std::shared_ptr<TextureMap> &textureMap)
+    {
+        m_textureMap = textureMap;
     }
 }

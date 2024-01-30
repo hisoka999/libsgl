@@ -5,8 +5,7 @@
 namespace UI
 {
 
-    Object::Object(Object *parent)
-        : parent(parent)
+    Object::Object(Object *parent) : parent(parent)
     {
         x = y = 0;
         width = height = 0;
@@ -15,8 +14,8 @@ namespace UI
         showHint = false;
         hint = nullptr;
     }
-    Object::Object(Object *parent, int pWidth, int pHeight)
-        : renderOrder(0), parent(parent), x(0), y(0), width(pWidth), height(pHeight)
+    Object::Object(Object *parent, int pWidth, int pHeight) :
+        renderOrder(0), parent(parent), x(0), y(0), width(pWidth), height(pHeight)
     {
 
         font = nullptr;
@@ -28,37 +27,19 @@ namespace UI
     {
         // dtor
     }
-    int Object::getRenderOrder()
-    {
-        return renderOrder;
-    }
+    int Object::getRenderOrder() const { return renderOrder; }
 
-    void Object::setHint(const std::shared_ptr<UI::Hint> &hint)
-    {
-        this->hint = hint;
-    }
+    void Object::setHint(const std::shared_ptr<UI::Hint> &hint) { this->hint = hint; }
 
-    const std::shared_ptr<UI::Hint> &Object::getHint()
-    {
-        return hint;
-    }
+    const std::shared_ptr<UI::Hint> &Object::getHint() { return hint; }
 
-    std::string &Object::getStyleClass()
-    {
-        return styleClass;
-    }
+    std::string &Object::getStyleClass() { return styleClass; }
 
-    void Object::setStyleClass(const std::string &value)
-    {
-        styleClass = value;
-    }
+    void Object::setStyleClass(const std::string &value) { styleClass = value; }
 
-    std::string &Object::getObjectName()
-    {
-        return objectName;
-    }
+    std::string &Object::getObjectName() { return objectName; }
 
-    const std::shared_ptr<Theme> Object::getTheme()
+    std::shared_ptr<Theme> Object::getTheme()
     {
         if (theme != nullptr)
             return theme;
@@ -70,19 +51,11 @@ namespace UI
         return nullptr;
     }
 
-    void Object::setTheme(const std::shared_ptr<Theme> &theme)
-    {
-        this->theme = theme;
-    }
+    void Object::setTheme(const std::shared_ptr<Theme> &theme) { this->theme = theme; }
 
-    void Object::setObjectName(const std::string &objectName)
-    {
-        this->objectName = objectName;
-    }
+    void Object::setObjectName(const std::string &objectName) { this->objectName = objectName; }
 
-    void Object::render([[maybe_unused]] core::Renderer *renderer)
-    {
-    }
+    void Object::render([[maybe_unused]] core::Renderer *renderer) {}
 
     void Object::postRender(core::Renderer *renderer)
     {
@@ -105,37 +78,33 @@ namespace UI
         }
         return false;
     }
-    graphics::Text *Object::getFont()
+    graphics::Text *Object::getFont() const
     {
         if (font != nullptr)
         {
             return font;
         }
-        else if (parent != nullptr)
+        if (parent != nullptr)
         {
             return parent->getFont();
         }
-        throw std::runtime_error(
-            "Object::getFont(): there was no font loaded for this object");
+        throw std::runtime_error("Object::getFont(): there was no font loaded for this object");
         return nullptr;
     }
-    void Object::setFont(graphics::Text *pFont)
-    {
-        font = pFont;
-    }
+    void Object::setFont(graphics::Text *pFont) { font = pFont; }
 
     void Object::setFont(const std::string &fontname, unsigned int font_size)
     {
-        auto text = graphics::TextureManager::Instance().loadFont(fontname, font_size);
+        const auto text = graphics::TextureManager::Instance().loadFont(fontname, font_size);
         font = text.get();
     }
     graphics::Rect Object::eventRect()
     {
         graphics::Rect r;
-        r.x = float(x);
-        r.y = float(y);
-        r.width = float(width);
-        r.height = float(height);
+        r.x = static_cast<float>(x);
+        r.y = static_cast<float>(y);
+        r.width = static_cast<float>(width);
+        r.height = static_cast<float>(height);
         if (getParent() != nullptr)
         {
             r.x += getParent()->eventRect().x;
@@ -147,10 +116,10 @@ namespace UI
     graphics::Rect Object::displayRect()
     {
         graphics::Rect r;
-        r.x = float(x);
-        r.y = float(y);
-        r.width = float(width);
-        r.height = float(height);
+        r.x = static_cast<float>(x);
+        r.y = static_cast<float>(y);
+        r.width = static_cast<float>(width);
+        r.height = static_cast<float>(height);
         if (getParent() != nullptr)
         {
             r.x += getParent()->displayRect().x;
@@ -159,18 +128,19 @@ namespace UI
         return r;
     }
 
-    bool Object::isShowHint()
-    {
-        return showHint;
-    }
+    bool Object::isShowHint() const { return showHint; }
 
-    void Object::setCheckDropCallBack(CheckDropCallBack callback)
-    {
-        dragCallback = callback;
-    }
+    void Object::setCheckDropCallBack(const CheckDropCallBack &callback) { dragCallback = callback; }
 
-    CheckDropCallBack Object::getCheckDropCallBack()
+    CheckDropCallBack Object::getCheckDropCallBack() { return dragCallback; }
+    void Object::setX(int x) { this->x = x; }
+    void Object::setY(int y) { this->y = y; }
+    void Object::setPos(int x, int y)
     {
-        return dragCallback;
+        this->x = x;
+        this->y = y;
     }
+    int Object::getX() const { return x; }
+    int Object::getY() const { return y; }
+
 } // namespace UI

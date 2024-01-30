@@ -1,12 +1,10 @@
 #include "engine/ui/Button.h"
 #include <engine/graphics/TextureManager.h>
-#include <functional>
 
 namespace UI
 {
 
-    Button::Button(Object *parent)
-        : Object(parent), static_width(0), hover(false), enabled(true), borderless(false)
+    Button::Button(Object *parent) : Object(parent), static_width(0), hover(false), enabled(true), borderless(false)
     {
         setObjectName("button");
 
@@ -22,16 +20,14 @@ namespace UI
 
         hoverColor = getTheme()->getStyleColor(this, UI::StyleType::HoverColor);
 
-        auto textureName = getTheme()->getStyleText(this, UI::StyleType::BackgroundImage);
+        const auto textureName = getTheme()->getStyleText(this, UI::StyleType::BackgroundImage);
         texture = nullptr;
 
         if (!textureName.empty())
             texture = graphics::TextureManager::Instance().loadTexture(textureName);
     }
 
-    Button::~Button()
-    {
-    }
+    Button::~Button() = default;
 
     void Button::setStaticWidth(const int pWidth)
     {
@@ -42,16 +38,13 @@ namespace UI
         }
     }
 
-    void Button::setFont(const std::string &fontname, unsigned int font_size)
+    void Button::setFont(const std::string &fontname, int font_size)
     {
         // TODO error handling
-        auto text = graphics::TextureManager::Instance().loadFont(fontname, font_size);
+        const auto text = graphics::TextureManager::Instance().loadFont(fontname, font_size);
         Object::setFont(text.get());
     }
-    void Button::setColor(SDL_Color color)
-    {
-        this->color = color;
-    }
+    void Button::setColor(SDL_Color color) { this->color = color; }
 
     void Button::setLabel(const std::string &label)
     {
@@ -115,15 +108,9 @@ namespace UI
         return r;
     }
 
-    bool Button::getBorderless() const
-    {
-        return borderless;
-    }
+    bool Button::getBorderless() const { return borderless; }
 
-    void Button::setBorderless(bool value)
-    {
-        borderless = value;
-    }
+    void Button::setBorderless(bool value) { borderless = value; }
     bool Button::handleEvents(core::Input *pInput)
     {
         if (!enabled)
@@ -158,10 +145,10 @@ namespace UI
         {
             graphics::Rect r = getParent()->displayRect();
 
-            r.x += getX();
-            r.y += getY();
-            tx = int(r.x);
-            ty = int(r.y);
+            r.x += static_cast<float>(getX());
+            r.y += static_cast<float>(getY());
+            tx = static_cast<int>(r.x);
+            ty = static_cast<int>(r.y);
         }
         else
         {
@@ -173,10 +160,10 @@ namespace UI
 
             // draw background rect
             graphics::Rect backgroundRect;
-            backgroundRect.x = float(tx);
-            backgroundRect.y = float(ty);
-            backgroundRect.width = float(getWidth() + 25);
-            backgroundRect.height = float(getHeight());
+            backgroundRect.x = static_cast<float>(tx);
+            backgroundRect.y = static_cast<float>(ty);
+            backgroundRect.width = static_cast<float>(getWidth() + 25);
+            backgroundRect.height = static_cast<float>(getHeight());
 
             pRenderer->setDrawColor(getTheme()->getStyleColor(this, UI::StyleType::BackgroundColor));
             pRenderer->fillRect(backgroundRect);
@@ -200,55 +187,25 @@ namespace UI
         Object::render(pRenderer);
     }
 
-    SDL_Color Button::getDisabledColor() const
-    {
-        return disabledColor;
-    }
+    SDL_Color Button::getDisabledColor() const { return disabledColor; }
 
-    void Button::setDisabledColor(const SDL_Color &value)
-    {
-        disabledColor = value;
-    }
+    void Button::setDisabledColor(const SDL_Color &value) { disabledColor = value; }
 
-    bool Button::isToggleAllowed()
-    {
-        return toggleAllowed;
-    }
+    bool Button::isToggleAllowed() const { return toggleAllowed; }
 
-    bool Button::isToggled()
-    {
-        return toggled && toggleAllowed;
-    }
+    bool Button::isToggled() const { return toggled && toggleAllowed; }
 
-    void Button::setToggleAllowed(bool toggleAllowed)
-    {
-        this->toggleAllowed = toggleAllowed;
-    }
+    void Button::setToggleAllowed(bool toggleAllowed) { this->toggleAllowed = toggleAllowed; }
 
-    void Button::toggle()
-    {
-        toggled = !toggled;
-    }
+    void Button::toggle() { toggled = !toggled; }
 
-    void Button::setToggled(bool value)
-    {
-        toggled = value;
-    }
+    void Button::setToggled(bool value) { toggled = value; }
 
-    SDL_Color Button::getHoverColor() const
-    {
-        return hoverColor;
-    }
+    SDL_Color Button::getHoverColor() const { return hoverColor; }
 
-    void Button::setHoverColor(const SDL_Color &value)
-    {
-        hoverColor = value;
-    }
+    void Button::setHoverColor(const SDL_Color &value) { hoverColor = value; }
 
-    bool Button::isHovered() const
-    {
-        return hover;
-    }
+    bool Button::isHovered() const { return hover; }
 
     void Button::render(core::Renderer *pRender)
     {
@@ -275,17 +232,8 @@ namespace UI
         getFont()->render(pRender, label, displayColor, tx + 10, ty + 10);
     }
 
-    void Button::enable()
-    {
-        enabled = true;
-    }
-    void Button::disable()
-    {
-        enabled = false;
-    }
-    bool Button::isEnabled()
-    {
-        return enabled;
-    }
+    void Button::enable() { enabled = true; }
+    void Button::disable() { enabled = false; }
+    bool Button::isEnabled() const { return enabled; }
 
 } // namespace UI

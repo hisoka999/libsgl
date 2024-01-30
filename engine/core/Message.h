@@ -11,29 +11,19 @@
 namespace core
 {
 
-	template <typename T, typename Data>
-	class Message
-	{
-	public:
-		Message(const T &type, Data data) : _type(type), _data(data)
-		{
-		}
-		virtual ~Message()
-		{
-		}
-		T getType()
-		{
-			return _type;
-		}
-		Data getData()
-		{
-			return _data;
-		}
+    template<typename T, typename Data>
+    class Message final
+    {
+    public:
+        Message(const T &type, Data data) : _type(type), _data(data) {}
+        ~Message() = default;
+        T getType() { return _type; }
+        Data getData() { return _data; }
 
-	protected:
-		T _type;
-		Data _data;
-	};
+    protected:
+        T _type;
+        Data _data;
+    };
 
 } /* namespace core */
 

@@ -1,6 +1,6 @@
 #include "date.h"
-#include <engine/utils/string.h>
 #include <cmath>
+#include <engine/utils/string.h>
 
 namespace utils
 {
@@ -23,18 +23,12 @@ namespace utils
                 return 31;
             }
         }
-        bool isLeapYear(const uint16_t year)
-        {
-            return year % 400 == 0 || (year % 4 == 0 && year % 100 != 0);
-        }
-        Date::Date(const uint16_t year, const uint16_t month, const uint16_t day)
-            : year(year), month(month), day(day)
+        bool isLeapYear(const uint16_t year) { return year % 400 == 0 || (year % 4 == 0 && year % 100 != 0); }
+        Date::Date(const uint16_t year, const uint16_t month, const uint16_t day) : year(year), month(month), day(day)
         {
         }
 
-        Date::~Date()
-        {
-        }
+        Date::~Date() = default;
 
         void Date::addDay(uint16_t value)
         {
@@ -51,35 +45,23 @@ namespace utils
             }
         }
 
-        std::string Date::format()
-        {
-            return utils::string_format("%.2i.%.2i.%i", day, month + 1, year);
-        }
+        std::string Date::format() { return utils::string_format("%.2i.%.2i.%i", day, month + 1, year); }
 
-        uint16_t Date::getYear() const
-        {
-            return year;
-        }
+        uint16_t Date::getYear() const { return year; }
 
-        uint16_t Date::getMonth() const
-        {
-            return month;
-        }
+        uint16_t Date::getMonth() const { return month; }
 
-        uint16_t Date::getDay() const
-        {
-            return day;
-        }
+        uint16_t Date::getDay() const { return day; }
 
-        uint64_t Date::toNumber() const
-        {
-            return (year * 365) + (month * 12) + day;
-        }
+        uint64_t Date::toNumber() const { return (year * 365) + (month * 12) + day; }
 
         uint16_t Date::getDayOfWeek()
         {
-            int letter = int(1 + year + std::floor(float(year / 4)) + std::floor(float((year - 1600) / 400)) - std::floor(float((year - 1600) / 100))) % 7;
-            std::string weekday = "";
+            int letter = int(1 + year + std::floor(static_cast<float>(year / 4)) +
+                             std::floor(static_cast<float>((year - 1600) / 400)) -
+                             std::floor(static_cast<float>((year - 1600) / 100))) %
+                         7;
+            std::string weekday;
 
             int dayOfYear = 0;
             for (int month = 0; month <= this->month; month++)
@@ -93,30 +75,23 @@ namespace utils
             return (letter + dayOfYear) - (weekOfYear * 7) - 1;
         }
 
-        bool Date::operator==(const Date &date)
+        bool Date::operator==(const Date &date) const
         {
             return year == date.getYear() && month == date.getMonth() && day == date.getDay();
         }
 
-        bool Date::operator>=(const Date &date)
+        bool Date::operator>=(const Date &date) const
         {
             return year >= date.getYear() && month >= date.getMonth() && day >= date.getDay();
         }
 
-        bool Date::operator>(const Date &date)
-        {
+        bool Date::operator>(const Date &date) const { return toNumber() > date.toNumber(); }
 
-            return toNumber() > date.toNumber();
-        }
-
-        bool Date::operator<=(const Date &date)
+        bool Date::operator<=(const Date &date) const
         {
             return year <= date.getYear() && month <= date.getMonth() && day <= date.getDay();
         }
 
-        bool Date::operator<(const Date &date)
-        {
-            return toNumber() < date.toNumber();
-        }
-    }
-}
+        bool Date::operator<(const Date &date) const { return toNumber() < date.toNumber(); }
+    } // namespace time
+} // namespace utils
