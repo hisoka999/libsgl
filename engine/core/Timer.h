@@ -17,7 +17,7 @@ namespace core
 	class Timer
 	{
 	public:
-		Timer(const uint32_t time, const uint32_t repeat);
+		Timer(const uint32_t time, const int32_t repeat);
 		virtual ~Timer();
 
 		void setCallback(std::function<void(uint32_t)> f)
@@ -34,7 +34,7 @@ namespace core
 	private:
 		uint32_t m_startTime;
 		uint32_t m_time;
-		uint32_t m_repeat;
+		int32_t m_repeat;
 		uint32_t m_execs;
 		bool m_paused;
 		std::function<void(uint32_t)> m_callback = nullptr;
