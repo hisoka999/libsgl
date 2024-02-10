@@ -1,20 +1,20 @@
 #include "engine/core/renderer.h"
-#include "engine/utils/exceptions.h"
 #include <exception>
 #include <iostream>
 #include <vector>
-#include "engine/utils/logger.h"
 #include "engine/graphics/texture.h"
+#include "engine/utils/exceptions.h"
+#include "engine/utils/logger.h"
 namespace core
 {
 
     std::vector<SDL_Point> points;
     void sdlRectP(const graphics::Rect &src, SDL_Rect *r)
     {
-        r->h = int(src.height);
-        r->w = int(src.width);
-        r->x = int(src.x);
-        r->y = int(src.y);
+        r->h = static_cast<int>(src.height);
+        r->w = static_cast<int>(src.width);
+        r->x = static_cast<int>(src.x);
+        r->y = static_cast<int>(src.y);
     }
 
     void sdlFRectP(const graphics::Rect &src, SDL_FRect *r)
@@ -29,10 +29,7 @@ namespace core
         return SDL_RenderDrawLine(renderer, x, y1, x, y2);
         ;
     }
-    inline int pixel(SDL_Renderer *renderer, Sint16 x, Sint16 y)
-    {
-        return SDL_RenderDrawPoint(renderer, x, y);
-    }
+    inline int pixel(SDL_Renderer *renderer, Sint16 x, Sint16 y) { return SDL_RenderDrawPoint(renderer, x, y); }
 
     inline int _drawQuadrants(SDL_Renderer *renderer, Sint16 x, Sint16 y, Sint16 dx, Sint16 dy, Sint32 f)
     {
@@ -123,7 +120,8 @@ namespace core
 \returns Returns 0 on success, -1 on failure.
             */
 #define DEFAULT_ELLIPSE_OVERSCAN 4
-    int _ellipseRGBA(SDL_Renderer *renderer, Sint16 x, Sint16 y, Sint16 rx, Sint16 ry, Uint8 r, Uint8 g, Uint8 b, Uint8 a, Sint32 f)
+    int _ellipseRGBA(SDL_Renderer *renderer, Sint16 x, Sint16 y, Sint16 rx, Sint16 ry, Uint8 r, Uint8 g, Uint8 b,
+                     Uint8 a, Sint32 f)
     {
         int result;
         Sint32 rxi, ryi;
@@ -287,7 +285,8 @@ namespace core
         return (result);
     }
 
-    int ellipseRGBA(SDL_Renderer *renderer, Sint16 x, Sint16 y, Sint16 rx, Sint16 ry, Uint8 r, Uint8 g, Uint8 b, Uint8 a)
+    int ellipseRGBA(SDL_Renderer *renderer, Sint16 x, Sint16 y, Sint16 rx, Sint16 ry, Uint8 r, Uint8 g, Uint8 b,
+                    Uint8 a)
     {
         return _ellipseRGBA(renderer, x, y, rx, ry, r, g, b, a, 0);
     }
@@ -310,8 +309,7 @@ namespace core
         return ellipseRGBA(renderer, x, y, rad, rad, r, g, b, a);
     }
 
-    Renderer::Renderer()
-        : camera(nullptr)
+    Renderer::Renderer() : camera(nullptr)
     {
         delta = 0;
         this->end = 0;
@@ -327,9 +325,8 @@ namespace core
     void Renderer::open(const GameWindow *pWin, bool pVSync)
     {
 
-        int numdrivers = SDL_GetNumRenderDrivers();
-        SGL_LOG_INFO(
-            "Render driver count: " + std::to_string(numdrivers));
+        const int numdrivers = SDL_GetNumRenderDrivers();
+        SGL_LOG_INFO("Render driver count: " + std::to_string(numdrivers));
 
         unsigned int renderFlags = SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE;
         if (pVSync)
@@ -343,17 +340,13 @@ namespace core
             SDL_GetRenderDriverInfo(i, &drinfo);
             SGL_LOG_TRACE("Driver name (" + std::to_string(i) + "): " + drinfo.name);
             if (drinfo.flags & SDL_RENDERER_SOFTWARE)
-                SGL_LOG_TRACE(
-                    " the renderer is a software fallback");
+                SGL_LOG_TRACE(" the renderer is a software fallback");
             if (drinfo.flags & SDL_RENDERER_ACCELERATED)
-                SGL_LOG_TRACE(
-                    " the renderer uses hardware acceleration");
+                SGL_LOG_TRACE(" the renderer uses hardware acceleration");
             if (drinfo.flags & SDL_RENDERER_PRESENTVSYNC)
-                SGL_LOG_TRACE(
-                    " present is synchronized	with the refresh rate");
+                SGL_LOG_TRACE(" present is synchronized	with the refresh rate");
             if (drinfo.flags & SDL_RENDERER_TARGETTEXTURE)
-                SGL_LOG_TRACE(
-                    " the renderer supports rendering to texture");
+                SGL_LOG_TRACE(" the renderer supports rendering to texture");
 
             if (drinfo.flags & renderFlags)
             {
@@ -379,8 +372,7 @@ namespace core
 
         SGL_LOG_TRACE("use driver id = " + std::to_string(drvId));
 
-        ren = SDL_CreateRenderer(const_cast<SDL_Window *>(pWin->getSDLWindow()), drvId,
-                                 renderFlags);
+        ren = SDL_CreateRenderer(const_cast<SDL_Window *>(pWin->getSDLWindow()), drvId, renderFlags);
 
         if (ren == nullptr)
         {
@@ -392,8 +384,8 @@ namespace core
         graphics::Rect rect;
         rect.x = 0;
         rect.y = 0;
-        rect.width = float(pWin->getWidth());
-        rect.height = float(pWin->getHeight());
+        rect.width = static_cast<float>(pWin->getWidth());
+        rect.height = static_cast<float>(pWin->getHeight());
         setViewPort(rect);
     }
     Renderer::~Renderer()
@@ -404,33 +396,21 @@ namespace core
         points.clear();
     }
 
-    SDL_Renderer *Renderer::getRenderer()
-    {
-        return ren;
-    }
-    void Renderer::clear()
-    {
-        SDL_RenderClear(ren);
-    }
+    SDL_Renderer *Renderer::getRenderer() { return ren; }
+    void Renderer::clear() { SDL_RenderClear(ren); }
 
-    void Renderer::renderPresent()
-    {
-        SDL_RenderPresent(ren);
-    }
+    void Renderer::renderPresent() { SDL_RenderPresent(ren); }
 
     void Renderer::calcDelta()
     {
         // calc time delta
-        Uint32 end = getTickCount();
+        const Uint32 end = getTickCount();
         delta = end - lastTick;
 
         lastTick = end;
     }
 
-    Uint32 Renderer::getTickCount()
-    {
-        return SDL_GetTicks();
-    }
+    Uint32 Renderer::getTickCount() { return SDL_GetTicks(); }
     void Renderer::setRenderTargetInternal(SDL_Texture *pTexture)
     {
         if (SDL_SetRenderTarget(ren, pTexture) != 0)
@@ -448,10 +428,7 @@ namespace core
             setRenderTargetInternal(texture->getSDLTexture());
     }
 
-    float Renderer::getTimeDelta()
-    {
-        return delta;
-    }
+    Uint32 Renderer::getTimeDelta() const { return delta; }
 
     const graphics::Rect &Renderer::getViewPort()
     {
@@ -459,10 +436,10 @@ namespace core
         {
             SDL_Rect rect;
             SDL_RenderGetViewport(ren, &rect);
-            viewPort.width = float(rect.w);
-            viewPort.height = float(rect.h);
-            viewPort.x = float(rect.x);
-            viewPort.y = float(rect.y);
+            viewPort.width = static_cast<float>(rect.w);
+            viewPort.height = static_cast<float>(rect.h);
+            viewPort.x = static_cast<float>(rect.x);
+            viewPort.y = static_cast<float>(rect.y);
         }
         return viewPort;
     }
@@ -477,14 +454,8 @@ namespace core
         }
     }
 
-    void Renderer::setMainCamera(Camera *pCamera)
-    {
-        camera = pCamera;
-    }
-    Camera *Renderer::getMainCamera()
-    {
-        return camera;
-    }
+    void Renderer::setMainCamera(Camera *pCamera) { camera = pCamera; }
+    Camera *Renderer::getMainCamera() { return camera; }
 
     void Renderer::drawCircle(int x, int y, int rad, SDL_Color color)
     {
@@ -496,29 +467,21 @@ namespace core
         }
     }
 
-    void Renderer::drawPoint(float x, float y)
-    {
-        SDL_RenderDrawPointF(ren, x, y);
-    }
+    void Renderer::drawPoint(float x, float y) { SDL_RenderDrawPointF(ren, x, y); }
     void Renderer::setDrawColor(Uint8 r, Uint8 g, Uint8 b, Uint8 a)
     {
-        int result = SDL_SetRenderDrawColor(ren, r, g, b, a);
-        if (result != 0)
+        if (SDL_SetRenderDrawColor(ren, r, g, b, a) != 0)
         {
             SGL_LOG_ERROR_SDL();
             throw SDLException("setDrawColor");
         }
     }
 
-    void Renderer::setDrawColor(const SDL_Color &color)
-    {
-        setDrawColor(color.r, color.g, color.b, color.a);
-    }
+    void Renderer::setDrawColor(const SDL_Color &color) { setDrawColor(color.r, color.g, color.b, color.a); }
     void Renderer::drawRect(const graphics::Rect &rect)
     {
         sdlFRectP(rect, &cacheRect);
-        int result = SDL_RenderDrawRectF(ren, &cacheRect);
-        if (result != 0)
+        if (SDL_RenderDrawRectF(ren, &cacheRect) != 0)
         {
             SGL_LOG_ERROR_SDL();
             throw SDLException("drawRect");
@@ -535,19 +498,10 @@ namespace core
             throw SDLException("fillRect");
         }
     }
-    float Renderer::getZoomFactor() const
-    {
-        return zoomFactor;
-    }
-    void Renderer::setZoomFactor(float factor)
-    {
-        zoomFactor = factor;
-    }
+    float Renderer::getZoomFactor() const { return zoomFactor; }
+    void Renderer::setZoomFactor(float factor) { zoomFactor = factor; }
 
-    void Renderer::setDrawBlendMode(SDL_BlendMode blendMode)
-    {
-        SDL_SetRenderDrawBlendMode(ren, blendMode);
-    }
+    void Renderer::setDrawBlendMode(SDL_BlendMode blendMode) { SDL_SetRenderDrawBlendMode(ren, blendMode); }
 
     SDL_BlendMode Renderer::getDrawBlendMode()
     {
@@ -569,5 +523,5 @@ namespace core
         setViewPort(viewPort);
     }
 
-}
+} // namespace core
 // namespace core

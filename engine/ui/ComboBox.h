@@ -11,13 +11,13 @@
 namespace UI
 {
 
-    template <typename T>
+    template<typename T>
     class ComboBox : public UI::Object
     {
 
     public:
         /** Default constructor */
-        ComboBox(Object *parent = nullptr) : UI::Object(parent), selection(0)
+        explicit ComboBox(Object *parent = nullptr) : UI::Object(parent), selection(0)
         {
             setObjectName("combobox");
             setWidth(100);
@@ -40,9 +40,7 @@ namespace UI
             backgroundColor = getTheme()->getStyleColor(this, UI::StyleType::BackgroundColor);
         }
         /** Default destructor */
-        virtual ~ComboBox()
-        {
-        }
+        virtual ~ComboBox() {}
 
         void render(core::Renderer *pRender)
         {
@@ -61,11 +59,12 @@ namespace UI
             graphics::Rect rect;
             rect.x = tx;
             rect.y = ty;
-            rect.width = float(getWidth());
+            rect.width = static_cast<float>(getWidth());
             rect.height = 28.f;
 
-            graphics::Rect leftButtonRect = {rect.x, rect.y, rect.height, rect.height};
-            graphics::Rect rightButtonRect = {rect.x + rect.width - rect.height, rect.y, rect.height, rect.height};
+            const graphics::Rect leftButtonRect = {rect.x, rect.y, rect.height, rect.height};
+            const graphics::Rect rightButtonRect = {rect.x + rect.width - rect.height, rect.y, rect.height,
+                                                    rect.height};
             pRender->setDrawColor(12, 21, 24, 255);
 
             pRender->fillRect(rect);
@@ -86,8 +85,10 @@ namespace UI
 
             pRender->fillRect(rightButtonRect);
 
-            iconFont->render(pRender, "\uf0da", textColor, int(rightButtonRect.x + (rect.height / 2) - 5), int(rightButtonRect.y + (rect.height / 2) - 10));
-            iconFont->render(pRender, "\uf0d9", textColor, int(leftButtonRect.x + (rect.height / 2) - 5), int(leftButtonRect.y + (rect.height / 2) - 10));
+            iconFont->render(pRender, "\uf0da", textColor, static_cast<int>(rightButtonRect.x + (rect.height / 2) - 5),
+                             static_cast<int>(rightButtonRect.y + (rect.height / 2) - 10));
+            iconFont->render(pRender, "\uf0d9", textColor, static_cast<int>(leftButtonRect.x + (rect.height / 2) - 5),
+                             static_cast<int>(leftButtonRect.y + (rect.height / 2) - 10));
 
             std::string text = "empty";
             if (elements.size() > 0)
@@ -96,25 +97,23 @@ namespace UI
             int textW, textH = 0;
             getFont()->size(text, &textW, &textH);
 
-            getFont()->render(pRender, text, textColor, int(rect.x + rect.height + 5), int(rect.y + (rect.height / 2) - (textH / 2)));
+            getFont()->render(pRender, text, textColor, static_cast<int>(rect.x + rect.height + 5),
+                              static_cast<int>(rect.y + (rect.height / 2) - (textH / 2)));
         }
 
         void addElement(T elem) { elements.push_back(elem); }
-        void setElementFunction(std::function<std::string(T)> func)
-        {
-            elementFunction = func;
-        }
+        void setElementFunction(std::function<std::string(T)> func) { elementFunction = func; }
         void clearElements()
         {
             elements.clear();
             selection = 0;
         }
-        virtual bool handleEvents(core::Input *pInput)
+        bool handleEvents(core::Input *pInput) override
         {
 
-            float tx = float(getX());
+            float tx = static_cast<float>(getX());
 
-            float ty = float(getY());
+            float ty = static_cast<float>(getY());
 
             if (this->getParent())
             {
@@ -126,11 +125,12 @@ namespace UI
             graphics::Rect rect;
             rect.x = tx;
             rect.y = ty;
-            rect.width = float(getWidth());
+            rect.width = static_cast<float>(getWidth());
             rect.height = 28;
 
-            graphics::Rect leftButtonRect = {rect.x, rect.y, rect.height, rect.height};
-            graphics::Rect rightButtonRect = {rect.x + rect.width - rect.height, rect.y, rect.height, rect.height};
+            const graphics::Rect leftButtonRect = {rect.x, rect.y, rect.height, rect.height};
+            const graphics::Rect rightButtonRect = {rect.x + rect.width - rect.height, rect.y, rect.height,
+                                                    rect.height};
             bool eventHandled = false;
 
             if (leftButtonRect.intersects(pInput->getMousePostion()) && pInput->isMouseButtonPressed(SDL_BUTTON_LEFT))
@@ -141,7 +141,8 @@ namespace UI
                     eventHandled = true;
                 }
             }
-            else if (rightButtonRect.intersects(pInput->getMousePostion()) && pInput->isMouseButtonPressed(SDL_BUTTON_LEFT))
+            else if (rightButtonRect.intersects(pInput->getMousePostion()) &&
+                     pInput->isMouseButtonPressed(SDL_BUTTON_LEFT))
             {
                 if (selection < elements.size() - 1 && elements.size() > 0)
                 {
@@ -151,7 +152,7 @@ namespace UI
             }
             return eventHandled;
         }
-        int getSelection() { return selection; }
+        int getSelection() const { return selection; }
         void setSelection(unsigned int selection)
         {
             if (selection >= elements.size() || elements.size() == 0)

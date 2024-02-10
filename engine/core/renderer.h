@@ -1,10 +1,10 @@
 #ifndef CORE_RENDERER_H
 #define CORE_RENDERER_H
 
+#include <SDL2/SDL_render.h>
 #include "engine/core/Camera.h"
 #include "engine/core/gamewindow.h"
 #include "engine/graphics/rect.h"
-#include <SDL2/SDL_render.h>
 
 namespace graphics
 {
@@ -29,7 +29,7 @@ namespace core
         void clear();
         void renderPresent();
         Uint32 getTickCount();
-        float getTimeDelta();
+        Uint32 getTimeDelta() const;
 
         void setRenderTarget(graphics::Texture *texture);
         const graphics::Rect &getViewPort();
@@ -68,11 +68,11 @@ namespace core
         SDL_Renderer *ren;
         Uint32 lastTick;
         Uint32 end;
-        float delta;
+        Uint32 delta;
         graphics::Rect viewPort;
         Camera *camera;
         float zoomFactor;
-        SDL_FRect cacheRect;
+        SDL_FRect cacheRect{};
     };
 
 } // namespace core
