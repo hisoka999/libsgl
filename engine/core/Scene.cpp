@@ -395,6 +395,8 @@ namespace core
         m_PhysicsWorld->Step(delta / 1000.f, velocityIterations, positionIterations);
 
         // Retrieve transform from Box2D
+        const auto &cameraViewPort = renderer->getMainCamera()->getViewPortRect();
+
         bool reSort = false;
         {
             const auto view = m_registry.view<core::ecs::Rigidbody2DComponent, core::ecs::Transform>();
@@ -408,7 +410,7 @@ namespace core
                     continue;
                 const auto oldPosition = transform.position;
                 transform.position = convertToPixels(pixelPerMeter, body->GetPosition());
-                if (oldPosition != transform.position)
+                if (oldPosition != transform.position && cameraViewPort.intersects(transform.position))
                     reSort = true;
                 // transform.Rotation.z = body->GetAngle();
                 if (m_registry.any_of<core::ecs::ScriptComponentList>(e))
