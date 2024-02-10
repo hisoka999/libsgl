@@ -1,16 +1,14 @@
 #include "parser.h"
 #include <algorithm>
-#include "Lexer.h"
 #include <chrono>
+#include "Lexer.h"
 #include "engine/utils/logger.h"
 namespace utils
 {
     namespace JSON
     {
 
-        Parser::Parser()
-        {
-        }
+        Parser::Parser() {}
 
         void Parser::parseString(const std::string &jsonData)
         {
@@ -20,24 +18,25 @@ namespace utils
                 char data = jsonData[i];
                 switch (data)
                 {
-                case '[': // array begin
-                    // parse sub string
-                    parseArray(jsonData.substr(i + 1));
-                    break;
-                case ']': // array end
-                    break;
-                case '{': // object begin
-                    parseObject(jsonData.substr(i + 1));
-                    break;
-                case '}': // object end
-                    break;
-                case ':': // object end
-                    break;
+                    case '[': // array begin
+                        // parse sub string
+                        parseArray(jsonData.substr(i + 1));
+                        break;
+                    case ']': // array end
+                        break;
+                    case '{': // object begin
+                        parseObject(jsonData.substr(i + 1));
+                        break;
+                    case '}': // object end
+                        break;
+                    case ':': // object end
+                        break;
                 }
             }
         }
 
-        size_t Parser::findPositionInString(const std::string_view &data, char starChar, char endChar, const size_t startPosition)
+        size_t Parser::findPositionInString(const std::string_view &data, char starChar, char endChar,
+                                            const size_t startPosition)
         {
             int depth = 0;
             for (size_t pos = startPosition; pos < data.size(); ++pos)
@@ -87,48 +86,50 @@ namespace utils
 
             switch (token.type)
             {
-            case TokenType::BOOL:
-                if (token.data == "true")
-                {
-                    return JsonValue(true);
-                }
-                else if (token.data == "false")
-                {
-                    return JsonValue(false);
-                }
-                break;
-            case TokenType::STRING:
-                if (token.data.length() == 0)
-                {
-                    return std::string("");
-                }
-                else
-                {
-                    return std::string(token.data);
-                }
-                break;
-            case TokenType::NUMBER:
-                if ((startChar >= '0' && startChar <= '9') || startChar == '-')
-                {
-                    if (token.data.find_first_of(".") < token.data.size())
+                case TokenType::BOOL:
+                    if (token.data == "true")
                     {
-                        return float(std::atof(data));
+                        return JsonValue(true);
+                    }
+                    else if (token.data == "false")
+                    {
+                        return JsonValue(false);
+                    }
+                    break;
+                case TokenType::STRING:
+                    if (token.data.length() == 0)
+                    {
+                        return std::string("");
                     }
                     else
                     {
-                        auto value = std::atoi(data);
-                        if (token.data.size() > 64)
-                        {
-                            return std::string(token.data);
-                        }
-                        return value;
+                        return std::string(token.data);
                     }
-                }
-                break;
-            case TokenType::NULLTOKEN:
-                return JsonValue(0);
-            default:
-                break;
+                    break;
+                case TokenType::NUMBER:
+                    if ((startChar >= '0' && startChar <= '9') || startChar == '-')
+                    {
+                        if (token.data.find_first_of(".") < token.data.size())
+                        {
+                            float result{};
+                            std::from_chars(std::begin(token.data), std::end(token.data), result);
+                            return result;
+                        }
+                        else
+                        {
+                            auto value = std::atoi(data);
+                            if (token.data.size() > 64)
+                            {
+                                return std::string(token.data);
+                            }
+                            return value;
+                        }
+                    }
+                    break;
+                case TokenType::NULLTOKEN:
+                    return JsonValue(0);
+                default:
+                    break;
             }
             return std::string(token.data);
         }
@@ -191,7 +192,8 @@ namespace utils
 
                 if (tokens[*start].data != ":")
                 {
-                    throw std::runtime_error(std::string("expected  colon but got other token: ") + std::string(tokens[*start].data) + "for key: " + jsonKey);
+                    throw std::runtime_error(std::string("expected  colon but got other token: ") +
+                                             std::string(tokens[*start].data) + "for key: " + jsonKey);
                 }
 
                 *start = *start + 1; // erease colon
@@ -225,7 +227,9 @@ namespace utils
                 }
                 else if (token.data != ",")
                 {
-                    throw std::runtime_error(std::string("expected  comma but got other token: ") + std::string(tokens[*start].data) + " for key: " + jsonKey + " for Value(" + std::string(valueStart.data) + ")");
+                    throw std::runtime_error(std::string("expected  comma but got other token: ") +
+                                             std::string(tokens[*start].data) + " for key: " + jsonKey + " for Value(" +
+                                             std::string(valueStart.data) + ")");
                 }
 
                 *start = *start + 1;
@@ -264,6 +268,6 @@ namespace utils
             return nullptr;
         }
 
-    }
+    } // namespace JSON
 
-}
+} // namespace utils
