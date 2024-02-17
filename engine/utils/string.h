@@ -34,24 +34,21 @@ namespace utils
     }
 
     // trim from both ends of string (right then left)
-    inline std::string &trim(std::string &s, const char *t = ws)
-    {
-        return ltrim(rtrim(s, t), t);
-    }
+    inline std::string &trim(std::string &s, const char *t = ws) { return ltrim(rtrim(s, t), t); }
 
-    template <typename T>
+    template<typename T>
     T process_arg(T value) noexcept
     {
         return value;
     }
 
-    template <typename T>
+    template<typename T>
     T const *process_arg(std::basic_string<T> const &value) noexcept
     {
         return value.c_str();
     }
 
-    template <typename... Args>
+    template<typename... Args>
     std::string string_format(const std::string &format, Args const &...args)
     {
         const auto fmt = format.c_str();
@@ -67,6 +64,10 @@ namespace utils
     std::string utf8chr(int cp);
     int codepoint(const std::string &u);
 
-};
+    [[nodiscard]] float to_float(const std::string &value);
+
+    [[nodiscard]] float to_float(const std::string_view &value);
+
+}; // namespace utils
 
 #endif /* UTILS_STRING_H_ */

@@ -111,9 +111,7 @@ namespace utils
                     {
                         if (token.data.find_first_of(".") < token.data.size())
                         {
-                            float result{};
-                            std::from_chars(std::begin(token.data), std::end(token.data), result);
-                            return result;
+                            return utils::to_float(token.data);
                         }
                         else
                         {

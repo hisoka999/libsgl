@@ -1,4 +1,6 @@
 #include "string.h"
+#include <sstream>
+#include <string>
 
 namespace utils
 {
@@ -83,4 +85,31 @@ namespace utils
             return (u0 - 240) * 262144 + (u1 - 128) * 4096 + (u2 - 128) * 64 + (u3 - 128);
         return -1;
     }
-}
+
+    float to_float(const std::string &value)
+    {
+        float valor;
+
+        std::stringstream stream(value);
+        stream >> valor;
+        if (stream.fail())
+        {
+            std::runtime_error e(value);
+            throw e;
+        }
+        return valor;
+    }
+
+    float to_float(const std::string_view &value)
+    {
+        float valor;
+        std::stringstream stream(value.data());
+        stream >> valor;
+        if (stream.fail())
+        {
+            std::runtime_error e(value.data());
+            throw e;
+        }
+        return valor;
+    }
+} // namespace utils
