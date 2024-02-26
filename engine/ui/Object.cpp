@@ -143,4 +143,7 @@ namespace UI
     int Object::getX() const { return x; }
     int Object::getY() const { return y; }
 
+    bool Object::isVisible() { return visible; }
+    void Object::setVisible(bool visible) { this->visible = visible; }
+
 } // namespace UI

@@ -90,6 +90,10 @@ namespace UI
             onOpen();
             setActive(true);
         }
+        for (auto obj: objects)
+        {
+            obj->setVisible(visible);
+        }
     }
 
     bool Window::getVisible() { return m_visible || m_is_closing != 0; }

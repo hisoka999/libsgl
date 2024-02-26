@@ -1,11 +1,11 @@
 #ifndef UI_CONTAINER_H
 #define UI_CONTAINER_H
 
+#include <memory>
+#include <vector>
 #include "engine/core/input.h"
 #include "engine/core/renderer.h"
 #include "engine/ui/Object.h"
-#include <memory>
-#include <vector>
 
 namespace UI
 {
@@ -31,6 +31,7 @@ namespace UI
         std::shared_ptr<Object> get(size_t pos);
         void needsRefresh();
         void setLayout(const std::shared_ptr<layout::Layout> &layout);
+        void updateLayout();
 
     protected:
         ObjectList objects;

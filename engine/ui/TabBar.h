@@ -8,10 +8,10 @@
 #ifndef UI_TABBAR_H_
 #define UI_TABBAR_H_
 
-#include "engine/ui/Object.h"
-#include "engine/ui/Tab.h"
 #include <memory>
 #include <vector>
+#include "engine/ui/Object.h"
+#include "engine/ui/Tab.h"
 
 namespace UI
 {
@@ -38,6 +38,7 @@ namespace UI
         virtual graphics::Rect eventRect();
         void setCurrentTab(std::shared_ptr<Tab> tab);
         void setTabWidth(int width);
+        void setVisible(bool visible) override;
 
     protected:
         int tabWidth = 120;
@@ -47,6 +48,7 @@ namespace UI
         void calulateTabRect(size_t index, graphics::Rect &rect);
 
     private:
+        void setActiveTab(int index);
         std::vector<std::shared_ptr<Tab>> tabs;
         int currentTab;
         int hoveredTab;

@@ -97,6 +97,8 @@ namespace UI
         void setTheme(const std::shared_ptr<Theme> &theme);
         void setCheckDropCallBack(const CheckDropCallBack &callback);
         CheckDropCallBack getCheckDropCallBack();
+        [[nodiscard]] bool isVisible();
+        virtual void setVisible(bool visible);
 
     protected:
         void setObjectName(const std::string &objectName);
@@ -136,6 +138,7 @@ namespace UI
         std::string objectName;
         std::shared_ptr<Theme> theme = nullptr;
         CheckDropCallBack dragCallback = nullptr;
+        bool visible = false;
     };
 
 } // namespace UI

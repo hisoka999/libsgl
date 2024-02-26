@@ -4,31 +4,28 @@
 
 namespace UI
 {
-    StringHint::StringHint() : Hint()
-    {
-        font = graphics::TextureManager::Instance().loadFont("fonts/arial.ttf", 14);
-    }
+    StringHint::StringHint() : Hint() { font = graphics::TextureManager::Instance().loadFont("fonts/arial.ttf", 14); }
 
-    StringHint::StringHint(const std::string &hintText)
-        : Hint()
+    StringHint::StringHint(const std::string &hintText) : Hint()
     {
         font = graphics::TextureManager::Instance().loadFont("fonts/arial.ttf", 14);
         setHintText(hintText);
     }
 
-    StringHint::~StringHint()
-    {
-    }
+    StringHint::~StringHint() {}
 
     void StringHint::render(core::Renderer *renderer)
     {
+        if (getHintText().empty())
+            return;
+
         int w, h = 0;
 
         int lineCount = 1;
         int lastLineBreak = 0;
         int pos = 0;
         int maxWidth = 0;
-        for (char chr : getHintText())
+        for (char chr: getHintText())
         {
 
             if (chr == '\n')
@@ -50,7 +47,8 @@ namespace UI
 
         renderBackground(renderer);
 
-        font->renderWrapped(renderer, getHintText(), utils::color::WHITE, getPosition().getX(), getPosition().getY(), 200);
+        font->renderWrapped(renderer, getHintText(), utils::color::WHITE, getPosition().getX(), getPosition().getY(),
+                            200);
     }
 
 } // namespace UI

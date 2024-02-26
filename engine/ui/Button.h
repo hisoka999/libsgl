@@ -15,9 +15,9 @@ namespace UI
     {
     public:
         /** Default constructor */
-        Button(Object *parent = nullptr);
+        explicit Button(Object *parent = nullptr);
         /** Default destructor */
-        virtual ~Button();
+        ~Button() override;
 
         void setLabel(const std::string &label);
         void setFont(const std::string &fontname, int font_size);

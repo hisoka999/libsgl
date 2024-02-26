@@ -11,8 +11,8 @@
 namespace UI
 {
 
-    TabBar::TabBar(Object *parent, TabDirection tabDirection)
-        : UI::Object(parent), currentTab(-1), hoveredTab(-1), tabDirection(tabDirection)
+    TabBar::TabBar(Object *parent, TabDirection tabDirection) :
+        UI::Object(parent), currentTab(-1), hoveredTab(-1), tabDirection(tabDirection)
     {
         setObjectName("tabbar");
 
@@ -49,7 +49,7 @@ namespace UI
         int tabX = static_cast<int>(displayRect.x) + 16;
         int taby = static_cast<int>(displayRect.y) + 16;
 
-        for (auto &tab : tabs)
+        for (auto &tab: tabs)
         {
             const std::string &title = tab->getTitle();
             // render tab
@@ -120,13 +120,9 @@ namespace UI
         }
     }
 
-    void TabBar::renderLeft([[maybe_unused]] core::Renderer *renderer)
-    {
-    }
+    void TabBar::renderLeft([[maybe_unused]] core::Renderer *renderer) {}
 
-    void TabBar::renderTop([[maybe_unused]] core::Renderer *renderer)
-    {
-    }
+    void TabBar::renderTop([[maybe_unused]] core::Renderer *renderer) {}
 
     void TabBar::postRender(core::Renderer *renderer)
     {
@@ -179,7 +175,7 @@ namespace UI
 
         graphics::Rect tabRect;
         int index = 0;
-        for (auto &tab : tabs)
+        for (auto &tab: tabs)
         {
             std::string title = tab->getTitle();
 
@@ -190,7 +186,7 @@ namespace UI
             {
                 if (pInput->isMouseButtonPressed(SDL_BUTTON_LEFT))
                 {
-                    currentTab = index;
+                    setActiveTab(index);
                     eventHandled = true;
                 }
                 // hover
@@ -207,7 +203,7 @@ namespace UI
     {
         tabs.push_back(tab);
         if (currentTab == -1)
-            currentTab = 0;
+            setActiveTab(0);
     }
     void TabBar::removeTabByIndex(int index)
     {
@@ -220,7 +216,7 @@ namespace UI
         if (it != tabs.end())
         {
             tabs.erase(it);
-            currentTab = 0;
+            setActiveTab(0);
         }
     }
 
@@ -272,11 +268,22 @@ namespace UI
     void TabBar::setCurrentTab(std::shared_ptr<Tab> tab)
     {
         auto it = std::find(tabs.begin(), tabs.end(), tab);
-        currentTab = std::distance(tabs.begin(), it);
+        setActiveTab(std::distance(tabs.begin(), it));
     }
 
-    void TabBar::setTabWidth(int width)
+    void TabBar::setTabWidth(int width) { tabWidth = width; }
+
+    void TabBar::setVisible(bool visible)
     {
-        tabWidth = width;
+        Object::setVisible(visible);
+        tabs[currentTab]->setVisible(isVisible());
+    }
+
+    void TabBar::setActiveTab(int index)
+    {
+        if (currentTab >= 0)
+            tabs[currentTab]->setVisible(false);
+        currentTab = index;
+        tabs[currentTab]->setVisible(isVisible());
     }
 } /* namespace UI */
