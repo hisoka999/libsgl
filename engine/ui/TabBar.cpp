@@ -11,8 +11,7 @@
 namespace UI
 {
 
-    TabBar::TabBar(Object *parent, TabDirection tabDirection) :
-        UI::Object(parent), currentTab(-1), hoveredTab(-1), tabDirection(tabDirection)
+    TabBar::TabBar(Object *parent, TabDirection tabDirection) : UI::Object(parent), currentTab(-1), hoveredTab(-1), tabDirection(tabDirection)
     {
         setObjectName("tabbar");
 
@@ -49,7 +48,7 @@ namespace UI
         int tabX = static_cast<int>(displayRect.x) + 16;
         int taby = static_cast<int>(displayRect.y) + 16;
 
-        for (auto &tab: tabs)
+        for (auto &tab : tabs)
         {
             const std::string &title = tab->getTitle();
             // render tab
@@ -175,7 +174,7 @@ namespace UI
 
         graphics::Rect tabRect;
         int index = 0;
-        for (auto &tab: tabs)
+        for (auto &tab : tabs)
         {
             std::string title = tab->getTitle();
 
@@ -281,7 +280,7 @@ namespace UI
 
     void TabBar::setActiveTab(int index)
     {
-        if (currentTab >= 0)
+        if (currentTab >= 0 && currentTab < static_cast<int>(tabs.size()))
             tabs[currentTab]->setVisible(false);
         currentTab = index;
         tabs[currentTab]->setVisible(isVisible());

@@ -27,7 +27,6 @@ namespace UI
         if (pInput->isMouseButtonUp(SDL_BUTTON_LEFT))
         {
 
-
             graphics::Rect parentRect;
             if (getParent() != nullptr)
                 parentRect = getParent()->displayRect();
@@ -46,7 +45,6 @@ namespace UI
             }
 
             destRect.y = parentRect.y + getHeight() + getY() - BUTTON_HEIGHT;
-
 
             // render right edge
             destRect.x = parentRect.x + getX();
@@ -76,7 +74,7 @@ namespace UI
             utils::Vector2 pos = pInput->getMouseWheelPosition();
 
             if ((m_scrollPosition >= 0 && pos.getY() == 1) ||
-                (pos.getY() == -1 && m_scrollPosition + scrollBarHeight < r.height - (BUTTON_HEIGHT * 2)))
+                (pos.getY() == -1 && (relativeHeight * m_scrollPosition) + scrollBarHeight < r.height - (BUTTON_HEIGHT * 2)))
             {
                 m_scrollPosition += pos.getY() * -5;
                 return true;
