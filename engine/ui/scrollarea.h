@@ -3,7 +3,7 @@
 
 #include <engine/ui/Container.h>
 #include <engine/ui/Object.h>
-
+#include <engine/ui/VerticalScrollbar.h>
 namespace UI
 {
 
@@ -11,8 +11,7 @@ namespace UI
     {
     public:
         /** Default constructor */
-        ScrollArea(const unsigned int pWidth, const unsigned pHeight,
-                   Object *parent);
+        ScrollArea(const unsigned int pWidth, const unsigned pHeight, Object *parent);
         /** Default destructor */
         ~ScrollArea() override;
         void render(core::Renderer *pRender) override;
@@ -26,13 +25,12 @@ namespace UI
     private:
         graphics::Rect renderRect;
         float scrollWidth, scrollHeight;
-        float scrollX, scrollY;
         float scrollPosX, scrollPosY;
-        graphics::Texture *renderArea;
+        std::unique_ptr<graphics::Texture> renderArea;
         bool buttonPressed;
-        std::shared_ptr<graphics::Text> uiText;
         SDL_Color backgroundColor;
         SDL_Color foregroundColor;
+        VerticalScrollbar virticalScrollBar;
     };
 
 } // namespace UI
