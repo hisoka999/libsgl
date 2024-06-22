@@ -12,6 +12,8 @@ namespace UI
         virticalScrollBar(parent)
     {
         setObjectName("scrollarea");
+        setWidth(pWidth);
+        setHeight(pHeight);
         renderRect.x = 0;
         renderRect.y = 0;
         renderRect.width = pWidth;
@@ -176,6 +178,24 @@ namespace UI
         virticalScrollBar.handleEvents(pInput);
         scrollPosY = virticalScrollBar.getScrollPosition();
         return eventHandled;
+    }
+
+    void ScrollArea::setPos(int x, int y)
+    {
+        UI::Object::setPos(x, y);
+        virticalScrollBar.setPos(getX() + renderRect.width, getY());
+    }
+
+    void ScrollArea::setX(int x)
+    {
+        UI::Object::setX(x);
+        virticalScrollBar.setX(getX() + renderRect.width);
+    }
+
+    void ScrollArea::setY(int y)
+    {
+        UI::Object::setY(y);
+        virticalScrollBar.setY(getY());
     }
 
 } // namespace UI

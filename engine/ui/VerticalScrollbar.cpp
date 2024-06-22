@@ -70,16 +70,23 @@ namespace UI
 
         if (pInput->isScrollWheel())
         {
-
-            utils::Vector2 pos = pInput->getMouseWheelPosition();
-
-            if ((m_scrollPosition >= 0 && pos.getY() == 1) ||
-                (pos.getY() == -1 && (relativeHeight * m_scrollPosition) + scrollBarHeight < r.height - (BUTTON_HEIGHT * 2)))
+            if (getParent()->displayRect().intersects(pInput->getMousePostion()))
             {
-                m_scrollPosition += pos.getY() * -5;
-                return true;
+                utils::Vector2 pos = pInput->getMouseWheelPosition();
+
+
+                float maxHeight = r.height - (BUTTON_HEIGHT * 2);
+                if ((m_scrollPosition >= 0 && pos.getY() == 1) ||
+                    (pos.getY() == -1 && (relativeHeight * m_scrollPosition) + scrollBarHeight < maxHeight))
+                {
+                    m_scrollPosition += pos.getY() * -5;
+                    m_scrollPosition = std::min(m_scrollPosition, static_cast<int>(maxHeight));
+                    return true;
+                }
             }
         }
+
+
         return false;
     }
 

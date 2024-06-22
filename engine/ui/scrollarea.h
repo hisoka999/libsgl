@@ -20,6 +20,9 @@ namespace UI
         graphics::Rect eventRect() override;
         bool handleEvents(core::Input *pInput) override;
         void reset(bool noscrollreset = true);
+        void setX(int x) override;
+        void setY(int y) override;
+        void setPos(int x, int y) override;
 
     protected:
     private:

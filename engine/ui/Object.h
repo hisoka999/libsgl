@@ -37,9 +37,9 @@ namespace UI
         Object(Object *parent, int pWidth, int pHeight);
         /** Default destructor */
         virtual ~Object();
-        void setX(int x);
-        void setY(int y);
-        void setPos(int x, int y);
+        virtual void setX(int x);
+        virtual void setY(int y);
+        virtual void setPos(int x, int y);
         [[nodiscard]] int getX() const;
         [[nodiscard]] int getY() const;
         virtual int getWidth() { return width; }
