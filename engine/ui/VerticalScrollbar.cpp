@@ -80,7 +80,7 @@ namespace UI
                     (pos.getY() == -1 && (relativeHeight * m_scrollPosition) + scrollBarHeight < maxHeight))
                 {
                     m_scrollPosition += pos.getY() * -5;
-                    m_scrollPosition = std::min(m_scrollPosition, static_cast<int>(maxHeight));
+                    m_scrollPosition = std::min(m_scrollPosition, static_cast<int>(maxHeight / relativeHeight));
                     return true;
                 }
             }
